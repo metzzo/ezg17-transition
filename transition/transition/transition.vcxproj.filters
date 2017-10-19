@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Quelldateien\SceneGraph">
+      <UniqueIdentifier>{147d949a-f4ae-4e7d-9c8c-dc751d15309e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\SceneGraph">
+      <UniqueIdentifier>{c78b48d3-0e02-4b8a-a649-8d2c0948e381}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Interfaces">
+      <UniqueIdentifier>{81453a40-f409-42eb-90fe-73dc08be5c80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -24,6 +33,27 @@
     <ClInclude Include="targetver.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="GroupNode.h">
+      <Filter>Headerdateien\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>Headerdateien\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingEngine.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryNode.h">
+      <Filter>Headerdateien\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingNode.h">
+      <Filter>Headerdateien\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="IDrawable.h">
+      <Filter>Headerdateien\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraNode.h">
+      <Filter>Headerdateien\SceneGraph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -31,6 +61,24 @@
     </ClCompile>
     <ClCompile Include="transition.cpp">
       <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupNode.cpp">
+      <Filter>Quelldateien\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>Quelldateien\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingEngine.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryNode.cpp">
+      <Filter>Quelldateien\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingNode.cpp">
+      <Filter>Quelldateien\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraNode.cpp">
+      <Filter>Quelldateien\SceneGraph</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

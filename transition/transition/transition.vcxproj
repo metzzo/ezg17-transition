@@ -145,10 +145,23 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CameraNode.h" />
+    <ClInclude Include="GeometryNode.h" />
+    <ClInclude Include="GroupNode.h" />
+    <ClInclude Include="IDrawable.h" />
+    <ClInclude Include="Node.h" />
+    <ClInclude Include="RenderingEngine.h" />
+    <ClInclude Include="RenderingNode.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CameraNode.cpp" />
+    <ClCompile Include="GeometryNode.cpp" />
+    <ClCompile Include="GroupNode.cpp" />
+    <ClCompile Include="Node.cpp" />
+    <ClCompile Include="RenderingEngine.cpp" />
+    <ClCompile Include="RenderingNode.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
