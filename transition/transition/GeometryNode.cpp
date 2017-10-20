@@ -10,6 +10,11 @@ GeometryNode::~GeometryNode()
 {
 }
 
+std::vector<const IDrawable*> GeometryNode::get_drawables() const
+{
+	return { this };
+}
+
 void GeometryNode::draw() const
 {
 	// TODO

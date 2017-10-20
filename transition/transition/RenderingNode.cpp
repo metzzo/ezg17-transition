@@ -11,6 +11,11 @@ RenderingNode::~RenderingNode()
 {
 }
 
+std::vector<const RenderingNode*> RenderingNode::get_rendering_nodes() const
+{
+	return { this };
+}
+
 void RenderingNode::before_render() const
 {
 }
@@ -19,7 +24,7 @@ void RenderingNode::after_render() const
 {
 }
 
-void RenderingNode::render(const std::vector<IDrawable*>& drawables) const
+void RenderingNode::render(const std::vector<const IDrawable*>& drawables) const
 {
 	before_render();
 	

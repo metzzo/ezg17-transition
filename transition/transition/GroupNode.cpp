@@ -24,6 +24,32 @@ void GroupNode::init(RenderingEngine* rendering_engine)
 	}
 }
 
+std::vector<const IDrawable*> GroupNode::get_drawables() const
+{
+	auto vec = std::vector<const IDrawable*>();
+
+	for (auto& node : get_nodes())
+	{
+		auto node_drawables = node->get_drawables();
+		vec.insert(vec.end(), node_drawables.begin(), node_drawables.end());
+	}
+
+	return vec;
+}
+
+std::vector<const RenderingNode*> GroupNode::get_rendering_nodes() const
+{
+	auto vec = std::vector<const RenderingNode*>();
+
+	for (auto& node : get_nodes())
+	{
+		auto node_drawables = node->get_rendering_nodes();
+		vec.insert(vec.end(), node_drawables.begin(), node_drawables.end());
+	}
+
+	return vec;
+}
+
 const std::vector<Node*>& GroupNode::get_nodes() const
 {
 	return nodes_;

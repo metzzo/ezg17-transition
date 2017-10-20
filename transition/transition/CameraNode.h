@@ -1,7 +1,8 @@
 #pragma once
-#include "Node.h"
+#include "RenderingNode.h"
+
 class CameraNode :
-	public Node
+	public RenderingNode
 {
 public:
 	CameraNode();

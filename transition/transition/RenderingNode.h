@@ -10,8 +10,10 @@ public:
 	RenderingNode();
 	~RenderingNode();
 
+	std::vector<const RenderingNode*> get_rendering_nodes() const override;
+
 	virtual void before_render() const;
 	virtual void after_render() const;
-	void render(const std::vector<IDrawable*> &drawables) const;
+	void render(const std::vector<const IDrawable*> &drawables) const;
 };
 

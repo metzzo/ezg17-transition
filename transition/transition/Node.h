@@ -14,8 +14,8 @@ public:
 
 	virtual void init(RenderingEngine *rendering_engine);
 
-	virtual std::vector<IDrawable*> get_drawables() const;
-	virtual std::vector<RenderingNode*> get_rendering_nodes() const;
+	virtual std::vector<const IDrawable*> get_drawables() const;
+	virtual std::vector<const RenderingNode*> get_rendering_nodes() const;
 
 	RenderingEngine *get_rendering_engine() const
 	{

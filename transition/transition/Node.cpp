@@ -17,12 +17,12 @@ void Node::init(RenderingEngine* rendering_engine)
 	this->rendering_engine_ = rendering_engine;
 }
 
-std::vector<IDrawable*> Node::get_drawables() const
+std::vector<const IDrawable*> Node::get_drawables() const
 {
-	return std::vector<IDrawable*>();
+	return std::vector<const IDrawable*>();
 }
 
-std::vector<RenderingNode*> Node::get_rendering_nodes() const
+std::vector<const RenderingNode*> Node::get_rendering_nodes() const
 {
-	return std::vector<RenderingNode*>();
+	return std::vector<const RenderingNode*>();
 }
