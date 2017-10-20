@@ -4,7 +4,7 @@
 
 RenderingEngine::RenderingEngine()
 {
-	this->root_node_ = new GroupNode(this);
+	this->root_node_ = new GroupNode();
 }
 
 

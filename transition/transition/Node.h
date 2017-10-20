@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
-#include "IDrawable.h"
-#include "RenderingNode.h"
+class IDrawable;
 class RenderingEngine;
+class RenderingNode;
 
 class Node
 {

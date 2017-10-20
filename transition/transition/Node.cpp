@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Node.h"
+#include "IDrawable.h"
 
 
 Node::Node()
