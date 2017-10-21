@@ -22,14 +22,17 @@
     <Filter Include="Headerdateien\Interfaces">
       <UniqueIdentifier>{81453a40-f409-42eb-90fe-73dc08be5c80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Resource">
+      <UniqueIdentifier>{81e073f8-db73-49c3-8829-d6bce12c2cce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Resource">
+      <UniqueIdentifier>{0c498d91-880b-4ced-8222-8aae8c5cc32c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -54,11 +57,17 @@
     <ClInclude Include="CameraNode.h">
       <Filter>Headerdateien\SceneGraph</Filter>
     </ClInclude>
+    <ClInclude Include="IResource.h">
+      <Filter>Headerdateien\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshResource.h">
+      <Filter>Headerdateien\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureResource.h">
+      <Filter>Headerdateien\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="transition.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -79,6 +88,15 @@
     </ClCompile>
     <ClCompile Include="CameraNode.cpp">
       <Filter>Quelldateien\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshResource.cpp">
+      <Filter>Quelldateien\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureResource.cpp">
+      <Filter>Quelldateien\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\Downloads\glad\src\glad.c">
+      <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

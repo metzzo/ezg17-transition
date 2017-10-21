@@ -1,9 +1,9 @@
-#include "stdafx.h"
 #include "GeometryNode.h"
+#include "MeshResource.h"
 
-
-GeometryNode::GeometryNode()
+GeometryNode::GeometryNode(const MeshResource *resource)
 {
+	this->resource_ = resource;
 }
 
 GeometryNode::~GeometryNode()

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "GroupNode.h"
 #include <cassert>
 
