@@ -12,8 +12,8 @@ public:
 
 	void init(RenderingEngine* rendering_engine) override;
 
-	std::vector<const IDrawable*> get_drawables() const override;
-	std::vector<const RenderingNode*> get_rendering_nodes() const override;
+	std::vector<IDrawable*> get_drawables() override;
+	std::vector<RenderingNode*> get_rendering_nodes() override;
 
 	const std::vector<Node*>& get_nodes() const;
 	void add_node(Node *node);

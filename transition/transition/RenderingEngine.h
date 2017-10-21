@@ -4,8 +4,8 @@
 class RenderingEngine
 {
 	GroupNode *root_node_;
-	std::vector<const IDrawable*> drawables_;
-	std::vector<const RenderingNode*> rendering_nodes_;
+	std::vector<IDrawable*> drawables_;
+	std::vector<RenderingNode*> rendering_nodes_;
 public:
 	RenderingEngine();
 	~RenderingEngine();

@@ -10,7 +10,7 @@ GeometryNode::~GeometryNode()
 {
 }
 
-std::vector<const IDrawable*> GeometryNode::get_drawables() const
+std::vector<IDrawable*> GeometryNode::get_drawables()
 {
 	return { this };
 }

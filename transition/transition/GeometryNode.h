@@ -9,7 +9,7 @@ public:
 	GeometryNode();
 	~GeometryNode();
 
-	std::vector<const IDrawable*> get_drawables() const override;
+	std::vector<IDrawable*> get_drawables() override;
 
 	void draw() const override;
 	void init(RenderingEngine* rendering_engine) override;
