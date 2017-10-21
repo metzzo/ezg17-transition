@@ -154,6 +154,7 @@
     <ClInclude Include="GroupNode.h" />
     <ClInclude Include="IDrawable.h" />
     <ClInclude Include="IResource.h" />
+    <ClInclude Include="ITransformable.h" />
     <ClInclude Include="MeshResource.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="RenderingEngine.h" />

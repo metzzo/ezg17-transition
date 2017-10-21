@@ -66,6 +66,9 @@
     <ClInclude Include="TextureResource.h">
       <Filter>Headerdateien\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="ITransformable.h">
+      <Filter>Headerdateien\Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">

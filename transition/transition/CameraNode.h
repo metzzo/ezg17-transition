@@ -5,7 +5,7 @@ class CameraNode :
 	public RenderingNode
 {
 public:
-	CameraNode();
+	CameraNode(const glm::ivec2& viewport, const glm::mat4& projection);
 	~CameraNode();
 };
 

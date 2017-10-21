@@ -1,15 +1,15 @@
 #pragma once
 #include "GroupNode.h"
+#include <glm/vec2.hpp>
 
 class RenderingEngine
 {
 	GroupNode *root_node_;
 	std::vector<IDrawable*> drawables_;
 	std::vector<RenderingNode*> rendering_nodes_;
-	int width_;
-	int height_;
+	glm::ivec2 viewport_;
 public:
-	RenderingEngine(int width, int height);
+	explicit RenderingEngine::RenderingEngine(const glm::ivec2 viewport);
 	~RenderingEngine();
 
 	void run();
@@ -17,6 +17,11 @@ public:
 	GroupNode* get_root_node() const
 	{
 		return this->root_node_;
+	}
+
+	const glm::ivec2& get_viewport() const
+	{
+		return viewport_;
 	}
 };
 
