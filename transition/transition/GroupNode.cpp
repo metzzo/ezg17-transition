@@ -18,9 +18,9 @@ void GroupNode::init(RenderingEngine* rendering_engine)
 {
 	Node::init(rendering_engine);
 
-	for (auto& nodes : get_nodes())
+	for (auto& node : this->get_nodes())
 	{
-		nodes->init(rendering_engine);
+		node->init(rendering_engine);
 	}
 }
 
