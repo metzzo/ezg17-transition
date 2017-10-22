@@ -17,7 +17,8 @@ std::vector<IDrawable*> GeometryNode::get_drawables()
 
 void GeometryNode::draw() const
 {
-	// TODO
+	glBindVertexArray(this->resource_->get_resource_id());
+	glDrawElements(GL_TRIANGLES, this->resource_->get_num_indices(), GL_UNSIGNED_INT, nullptr);
 }
 
 void GeometryNode::init(RenderingEngine* rendering_engine)

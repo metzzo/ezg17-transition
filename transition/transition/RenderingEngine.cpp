@@ -4,11 +4,15 @@
 #include <iostream>
 #include "GroupNode.h"
 #include "IResource.h"
+#include "ShaderResource.h"
 
 RenderingEngine::RenderingEngine(const glm::ivec2 viewport)
 {
 	this->root_node_ = new GroupNode();
 	this->viewport_ = viewport;
+
+	this->main_shader_ = new ShaderResource("assets/shaders/main_shader.vs", "assets/shaders/main_shader.fs");
+	this->register_resource(this->main_shader_);
 }
 
 RenderingEngine::~RenderingEngine()
