@@ -1,6 +1,6 @@
 #include "MeshResource.h"
 #include <cstring>
-#include <glad/glad.h>
+#include "glheaders.h"
 
 MeshResource::MeshResource()
 {
@@ -12,17 +12,17 @@ MeshResource::MeshResource()
 
 	float vertices[] = {
 		// positions          // texture coords
-		0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
-		0.5f, -0.5f, 0.0f,   1.0f, 0.0f, // bottom right
-		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, // bottom left
-		-0.5f,  0.5f, 0.0f,   0.0f, 1.0f  // top left 
+		0.5f,  0.5f, 0.0f,    // top right
+		0.5f, -0.5f, 0.0f,    // bottom right
+		-0.5f, -0.5f, 0.0f,   // bottom left
+		-0.5f,  0.5f, 0.0f    // top left 
 	};
 
 	float normals[] = {
-		0.0f, 0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 0.0f, 1.0f
+		0.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
 	};
 
 	float uvs[] = {
@@ -37,11 +37,11 @@ MeshResource::MeshResource()
 		1, 2, 3  // second triangle
 	};
 
-	this->vertices_ = new float[16];
+	this->vertices_ = new float[12];
 	memcpy(this->vertices_, &vertices, sizeof(vertices));
 	this->num_vertices_ = 4;
 
-	this->normals_ = new float[16];
+	this->normals_ = new float[12];
 	memcpy(this->normals_, &normals, sizeof(normals));
 
 	this->uvs_ = new float[8];
@@ -77,6 +77,8 @@ MeshResource::~MeshResource()
 	glDeleteBuffers(1, &this->ebo_);
 
 	delete this->vertices_;
+	delete this->normals_;
+	delete this->uvs_;
 	delete this->indices_;
 }
 
@@ -99,14 +101,14 @@ void MeshResource::init()
 
 	//Bind Positions to Shader-Location 0
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo_normals_);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*this->num_vertices_*4, this->normals_, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*this->num_vertices_*3, this->normals_, GL_STATIC_DRAW);
 
 	//Bind Normals to Shader-Location 1
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo_uvs_);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*this->num_vertices_ * 2, this->uvs_, GL_STATIC_DRAW);
