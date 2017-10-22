@@ -1,16 +1,23 @@
 #pragma once
-#include "GroupNode.h"
 #include <glm/vec2.hpp>
+#include <vector>
+class GroupNode;
+class IResource;
+class IDrawable;
+class RenderingNode;
 
 class RenderingEngine
 {
 	GroupNode *root_node_;
 	std::vector<IDrawable*> drawables_;
 	std::vector<RenderingNode*> rendering_nodes_;
+	std::vector<IResource*>  resources_;
 	glm::ivec2 viewport_;
 public:
 	explicit RenderingEngine::RenderingEngine(const glm::ivec2 viewport);
 	~RenderingEngine();
+
+	void register_resource(IResource *resource);
 
 	void run();
 

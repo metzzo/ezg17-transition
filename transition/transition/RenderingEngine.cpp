@@ -2,6 +2,8 @@
 #include "RenderingNode.h"
 #include "glheaders.h"
 #include <iostream>
+#include "GroupNode.h"
+#include "IResource.h"
 
 RenderingEngine::RenderingEngine(const glm::ivec2 viewport)
 {
@@ -12,6 +14,11 @@ RenderingEngine::RenderingEngine(const glm::ivec2 viewport)
 RenderingEngine::~RenderingEngine()
 {
 	delete this->root_node_;
+}
+
+void RenderingEngine::register_resource(IResource* resource)
+{
+	this->resources_.push_back(resource);
 }
 
 void RenderingEngine::run()
@@ -37,6 +44,11 @@ void RenderingEngine::run()
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		glfwTerminate();
 		return;
+	}
+
+	for (auto& resource : resources_)
+	{
+		resource->init();
 	}
 
 	this->root_node_->init(this);

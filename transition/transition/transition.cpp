@@ -9,6 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "GeometryNode.h"
 #include "MeshResource.h"
+#include "GroupNode.h"
 
 int main()
 {
@@ -22,6 +23,8 @@ int main()
 	root->add_node(cam);
 
 	const auto mesh = new MeshResource();
+	engine.register_resource(mesh);
+
 	const auto triangle = new GeometryNode(mesh);
 	root->add_node(triangle);
 
