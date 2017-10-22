@@ -1,7 +1,6 @@
 #include "RenderingEngine.h"
 #include "RenderingNode.h"
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
+#include "glheaders.h"
 #include <iostream>
 
 RenderingEngine::RenderingEngine(const glm::ivec2 viewport)

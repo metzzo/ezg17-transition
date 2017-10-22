@@ -1,5 +1,5 @@
 #include "RenderingNode.h"
-#include <glad/glad.h>
+#include "glheaders.h"
 
 RenderingNode::RenderingNode(const glm::ivec2 viewport, const glm::mat4 projection)
 {

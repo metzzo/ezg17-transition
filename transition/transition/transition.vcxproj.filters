@@ -69,6 +69,12 @@
     <ClInclude Include="ITransformable.h">
       <Filter>Headerdateien\Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="ColladaImporter.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="glheaders.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">
@@ -98,7 +104,7 @@
     <ClCompile Include="TextureResource.cpp">
       <Filter>Quelldateien\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\Downloads\glad\src\glad.c">
+    <ClCompile Include="glad.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
