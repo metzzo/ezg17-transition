@@ -70,8 +70,6 @@ void ShaderResource::init()
 	}
 	auto v_shader_code = vertex_code.c_str();
 	auto f_shader_code = fragment_code.c_str();
-	int success;
-	char info_log[512];
 	// vertex shader
 	const auto vertex = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex, 1, &v_shader_code, nullptr);

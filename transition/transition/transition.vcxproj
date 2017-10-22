@@ -165,6 +165,7 @@
     <ClInclude Include="Node.h" />
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="RenderingNode.h" />
+    <ClInclude Include="ShaderResource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextureResource.h" />
   </ItemGroup>
@@ -177,6 +178,7 @@
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="RenderingNode.cpp" />
+    <ClCompile Include="ShaderResource.cpp" />
     <ClCompile Include="TextureResource.cpp" />
     <ClCompile Include="transition.cpp" />
   </ItemGroup>

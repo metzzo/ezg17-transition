@@ -75,6 +75,9 @@
     <ClInclude Include="glheaders.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderResource.h">
+      <Filter>Headerdateien\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">
@@ -106,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="glad.c">
       <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderResource.cpp">
+      <Filter>Quelldateien\Resource</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
