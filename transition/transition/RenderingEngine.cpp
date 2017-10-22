@@ -7,7 +7,7 @@
 
 RenderingEngine::RenderingEngine(const glm::ivec2 viewport)
 {
-	this->root_node_ = new GroupNode();
+	this->root_node_ = new GroupNode("root");
 	this->viewport_ = viewport;
 }
 
