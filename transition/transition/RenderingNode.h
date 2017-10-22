@@ -5,7 +5,8 @@
 #include "IDrawable.h"
 
 class RenderingNode :
-	public Node, ITransformable
+	public Node, 
+	public ITransformable
 {
 	glm::ivec2 viewport_;
 	glm::mat4 projection_;
@@ -18,7 +19,7 @@ public:
 
 	virtual void before_render() const;
 	virtual void after_render() const;
-	void render(const std::vector<IDrawable*> &drawables) const;
+	void render(const std::vector<IDrawable*> &drawables);
 
 	void set_look_at(const glm::mat4 look_at)
 	{
@@ -29,5 +30,7 @@ public:
 	{
 		return this->look_at_;
 	}
+
+	virtual void set_model_matrix(const glm::mat4& trafo) = 0;
 };
 

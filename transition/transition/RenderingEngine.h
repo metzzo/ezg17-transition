@@ -1,11 +1,12 @@
 #pragma once
 #include <glm/vec2.hpp>
 #include <vector>
+#include "ShaderResource.h"
 class GroupNode;
 class IResource;
 class IDrawable;
 class RenderingNode;
-class ShaderResource;
+class MainShader;
 
 class RenderingEngine
 {
@@ -15,7 +16,7 @@ class RenderingEngine
 	std::vector<IResource*>  resources_;
 	glm::ivec2 viewport_;
 
-	ShaderResource *main_shader_;
+	MainShader *main_shader_;
 public:
 	explicit RenderingEngine::RenderingEngine(const glm::ivec2 viewport);
 	~RenderingEngine();
@@ -34,7 +35,7 @@ public:
 		return viewport_;
 	}
 
-	ShaderResource *get_main_shader() const
+	MainShader *get_main_shader() const
 	{
 		return this->main_shader_;
 	}

@@ -5,7 +5,8 @@
 class MeshResource;
 
 class GeometryNode :
-	public Node, IDrawable
+	public Node, 
+	public IDrawable
 {
 	const MeshResource* resource_;
 public:
@@ -14,7 +15,7 @@ public:
 
 	std::vector<IDrawable*> get_drawables() override;
 
-	void draw() const override;
+	void draw(RenderingNode *rendering_node) const override;
 	void init(RenderingEngine* rendering_engine) override;
 };
 

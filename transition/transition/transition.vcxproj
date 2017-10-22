@@ -163,6 +163,7 @@
     <ClInclude Include="ITransformable.h" />
     <ClInclude Include="MeshResource.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="MainShader.h" />
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="RenderingNode.h" />
     <ClInclude Include="ShaderResource.h" />
@@ -176,6 +177,7 @@
     <ClCompile Include="GroupNode.cpp" />
     <ClCompile Include="MeshResource.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="MainShader.cpp" />
     <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="RenderingNode.cpp" />
     <ClCompile Include="ShaderResource.cpp" />

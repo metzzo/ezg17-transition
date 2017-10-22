@@ -26,13 +26,13 @@ void RenderingNode::after_render() const
 {
 }
 
-void RenderingNode::render(const std::vector<IDrawable*>& drawables) const
+void RenderingNode::render(const std::vector<IDrawable*>& drawables)
 {
 	before_render();
 	
 	for (auto &drawable : drawables)
 	{
-		drawable->draw();
+		drawable->draw(this);
 	}
 
 	after_render();
