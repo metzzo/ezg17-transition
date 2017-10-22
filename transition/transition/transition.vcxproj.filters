@@ -107,5 +107,8 @@
     <ClCompile Include="glad.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="ColladaImporter.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

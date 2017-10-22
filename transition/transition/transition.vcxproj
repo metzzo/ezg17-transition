@@ -170,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CameraNode.cpp" />
+    <ClCompile Include="ColladaImporter.cpp" />
     <ClCompile Include="GeometryNode.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="GroupNode.cpp" />
