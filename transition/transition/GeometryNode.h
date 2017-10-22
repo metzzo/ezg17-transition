@@ -9,7 +9,7 @@ class GeometryNode :
 {
 	const MeshResource* resource_;
 public:
-	explicit GeometryNode(const MeshResource *resource);
+	explicit GeometryNode(const string& name, const MeshResource *resource);
 	~GeometryNode();
 
 	std::vector<IDrawable*> get_drawables() override;

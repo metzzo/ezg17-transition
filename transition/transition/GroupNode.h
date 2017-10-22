@@ -7,8 +7,8 @@ class GroupNode : public Node
 	std::vector<Node*> nodes_;
 public:
 
+	GroupNode(const string& name);
 	~GroupNode();
-	GroupNode();
 
 	void init(RenderingEngine* rendering_engine) override;
 

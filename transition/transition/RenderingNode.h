@@ -11,7 +11,7 @@ class RenderingNode :
 	glm::mat4 projection_;
 	glm::mat4 look_at_;
 public:
-	RenderingNode(const glm::ivec2 viewport, const glm::mat4 projection);
+	RenderingNode(const string& name, const glm::ivec2 viewport, const glm::mat4 projection);
 	~RenderingNode();
 
 	std::vector<RenderingNode*> get_rendering_nodes() override;

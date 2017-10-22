@@ -1,6 +1,6 @@
 #include "CameraNode.h"
 
-CameraNode::CameraNode(const glm::ivec2& viewport, const glm::mat4& projection)
+CameraNode::CameraNode(const string& name, const glm::ivec2& viewport, const glm::mat4& projection) : RenderingNode(name)
 	: RenderingNode(viewport, projection)
 {
 }

@@ -1,16 +1,16 @@
 #include "GroupNode.h"
 #include <cassert>
 
+GroupNode::GroupNode(const string& name) : Node(name)
+{
+}
+
 GroupNode::~GroupNode()
 {
 	for (auto &node : this->nodes_)
 	{
 		delete node;
 	}
-}
-
-GroupNode::GroupNode()
-{
 }
 
 void GroupNode::init(RenderingEngine* rendering_engine)

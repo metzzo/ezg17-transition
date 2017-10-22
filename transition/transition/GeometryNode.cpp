@@ -1,7 +1,7 @@
 #include "GeometryNode.h"
 #include "MeshResource.h"
 
-GeometryNode::GeometryNode(const MeshResource *resource)
+GeometryNode::GeometryNode(const string& name, const MeshResource *resource) : Node(name)
 {
 	this->resource_ = resource;
 }

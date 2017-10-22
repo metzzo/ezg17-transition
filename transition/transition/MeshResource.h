@@ -5,15 +5,20 @@
 class MeshResource : public IResource
 {
 	float *vertices_;
+	float *normals_;
+	float *uvs_;
 	int num_vertices_;
 
 	unsigned int *indices_;
 	int num_indices_;
 	GLuint vao_;
-	GLuint vbo_;
+	GLuint vbo_positions_;
+	GLuint vbo_normals_;
+	GLuint vbo_uvs_;
 	GLuint ebo_;
 public:
 	MeshResource();
+	MeshResource(float *vertices, float *normals, float *uvs, int num_vertices, unsigned int *indices, int num_indices);
 	~MeshResource();
 
 	int get_resource_id() const override;
