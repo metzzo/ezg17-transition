@@ -4,9 +4,9 @@
 
 class MeshResource : public IResource
 {
-	float *vertices_;
-	float *normals_;
-	float *uvs_;
+	float *vertices_ = nullptr;
+	float *normals_ = nullptr;
+	float *uvs_ = nullptr;
 	int num_vertices_;
 
 	unsigned int *indices_;
