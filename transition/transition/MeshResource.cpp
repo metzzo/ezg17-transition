@@ -102,20 +102,21 @@ void MeshResource::init()
 	//Bind Positions to Shader-Location 0
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, this->vbo_uvs_);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*this->num_vertices_ * 2, this->uvs_, GL_STATIC_DRAW);
+
+	//Bind UVs to Shader-Location 1
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo_normals_);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*this->num_vertices_*3, this->normals_, GL_STATIC_DRAW);
 
 	//Bind Normals to Shader-Location 1
-	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 
-	glBindBuffer(GL_ARRAY_BUFFER, this->vbo_uvs_);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*this->num_vertices_ * 2, this->uvs_, GL_STATIC_DRAW);
-
-	//Bind Normals to Shader-Location 3
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo_);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*this->num_indices_, this->indices_, GL_STATIC_DRAW);
