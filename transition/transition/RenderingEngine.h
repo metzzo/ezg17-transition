@@ -5,6 +5,7 @@ class GroupNode;
 class IResource;
 class IDrawable;
 class RenderingNode;
+class ShaderResource;
 
 class RenderingEngine
 {
@@ -13,6 +14,8 @@ class RenderingEngine
 	std::vector<RenderingNode*> rendering_nodes_;
 	std::vector<IResource*>  resources_;
 	glm::ivec2 viewport_;
+
+	ShaderResource *main_shader_;
 public:
 	explicit RenderingEngine::RenderingEngine(const glm::ivec2 viewport);
 	~RenderingEngine();
@@ -29,6 +32,11 @@ public:
 	const glm::ivec2& get_viewport() const
 	{
 		return viewport_;
+	}
+
+	ShaderResource *get_main_shader() const
+	{
+		return this->main_shader_;
 	}
 };
 
