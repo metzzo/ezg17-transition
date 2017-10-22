@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include <string>
-using namespace std;
 
 class IDrawable;
 class RenderingEngine;
@@ -11,10 +10,10 @@ class Node
 {
 	Node *parent_;
 	RenderingEngine *rendering_engine_;
-	string name_;
+	std::string name_;
 
 public:
-	explicit Node(const string& name);
+	explicit Node(const std::string& name);
 	virtual ~Node();
 
 	virtual void init(RenderingEngine *rendering_engine);
@@ -37,7 +36,8 @@ public:
 		return this->parent_;
 	}
 
-	string get_name() {
+	std::string get_name() const
+	{
 		return this->name_;
 	}
 };

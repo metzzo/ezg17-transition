@@ -3,7 +3,7 @@
 #include "RenderingNode.h"
 #include "ITransformable.h"
 
-GeometryNode::GeometryNode(const string& name, const MeshResource *resource) : Node(name)
+GeometryNode::GeometryNode(const std::string& name, const MeshResource *resource) : Node(name)
 {
 	this->resource_ = resource;
 }

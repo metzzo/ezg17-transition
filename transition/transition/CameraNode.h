@@ -5,9 +5,8 @@
 class CameraNode :
 	public RenderingNode
 {
-	int program_id_;
 public:
-	CameraNode(const string& name, const glm::ivec2& viewport, const glm::mat4& projection);
+	CameraNode(const std::string& name, const glm::ivec2& viewport, const glm::mat4& projection);
 	~CameraNode();
 
 	void before_render() const override;

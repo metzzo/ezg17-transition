@@ -25,8 +25,15 @@ void RenderingEngine::register_resource(IResource* resource)
 	this->resources_.push_back(resource);
 }
 
+void error_callback(int error, const char* description)
+{
+	std::cout << "Error: " << std::string(description) << std::endl;
+}
+
 void RenderingEngine::run()
 {
+	glfwSetErrorCallback(error_callback);
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -60,7 +67,7 @@ void RenderingEngine::run()
 	this->drawables_ = this->root_node_->get_drawables();
 	this->rendering_nodes_ = this->root_node_->get_rendering_nodes();
 
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 	while (!glfwWindowShouldClose(window))
 	{
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {

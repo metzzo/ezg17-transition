@@ -1,7 +1,7 @@
 #include "RenderingNode.h"
 #include "glheaders.h"
 
-RenderingNode::RenderingNode(const string& name, const glm::ivec2 viewport, const glm::mat4 projection) : Node(name)
+RenderingNode::RenderingNode(const std::string& name, const glm::ivec2 viewport, const glm::mat4 projection) : Node(name)
 {
 	this->viewport_ = viewport;
 	this->projection_ = projection;
