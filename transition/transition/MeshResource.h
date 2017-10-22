@@ -18,5 +18,15 @@ public:
 
 	int get_resource_id() const override;
 	void init() override;
+
+	int get_num_indices() const
+	{
+		return num_indices_;
+	}
+
+	int get_num_vertices() const
+	{
+		return num_vertices_;
+	}
 };
 
