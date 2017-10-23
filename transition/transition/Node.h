@@ -5,6 +5,7 @@
 class IDrawable;
 class RenderingEngine;
 class RenderingNode;
+class LightNode;
 
 class Node
 {
@@ -20,6 +21,7 @@ public:
 
 	virtual std::vector<IDrawable*> get_drawables();
 	virtual std::vector<RenderingNode*> get_rendering_nodes();
+	virtual std::vector<LightNode*> get_light_nodes();
 
 	RenderingEngine *get_rendering_engine() const
 	{

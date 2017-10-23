@@ -2,11 +2,13 @@
 #include <glm/vec2.hpp>
 #include <vector>
 #include "ShaderResource.h"
+#include "CameraNode.h"
 class GroupNode;
 class IResource;
 class IDrawable;
 class RenderingNode;
 class MainShader;
+class LightNode;
 
 class RenderingEngine
 {
@@ -14,6 +16,7 @@ class RenderingEngine
 	std::vector<IDrawable*> drawables_;
 	std::vector<RenderingNode*> rendering_nodes_;
 	std::vector<IResource*>  resources_;
+	std::vector<LightNode*> light_nodes_;
 	glm::ivec2 viewport_;
 
 	MainShader *main_shader_;

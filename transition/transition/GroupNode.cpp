@@ -29,8 +29,8 @@ std::vector<IDrawable*> GroupNode::get_drawables()
 
 	for (auto& node : get_nodes())
 	{
-		auto node_drawables = node->get_drawables();
-		vec.insert(vec.end(), node_drawables.begin(), node_drawables.end());
+		auto drawables = node->get_drawables();
+		vec.insert(vec.end(), drawables.begin(), drawables.end());
 	}
 
 	return vec;
@@ -42,8 +42,21 @@ std::vector<RenderingNode*> GroupNode::get_rendering_nodes()
 
 	for (auto& node : get_nodes())
 	{
-		auto node_drawables = node->get_rendering_nodes();
-		vec.insert(vec.end(), node_drawables.begin(), node_drawables.end());
+		auto rendering_nodes = node->get_rendering_nodes();
+		vec.insert(vec.end(), rendering_nodes.begin(), rendering_nodes.end());
+	}
+
+	return vec;
+}
+
+std::vector<LightNode*> GroupNode::get_light_nodes()
+{
+	auto vec = std::vector<LightNode*>();
+
+	for (auto& node : get_nodes())
+	{
+		auto lights = node->get_light_nodes();
+		vec.insert(vec.end(), lights.begin(), lights.end());
 	}
 
 	return vec;

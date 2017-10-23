@@ -26,3 +26,8 @@ std::vector<RenderingNode*> Node::get_rendering_nodes()
 {
 	return std::vector<RenderingNode*>();
 }
+
+std::vector<LightNode*> Node::get_light_nodes()
+{
+	return std::vector<LightNode*>();
+}

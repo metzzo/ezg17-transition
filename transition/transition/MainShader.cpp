@@ -26,6 +26,26 @@ void MainShader::set_projection(const glm::mat4& projection) const
 	glUniformMatrix4fv(this->projection_uniform_, 1, GL_FALSE, &projection[0][0]);
 }
 
+void MainShader::set_light_ambient(int light_index, const glm::vec3& color) const
+{
+}
+
+void MainShader::set_light_diffuse(int light_index, const glm::vec3& color) const
+{
+}
+
+void MainShader::set_light_specular(int light_index, const glm::vec3& color) const
+{
+}
+
+void MainShader::set_light_linear(const int light_index, const float linear) const
+{
+}
+
+void MainShader::set_light_quadratic(const int light_index, const float quadratic) const
+{
+}
+
 MainShader::~MainShader()
 {
 }

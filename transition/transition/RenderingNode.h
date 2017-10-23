@@ -17,9 +17,9 @@ public:
 
 	std::vector<RenderingNode*> get_rendering_nodes() override;
 
-	virtual void before_render() const;
+	virtual void before_render(const std::vector<LightNode*> &light_nodes) const;
 	virtual void after_render() const;
-	void render(const std::vector<IDrawable*> &drawables);
+	void render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes);
 
 	virtual void set_model_matrix(const glm::mat4& trafo) = 0;
 };

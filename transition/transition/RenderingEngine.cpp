@@ -66,6 +66,7 @@ void RenderingEngine::run()
 
 	this->drawables_ = this->root_node_->get_drawables();
 	this->rendering_nodes_ = this->root_node_->get_rendering_nodes();
+	this->light_nodes_ = this->root_node_->get_light_nodes();
 
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 	while (!glfwWindowShouldClose(window))
