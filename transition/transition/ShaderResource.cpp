@@ -107,7 +107,9 @@ void ShaderResource::init()
 	{
 		glDeleteShader(geometry);
 	}
+
 }
+
 
 void ShaderResource::check_compile_errors(const GLuint shader, const std::string type)
 {

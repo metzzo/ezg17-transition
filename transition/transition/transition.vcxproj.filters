@@ -28,6 +28,12 @@
     <Filter Include="Quelldateien\Resource">
       <UniqueIdentifier>{0c498d91-880b-4ced-8222-8aae8c5cc32c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\Resource\Shader">
+      <UniqueIdentifier>{b368db4b-0642-403e-bf0b-8944fbb14177}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Resource\Shader">
+      <UniqueIdentifier>{daa5ea4a-08b9-45ea-9044-8c38442bbf9f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -76,7 +82,10 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="ShaderResource.h">
-      <Filter>Headerdateien\Resource</Filter>
+      <Filter>Headerdateien\Resource\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="MainShader.h">
+      <Filter>Headerdateien\Resource\Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -114,7 +123,10 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="ShaderResource.cpp">
-      <Filter>Quelldateien\Resource</Filter>
+      <Filter>Quelldateien\Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="MainShader.cpp">
+      <Filter>Quelldateien\Resource\Shader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

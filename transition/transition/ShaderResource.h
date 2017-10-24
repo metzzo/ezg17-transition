@@ -2,6 +2,7 @@
 #include "IResource.h"
 #include <string>
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 class ShaderResource :
 	public IResource
@@ -10,7 +11,7 @@ class ShaderResource :
 	const char* fragment_path_;
 	const char* geometry_path_;
 
-	unsigned int program_id_;
+	GLuint program_id_;
 
 	static void check_compile_errors(GLuint shader, std::string type);
 public:

@@ -2,7 +2,7 @@
 #include "IDrawable.h"
 
 
-Node::Node(const string& name)
+Node::Node(const std::string& name)
 {
 	this->set_parent(nullptr);
 	this->name_ = name;

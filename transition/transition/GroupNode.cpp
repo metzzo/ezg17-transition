@@ -1,7 +1,7 @@
 #include "GroupNode.h"
 #include <cassert>
 
-GroupNode::GroupNode(const string& name) : Node(name)
+GroupNode::GroupNode(const std::string& name) : Node(name)
 {
 }
 
