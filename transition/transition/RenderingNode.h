@@ -1,12 +1,12 @@
 #pragma once
-#include "Node.h"
+#include "TransformationNode.h"
 #include <vector>
 #include <glm/glm.hpp>
 #include "IDrawable.h"
+#include "ShaderResource.h"
 
 class RenderingNode :
-	public Node, 
-	public ITransformable
+	public TransformationNode
 {
 protected:
 	glm::ivec2 viewport_;
@@ -21,6 +21,10 @@ public:
 	virtual void after_render() const;
 	void render(const std::vector<IDrawable*> &drawables);
 
-	virtual void set_model_matrix(const glm::mat4& trafo) = 0;
+	virtual ShaderResource* getShader() const = 0;
+
+	glm::mat4 get_projection_matrix() const;
+	glm::mat4 get_view_matrix() const;
+	void set_view_matrix(const glm::mat4& mat);
 };
 

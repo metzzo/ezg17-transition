@@ -5,6 +5,7 @@
 #include "GroupNode.h"
 #include "IResource.h"
 #include "MainShader.h"
+#include "GLDebugContext.h"
 
 RenderingEngine::RenderingEngine(const glm::ivec2 viewport)
 {
@@ -35,6 +36,11 @@ void RenderingEngine::run()
 	glfwSetErrorCallback(error_callback);
 
 	glfwInit();
+
+#if _DEBUG
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+#endif
+
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
@@ -57,6 +63,27 @@ void RenderingEngine::run()
 		return;
 	}
 
+	//Set DebugContext Callback
+#if _DEBUG
+	// Query the OpenGL function to register your callback function.
+	PFNGLDEBUGMESSAGECALLBACKPROC _glDebugMessageCallback = (PFNGLDEBUGMESSAGECALLBACKPROC)glfwGetProcAddress("glDebugMessageCallback");
+
+	// Register your callback function.
+	if (_glDebugMessageCallback != NULL) {
+		_glDebugMessageCallback(DebugCallback, NULL);
+	}
+
+	// Enable synchronous callback. This ensures that your callback function is called
+	// right after an error has occurred. 
+	if (_glDebugMessageCallback != NULL) {
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	}
+#endif
+
+	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+
 	for (auto& resource : resources_)
 	{
 		resource->init();
@@ -66,7 +93,7 @@ void RenderingEngine::run()
 
 	this->drawables_ = this->root_node_->get_drawables();
 	this->rendering_nodes_ = this->root_node_->get_rendering_nodes();
-
+	
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 	while (!glfwWindowShouldClose(window))
 	{

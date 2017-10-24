@@ -1,6 +1,7 @@
 #pragma once
 #include "IResource.h"
-#include <glad/glad.h>
+#include "glheaders.h"
+#include "Material.h"
 
 class MeshResource : public IResource
 {
@@ -16,9 +17,12 @@ class MeshResource : public IResource
 	GLuint vbo_normals_;
 	GLuint vbo_uvs_;
 	GLuint ebo_;
+
+	Material material;
+
 public:
 	MeshResource();
-	MeshResource(float *vertices, float *normals, float *uvs, int num_vertices, unsigned int *indices, int num_indices);
+	MeshResource(float *vertices, float *normals, float *uvs, int num_vertices, unsigned int *indices, int num_indices, const Material& material);
 	~MeshResource();
 
 	int get_resource_id() const override;
@@ -32,6 +36,10 @@ public:
 	int get_num_vertices() const
 	{
 		return num_vertices_;
+	}
+
+	Material get_material() const {
+		return material;
 	}
 };
 

@@ -1,7 +1,6 @@
 #pragma once
-#include "ITransformable.h"
 class RenderingNode;
-class IDrawable : public ITransformable
+class IDrawable
 {
 public:
 	virtual ~IDrawable() = default;

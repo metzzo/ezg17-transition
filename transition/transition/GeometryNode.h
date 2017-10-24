@@ -1,11 +1,11 @@
 #pragma once
-#include "Node.h"
+#include "TransformationNode.h"
 #include "IDrawable.h"
 
 class MeshResource;
 
 class GeometryNode :
-	public Node, 
+	public TransformationNode, 
 	public IDrawable
 {
 	const MeshResource* resource_;

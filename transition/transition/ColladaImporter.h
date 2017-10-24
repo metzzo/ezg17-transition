@@ -1,13 +1,29 @@
 #pragma once
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 #include "Node.h"
-using namespace std;
+#include "GroupNode.h"
+#include "TextureResource.h"
+#include "MeshResource.h"
+#include "RenderingEngine.h"
+
+#define MODEL_LOADER_TEXTURE_DIRECTORY "assets/gfx/"
 
 class ColladaImporter {
 
 public:
-	Node* loadeNode(const string& path);
+	ColladaImporter(RenderingEngine* engine);
+	//Destructor removes created textures.
+	~ColladaImporter();
+	Node* load_node(const std::string& path);
 
 private:
-	void processNode(aiNode* node, const aiScene* scene, vector<Node*>& lights, Node* parent);
-	MeshResource* processMesh(aiNode* node, const aiScene* scene);
+	RenderingEngine* engine_;
+	std::vector<TextureResource*> loaded_textures_;
+
+	void processLights(const aiScene* scene, std::vector<Node*>& lights);
+	void processNode(aiNode* node, const aiScene* scene, std::vector<Node*>& lights, GroupNode* parent);
+	MeshResource* processMesh(aiMesh* node, const aiScene* scene);
+	std::vector<TextureResource*> loadMaterialTextures(aiMaterial* mat, aiTextureType type);
 };

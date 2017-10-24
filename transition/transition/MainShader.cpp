@@ -6,6 +6,7 @@ MainShader::MainShader() : ShaderResource("assets/shaders/main_shader.vs", "asse
 	this->model_uniform_ = -1;
 	this->view_uniform_ = -1;
 	this->projection_uniform_ = -1;
+	this->diffuse_texture_uniform_ = -1;
 }
 
 void MainShader::set_model(const glm::mat4& model) const
@@ -26,6 +27,14 @@ void MainShader::set_projection(const glm::mat4& projection) const
 	glUniformMatrix4fv(this->projection_uniform_, 1, GL_FALSE, &projection[0][0]);
 }
 
+void MainShader::set_diffuse_texture(TextureResource* texture) const {
+	if (this->diffuse_texture_uniform_ >= 0) {
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture->get_resource_id());
+		glUniform1i(this->diffuse_texture_uniform_, 0);
+	}
+}
+
 MainShader::~MainShader()
 {
 }
@@ -38,4 +47,5 @@ void MainShader::init()
 	this->model_uniform_ = glGetUniformLocation(this->ShaderResource::get_resource_id(), "model");
 	this->view_uniform_ = glGetUniformLocation(this->ShaderResource::get_resource_id(), "view");
 	this->projection_uniform_ = glGetUniformLocation(this->ShaderResource::get_resource_id(), "projection");
+	this->diffuse_texture_uniform_ = glGetUniformLocation(this->ShaderResource::get_resource_id(), "diffusetexture");
 }

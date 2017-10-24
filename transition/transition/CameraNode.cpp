@@ -19,11 +19,9 @@ void CameraNode::before_render() const
 	glUseProgram(program_id);
 
 	shader->set_projection(this->projection_);
-	shader->set_view(this->get_transformation());
+	shader->set_view(this->get_view_matrix());
 }
 
-void CameraNode::set_model_matrix(const glm::mat4& trafo)
-{
-	const auto shader = this->get_rendering_engine()->get_main_shader();
-	shader->set_model(trafo);
+ShaderResource* CameraNode::getShader() const {
+	return this->get_rendering_engine()->get_main_shader();
 }
