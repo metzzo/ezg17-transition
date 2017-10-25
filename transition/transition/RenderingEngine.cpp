@@ -6,6 +6,7 @@
 #include "IResource.h"
 #include "MainShader.h"
 #include "GLDebugContext.h"
+#include "Node.h"
 
 RenderingEngine::RenderingEngine(const glm::ivec2 viewport)
 {
@@ -94,6 +95,9 @@ void RenderingEngine::run()
 	this->drawables_ = this->root_node_->get_drawables();
 	this->rendering_nodes_ = this->root_node_->get_rendering_nodes();
 	
+	float currentscale = 1.0f;
+	float scalemult = 1.001f;
+	Node* gitti = this->root_node_->find_by_name("Sphere");
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 	while (!glfwWindowShouldClose(window))
 	{
@@ -106,6 +110,12 @@ void RenderingEngine::run()
 			rendering_node->render(this->drawables_);
 		}
 
+		gitti->apply_transformation_by_object(Transformation::scale(glm::vec3(scalemult, 1.0f, 1.0f)));
+		currentscale *= scalemult;
+		if ((currentscale > 3.0f && scalemult > 1.0f) || (currentscale < 0.5f && scalemult < 1.0f)) {
+			scalemult = 1 / scalemult;
+		}
+		std::cout << currentscale << std::endl;
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

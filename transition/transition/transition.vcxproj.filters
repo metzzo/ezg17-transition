@@ -93,6 +93,9 @@
     <ClInclude Include="GLDebugContext.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Transformation.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">

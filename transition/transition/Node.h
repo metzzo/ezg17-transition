@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <glm/glm.hpp>
+#include "Transformation.h"
 
 class IDrawable;
 class RenderingEngine;
@@ -28,6 +29,13 @@ public:
 	*/
 	virtual void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverseTransformation) = 0;
 
+	/*
+	TODO: I wanted to call this function apply_transformation as well, however somehow other classes couldn't find the function like that
+	*/
+	void apply_transformation_by_object(const Transformation& transformation) {
+		apply_transformation(transformation.get_transformation_matrix(), transformation.get_inverse_transformation_matrix());
+	}
+
 	RenderingEngine *get_rendering_engine() const
 	{
 		return this->rendering_engine_;
@@ -46,6 +54,15 @@ public:
 	std::string get_name() const
 	{
 		return this->name_;
+	}
+
+	virtual Node* find_by_name(const std::string& name) {
+		if (this->name_ == name) {
+			return this;
+		}
+		else {
+			return nullptr;
+		}
 	}
 };
 

@@ -20,5 +20,7 @@ public:
 	void add_node(Node *node);
 
 	void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverseTransformation) override;
+
+	Node* find_by_name(const std::string& name) override;
 };
 
