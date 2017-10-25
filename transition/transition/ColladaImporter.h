@@ -20,10 +20,9 @@ public:
 
 private:
 	RenderingEngine* engine_;
-	std::vector<TextureResource*> loaded_textures_;
 
 	void processLights(const aiScene* scene, std::vector<Node*>& lights);
-	void processNode(aiNode* node, const aiScene* scene, std::vector<Node*>& lights, GroupNode* parent);
-	MeshResource* processMesh(aiMesh* node, const aiScene* scene);
-	std::vector<TextureResource*> loadMaterialTextures(aiMaterial* mat, aiTextureType type);
+	void processNode(aiNode* node, const aiScene* scene, std::vector<Node*>& lights, std::vector<TextureResource*>& textures, GroupNode* parent);
+	MeshResource* processMesh(aiMesh* node, const aiScene* scene, std::vector<TextureResource*>& textures);
+	std::vector<TextureResource*> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::vector<TextureResource*>& textures);
 };

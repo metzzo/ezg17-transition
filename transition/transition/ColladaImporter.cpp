@@ -11,11 +11,6 @@ ColladaImporter::ColladaImporter(RenderingEngine* engine) {
 }
 
 ColladaImporter::~ColladaImporter() {
-	for (auto ci = loaded_textures_.begin(); ci != loaded_textures_.end(); ci++) {
-		delete (*ci);
-		*ci = nullptr;
-	}
-	loaded_textures_.clear();
 }
 
 Node* ColladaImporter::load_node(const std::string& path) {
@@ -28,9 +23,10 @@ Node* ColladaImporter::load_node(const std::string& path) {
 	}
 
 	std::vector<Node*> lights;
+	std::vector<TextureResource*> textures;
 	processLights(scene, lights);
 	GroupNode* node = new GroupNode(std::string(scene->mRootNode->mName.C_Str()));
-	processNode(scene->mRootNode, scene, lights, node);
+	processNode(scene->mRootNode, scene, lights, textures, node);
 	return node;
 }
 
@@ -46,12 +42,12 @@ void ColladaImporter::processLights(const aiScene* scene, std::vector<Node*>& li
 	}
 }
 
-void ColladaImporter::processNode(aiNode* node, const aiScene* scene, std::vector<Node*>& lights, GroupNode* parent) {
+void ColladaImporter::processNode(aiNode* node, const aiScene* scene, std::vector<Node*>& lights, std::vector<TextureResource*>& textures, GroupNode* parent) {
 
 	//Alle aktuellen Meshes durchgehen und Objekte erzeugen
 	for (int i = 0; i < node->mNumMeshes; i++) {
 		aiMesh* aiMesh = scene->mMeshes[node->mMeshes[i]];
-		MeshResource* mesh = processMesh(aiMesh, scene);
+		MeshResource* mesh = processMesh(aiMesh, scene, textures);
 		GeometryNode* geoNode = new GeometryNode(parent->get_name() + "_" + std::to_string(i), mesh);
 		parent->add_node(geoNode);
 	}
@@ -71,7 +67,7 @@ void ColladaImporter::processNode(aiNode* node, const aiScene* scene, std::vecto
 		}
 		if (!light) {
 			GroupNode* sub = new GroupNode(std::string(node->mChildren[i]->mName.C_Str()));
-			processNode(node->mChildren[i], scene, lights, sub);
+			processNode(node->mChildren[i], scene, lights, textures, sub);
 			parent->add_node(sub);
 		}
 	}
@@ -82,7 +78,7 @@ void ColladaImporter::processNode(aiNode* node, const aiScene* scene, std::vecto
 	parent->apply_transformation(transformation, glm::inverse(transformation));
 }
 
-MeshResource* ColladaImporter::processMesh(aiMesh* mesh, const aiScene* scene) {
+MeshResource* ColladaImporter::processMesh(aiMesh* mesh, const aiScene* scene, std::vector<TextureResource*>& textures) {
 	float *vertices_positions = new float[mesh->mNumVertices*3];
 	float *vertices_normals = new float[mesh->mNumVertices * 3];
 	float *vertices_uvs = new float[mesh->mNumVertices * 2];
@@ -119,7 +115,7 @@ MeshResource* ColladaImporter::processMesh(aiMesh* mesh, const aiScene* scene) {
 	//Process materials
 	if (mesh->mMaterialIndex >= 0) {
 		aiMaterial* aimaterial = scene->mMaterials[mesh->mMaterialIndex];
-		std::vector<TextureResource*> diffuseMaps = loadMaterialTextures(aimaterial, aiTextureType_DIFFUSE);
+		std::vector<TextureResource*> diffuseMaps = loadMaterialTextures(aimaterial, aiTextureType_DIFFUSE, textures);
 		if (diffuseMaps.size() != 0) {
 			material.set_texture(diffuseMaps.at(0));
 		}
@@ -183,24 +179,24 @@ MeshResource* ColladaImporter::processMesh(aiMesh* mesh, const aiScene* scene) {
 	return res;
 }
 
-std::vector<TextureResource*> ColladaImporter::loadMaterialTextures(aiMaterial* mat, aiTextureType type) {
+std::vector<TextureResource*> ColladaImporter::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::vector<TextureResource*>& loaded_textures) {
 	std::vector<TextureResource*> textures;
 	for (int i = 0; i < mat->GetTextureCount(type); i++) {
 		aiString str;
 		mat->GetTexture(type, i, &str);
 		std::string path = MODEL_LOADER_TEXTURE_DIRECTORY + std::string(str.C_Str());
 		bool alreadyLoaded = false;
-		for (int j = 0; j < loaded_textures_.size() && !alreadyLoaded; j++) {
-			if (loaded_textures_[j]->get_texture_path() == path.c_str()) {
-				textures.push_back(loaded_textures_[j]);
+		for (int j = 0; j < loaded_textures.size() && !alreadyLoaded; j++) {
+			if (loaded_textures[j]->get_texture_path() == path.c_str()) {
+				textures.push_back(loaded_textures[j]);
 				alreadyLoaded = true;
 			}
 		}
 		if (!alreadyLoaded) {
 			TextureResource* texture = new TextureResource(path.c_str());
 			this->engine_->register_resource(texture);
+			loaded_textures.push_back(texture);
 			textures.push_back(texture);
-			loaded_textures_.push_back(texture);
 		}
 	}
 	return textures;

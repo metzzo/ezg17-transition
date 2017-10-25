@@ -110,4 +110,8 @@ void RenderingEngine::run()
 		glfwPollEvents();
 	}
 	glfwTerminate();
+
+	for (auto& resource : resources_) {
+		delete resource;
+	}
 }
