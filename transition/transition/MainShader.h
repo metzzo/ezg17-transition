@@ -1,6 +1,8 @@
 #pragma once
 #include "ShaderResource.h"
 #include "TextureResource.h"
+#include "GeometryNode.h"
+#include "RenderingNode.h"
 
 class MainShader :
 	public ShaderResource
@@ -15,9 +17,7 @@ public:
 
 	void init() override;
 
-	void set_model(const glm::mat4& model) const;
-	void set_view(const glm::mat4& view) const;
-	void set_projection(const glm::mat4& projection) const;
-	void set_diffuse_texture(TextureResource* texture) const;
+	void set_camera_uniforms(const RenderingNode* node) override;
+	void set_model_uniforms(const GeometryNode* node) override;
 };
 

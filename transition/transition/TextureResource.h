@@ -13,8 +13,10 @@ public:
 
 	const char* get_texture_path() const;
 
+	void bind(GLuint unit);
+
 private:
-	char* texture_path;
-	GLuint handle;
+	char* texture_path_;
+	GLuint handle_;
 };
 

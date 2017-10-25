@@ -18,8 +18,7 @@ void CameraNode::before_render() const
 	const auto program_id = shader->get_resource_id();
 	glUseProgram(program_id);
 
-	shader->set_projection(this->projection_);
-	shader->set_view(this->get_view_matrix());
+	shader->set_camera_uniforms(this);
 }
 
 ShaderResource* CameraNode::getShader() const {
