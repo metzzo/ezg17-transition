@@ -193,7 +193,7 @@ std::vector<TextureResource*> ColladaImporter::loadMaterialTextures(aiMaterial* 
 			}
 		}
 		if (!alreadyLoaded) {
-			TextureResource* texture = new TextureResource(path.c_str());
+			TextureResource* texture = new TextureResource(path);
 			this->engine_->register_resource(texture);
 			loaded_textures.push_back(texture);
 			textures.push_back(texture);
