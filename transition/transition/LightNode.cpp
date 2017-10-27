@@ -13,9 +13,8 @@ LightNode::~LightNode()
 {
 }
 
-void LightNode::set_color(const glm::vec3 ambient, const glm::vec3 diffuse, const glm::vec3 specular)
+void LightNode::set_color(const glm::vec3 diffuse, const glm::vec3 specular)
 {
-	this->ambient_ = ambient;
 	this->diffuse_ = diffuse;
 	this->specular_ = specular;
 }

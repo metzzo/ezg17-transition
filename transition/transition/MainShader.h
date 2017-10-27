@@ -6,6 +6,7 @@
 
 class LightNode;
 
+const unsigned int max_nr_lights = 10;
 class MainShader :
 	public ShaderResource,
 	public ILightShader
@@ -14,6 +15,18 @@ class MainShader :
 	GLint view_uniform_;
 	GLint projection_uniform_;
 	GLint diffuse_texture_uniform_;
+
+	GLint num_lights_uniform_;
+	GLint light_type_uniform_[max_nr_lights];
+	GLint position_uniform_[max_nr_lights];
+	GLint direction_uniform_[max_nr_lights];
+	GLint linear_uniform_[max_nr_lights];
+	GLint quadratic_uniform_[max_nr_lights];
+	GLint diffuse_uniform_[max_nr_lights];
+	GLint specular_uniform_[max_nr_lights];
+
+	int get_uniform(const std::string name) const;
+	int get_uniform(const std::string name, const std::string attribute, const int index) const;
 public:
 	MainShader();
 	~MainShader();

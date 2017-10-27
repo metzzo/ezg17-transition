@@ -19,7 +19,7 @@ public:
 
 	virtual void before_render(const std::vector<LightNode*> &light_nodes) const;
 	virtual void after_render() const;
-	void render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes);
+	void render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const;
 
 	virtual ShaderResource* get_shader() const = 0;
 

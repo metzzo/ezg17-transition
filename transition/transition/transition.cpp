@@ -6,10 +6,9 @@
 #include "CameraNode.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "GeometryNode.h"
-#include "MeshResource.h"
 #include "GroupNode.h"
 #include "ColladaImporter.h"
+#include "DirectionalLightNode.h"
 
 int main()
 {
@@ -23,10 +22,14 @@ int main()
 	cam->set_view_matrix(glm::lookAt(glm::vec3(5, 5, 5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
 	root->add_node(cam);
 
-	ColladaImporter* importer = new ColladaImporter(engine);
-	Node* world = importer->load_node("assets/models/gitti.dae");
+	auto importer = new ColladaImporter(engine);
+	const auto world = importer->load_node("assets/models/gitti.dae");
 	root->add_node(world);
-	
+
+	const auto dir_light = new DirectionalLightNode("dir_light1");
+	dir_light->set_view_matrix(glm::lookAt(glm::vec3(-5, -5, 5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
+	root->add_node(dir_light);
+
 	engine->run();
 
 	delete world;

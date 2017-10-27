@@ -29,7 +29,7 @@ public:
 	Applies a transformation to the Node. The inverse transformation is given as well, as this might be used for the normal-transformation-matrix 
 	or the view-matrix (or not at all), depending on the type of the node
 	*/
-	virtual void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverseTransformation) = 0;
+	virtual void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) = 0;
 
 	/*
 	TODO: I wanted to call this function apply_transformation as well, however somehow other classes couldn't find the function like that

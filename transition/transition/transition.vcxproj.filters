@@ -34,6 +34,12 @@
     <Filter Include="Headerdateien\Resource\Shader">
       <UniqueIdentifier>{daa5ea4a-08b9-45ea-9044-8c38442bbf9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\SceneGraph\Light">
+      <UniqueIdentifier>{2ede9bfc-25e3-4b97-85d4-9dcd5ee8c118}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\SceneGraph\Light">
+      <UniqueIdentifier>{6c0f238e-90ab-41c8-bd39-3840f4cdb698}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -87,14 +93,23 @@
     <ClInclude Include="Material.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="TransformationNode.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="GLDebugContext.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Transformation.h">
       <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="ILightShader.h">
+      <Filter>Headerdateien\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLightNode.h">
+      <Filter>Headerdateien\SceneGraph\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="LightNode.h">
+      <Filter>Headerdateien\SceneGraph\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformationNode.h">
+      <Filter>Headerdateien\SceneGraph\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +151,12 @@
     </ClCompile>
     <ClCompile Include="MainShader.cpp">
       <Filter>Quelldateien\Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="LightNode.cpp">
+      <Filter>Quelldateien\SceneGraph\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLightNode.cpp">
+      <Filter>Quelldateien\SceneGraph\Light</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

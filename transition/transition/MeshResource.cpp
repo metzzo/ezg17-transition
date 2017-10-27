@@ -67,7 +67,7 @@ MeshResource::MeshResource(float *vertices, float *normals, float *uvs, int num_
 	this->num_vertices_ = num_vertices;
 	this->indices_ = indices;
 	this->num_indices_ = num_indices;
-	this->material = material;
+	this->material_ = material;
 }
 
 MeshResource::~MeshResource()

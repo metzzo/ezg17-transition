@@ -6,5 +6,10 @@ class DirectionalLightNode :
 public:
 	explicit DirectionalLightNode(const std::string& name);
 	~DirectionalLightNode();
+
+	int get_light_type() override
+	{
+		return 1;
+	}
 };
 

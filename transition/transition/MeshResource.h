@@ -18,7 +18,7 @@ class MeshResource : public IResource
 	GLuint vbo_uvs_;
 	GLuint ebo_;
 
-	Material material;
+	Material material_;
 
 public:
 	MeshResource();
@@ -39,7 +39,7 @@ public:
 	}
 
 	Material get_material() const {
-		return material;
+		return material_;
 	}
 };
 
