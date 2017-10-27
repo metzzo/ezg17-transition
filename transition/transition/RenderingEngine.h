@@ -1,8 +1,6 @@
 #pragma once
 #include <glm/vec2.hpp>
 #include <vector>
-#include "ShaderResource.h"
-#include "CameraNode.h"
 class GroupNode;
 class IResource;
 class IDrawable;

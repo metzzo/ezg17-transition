@@ -24,6 +24,5 @@ public:
 
 	std::vector<RenderingNode*> get_rendering_nodes() override;
 	std::vector<LightNode*> get_light_nodes() override;
-	virtual void apply_to_shader(const ILightShader* shader, int light_index);
 };
 

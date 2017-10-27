@@ -41,14 +41,3 @@ std::vector<LightNode*> LightNode::get_light_nodes()
 {
 	return{ this };
 }
-
-void LightNode::apply_to_shader(const ILightShader* shader, const int light_index)
-{
-	shader->set_light_ambient(light_index, this->ambient_);
-	shader->set_light_diffuse(light_index, this->diffuse_);
-	shader->set_light_specular(light_index, this->specular_);
-
-	shader->set_light_linear(light_index, this->linear_);
-	shader->set_light_quadratic(light_index, this->quadratic_);
-}
-

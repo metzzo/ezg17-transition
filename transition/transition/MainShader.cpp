@@ -24,30 +24,17 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 	//Give Model to Shader
 	glUniformMatrix4fv(this->model_uniform_, 1, GL_FALSE, &(node->get_transformation())[0][0]);
 	//Bind Texture and give it to Shader 
-	Material material = node->get_mesh_resource()->get_material();
-	TextureResource* texture = material.get_texture();
+	auto material = node->get_mesh_resource()->get_material();
+	auto texture = material.get_texture();
 	texture->bind(0);
 	glUniform1i(this->diffuse_texture_uniform_, 0);
 }
-void MainShader::set_light_ambient(int light_index, const glm::vec3& color) const
+
+void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 {
+	// TODO
 }
 
-void MainShader::set_light_diffuse(int light_index, const glm::vec3& color) const
-{
-}
-
-void MainShader::set_light_specular(int light_index, const glm::vec3& color) const
-{
-}
-
-void MainShader::set_light_linear(const int light_index, const float linear) const
-{
-}
-
-void MainShader::set_light_quadratic(const int light_index, const float quadratic) const
-{
-}
 
 MainShader::~MainShader()
 {

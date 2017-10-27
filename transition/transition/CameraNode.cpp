@@ -24,6 +24,7 @@ void CameraNode::before_render(const std::vector<LightNode*>& light_nodes) const
 		light->apply_to_shader(shader, light_index);
 		light_index++;
 	}*/
+	shader->set_light_uniforms(light_nodes);
 	shader->set_camera_uniforms(this);
 }
 
