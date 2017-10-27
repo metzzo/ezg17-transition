@@ -75,3 +75,22 @@ void GroupNode::add_node(Node* node)
 	this->nodes_.push_back(node);
 	node->set_parent(this);
 }
+
+void GroupNode::apply_transformation(const glm::mat4& transformation, const glm::mat4& inverseTransformation) {
+	for (auto& node : get_nodes()) {
+		node->apply_transformation(transformation, inverseTransformation);
+	}
+}
+
+Node* GroupNode::find_by_name(const std::string& name) {
+	if (this->get_name() == name) {
+		return this;
+	}
+	for (auto& node : get_nodes()) {
+		Node* found = node->find_by_name(name);
+		if (found != nullptr) {
+			return found;
+		}
+	}
+	return nullptr;
+}

@@ -18,20 +18,15 @@ void CameraNode::before_render(const std::vector<LightNode*>& light_nodes) const
 	const auto shader = this->get_rendering_engine()->get_main_shader();
 	const auto program_id = shader->get_resource_id();
 	glUseProgram(program_id);
-
-	shader->set_projection(this->projection_);
-	shader->set_view(this->get_transformation());
-
-	auto light_index = 0;
+	/*auto light_index = 0;
 	for (auto& light : light_nodes)
 	{
 		light->apply_to_shader(shader, light_index);
 		light_index++;
-	}
+	}*/
+	shader->set_camera_uniforms(this);
 }
 
-void CameraNode::set_model_matrix(const glm::mat4& trafo)
-{
-	const auto shader = this->get_rendering_engine()->get_main_shader();
-	shader->set_model(trafo);
+ShaderResource* CameraNode::getShader() const {
+	return this->get_rendering_engine()->get_main_shader();
 }

@@ -3,6 +3,8 @@
 #include <string>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+class RenderingNode;
+class GeometryNode;
 
 class ShaderResource :
 	public IResource
@@ -20,5 +22,7 @@ public:
 
 	int get_resource_id() const override;
 	void init() override;
+	virtual void set_camera_uniforms(const RenderingNode* node) = 0;
+	virtual void set_model_uniforms(const GeometryNode* node) = 0;
 };
 

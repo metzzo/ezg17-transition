@@ -1,11 +1,13 @@
 #pragma once
-#include "Node.h"
+#include "TransformationNode.h"
 #include "IDrawable.h"
+#include "MeshResource.h"
+#include "ShaderResource.h"
 
 class MeshResource;
 
 class GeometryNode :
-	public Node, 
+	public TransformationNode, 
 	public IDrawable
 {
 	const MeshResource* resource_;
@@ -15,7 +17,9 @@ public:
 
 	std::vector<IDrawable*> get_drawables() override;
 
-	void draw(RenderingNode *rendering_node) const override;
+	void draw(ShaderResource *rendering_node) const override;
 	void init(RenderingEngine* rendering_engine) override;
+
+	const MeshResource* get_mesh_resource() const;
 };
 

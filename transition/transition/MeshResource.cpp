@@ -4,11 +4,11 @@
 
 MeshResource::MeshResource()
 {
-	this->vao_ = 0;
-	this->vbo_positions_ = 0;
-	this->vbo_normals_ = 0;
-	this->vbo_uvs_ = 0;
-	this->ebo_ = 0;
+	this->vao_ = -1;
+	this->vbo_positions_ = -1;
+	this->vbo_normals_ = -1;
+	this->vbo_uvs_ = -1;
+	this->ebo_ = -1;
 
 	float vertices[] = {
 		// positions          // texture coords
@@ -54,12 +54,12 @@ MeshResource::MeshResource()
 
 }
 
-MeshResource::MeshResource(float *vertices, float *normals, float *uvs, int num_vertices, unsigned int *indices, int num_indices) {
-	this->vao_ = 0;
-	this->vbo_positions_ = 0;
-	this->vbo_normals_ = 0;
-	this->vbo_uvs_ = 0;
-	this->ebo_ = 0;
+MeshResource::MeshResource(float *vertices, float *normals, float *uvs, int num_vertices, unsigned int *indices, int num_indices, const Material& material) {
+	this->vao_ = -1;
+	this->vbo_positions_ = -1;
+	this->vbo_normals_ = -1;
+	this->vbo_uvs_ = -1;
+	this->ebo_ = -1;
 
 	this->vertices_ = vertices;
 	this->normals_ = normals;
@@ -67,14 +67,17 @@ MeshResource::MeshResource(float *vertices, float *normals, float *uvs, int num_
 	this->num_vertices_ = num_vertices;
 	this->indices_ = indices;
 	this->num_indices_ = num_indices;
+	this->material = material;
 }
 
 MeshResource::~MeshResource()
 {
-	glDeleteVertexArrays(1, &this->vao_);
-	glDeleteBuffers(1, &this->vbo_positions_);
-	glDeleteBuffers(1, &this->vbo_normals_);
-	glDeleteBuffers(1, &this->ebo_);
+	if (this->vao_ != -1) {
+		glDeleteVertexArrays(1, &this->vao_);
+		glDeleteBuffers(1, &this->vbo_positions_);
+		glDeleteBuffers(1, &this->vbo_normals_);
+		glDeleteBuffers(1, &this->ebo_);
+	}
 
 	delete this->vertices_;
 	delete this->normals_;
@@ -92,6 +95,7 @@ void MeshResource::init()
 	glGenVertexArrays(1, &this->vao_);
 	glGenBuffers(1, &this->vbo_positions_);
 	glGenBuffers(1, &this->vbo_normals_);
+	glGenBuffers(1, &this->vbo_uvs_);
 	glGenBuffers(1, &this->ebo_);
 
 	glBindVertexArray(vao_);

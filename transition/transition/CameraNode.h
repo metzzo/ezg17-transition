@@ -11,6 +11,6 @@ public:
 
 	void before_render(const std::vector<LightNode*> &light_nodes) const override;
 
-	void set_model_matrix(const glm::mat4& trafo) override;
+	ShaderResource* getShader() const override;
 };
 

@@ -72,9 +72,6 @@
     <ClInclude Include="TextureResource.h">
       <Filter>Headerdateien\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="ITransformable.h">
-      <Filter>Headerdateien\Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="ColladaImporter.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -86,6 +83,18 @@
     </ClInclude>
     <ClInclude Include="MainShader.h">
       <Filter>Headerdateien\Resource\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformationNode.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="GLDebugContext.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Transformation.h">
+      <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -117,6 +126,9 @@
       <Filter>Quelldateien\Resource</Filter>
     </ClCompile>
     <ClCompile Include="glad.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="ColladaImporter.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="ShaderResource.cpp">

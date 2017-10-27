@@ -5,6 +5,8 @@
 #include "GroupNode.h"
 #include "IResource.h"
 #include "MainShader.h"
+#include "GLDebugContext.h"
+#include "Node.h"
 
 RenderingEngine::RenderingEngine(const glm::ivec2 viewport)
 {
@@ -35,6 +37,11 @@ void RenderingEngine::run()
 	glfwSetErrorCallback(error_callback);
 
 	glfwInit();
+
+#if _DEBUG
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+#endif
+
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
@@ -57,6 +64,27 @@ void RenderingEngine::run()
 		return;
 	}
 
+	//Set DebugContext Callback
+#if _DEBUG
+	// Query the OpenGL function to register your callback function.
+	PFNGLDEBUGMESSAGECALLBACKPROC _glDebugMessageCallback = (PFNGLDEBUGMESSAGECALLBACKPROC)glfwGetProcAddress("glDebugMessageCallback");
+
+	// Register your callback function.
+	if (_glDebugMessageCallback != NULL) {
+		_glDebugMessageCallback(DebugCallback, NULL);
+	}
+
+	// Enable synchronous callback. This ensures that your callback function is called
+	// right after an error has occurred. 
+	if (_glDebugMessageCallback != NULL) {
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	}
+#endif
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+
 	for (auto& resource : resources_)
 	{
 		resource->init();
@@ -68,6 +96,9 @@ void RenderingEngine::run()
 	this->rendering_nodes_ = this->root_node_->get_rendering_nodes();
 	this->light_nodes_ = this->root_node_->get_light_nodes();
 
+	float currentscale = 1.0f;
+	float scalemult = 1.001f;
+	Node* gitti = this->root_node_->find_by_name("Sphere");
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 	while (!glfwWindowShouldClose(window))
 	{
@@ -77,11 +108,21 @@ void RenderingEngine::run()
 
 		for (auto& rendering_node : this->rendering_nodes_)
 		{
-			rendering_node->render(this->drawables_);
+			rendering_node->render(this->drawables_, this->light_nodes_);
 		}
 
+		gitti->apply_transformation_by_object(Transformation::scale(glm::vec3(scalemult, 1.0f, 1.0f)));
+		currentscale *= scalemult;
+		if ((currentscale > 3.0f && scalemult > 1.0f) || (currentscale < 0.5f && scalemult < 1.0f)) {
+			scalemult = 1 / scalemult;
+		}
+		std::cout << currentscale << std::endl;
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 	glfwTerminate();
+
+	for (auto& resource : resources_) {
+		delete resource;
+	}
 }

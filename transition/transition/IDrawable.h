@@ -1,10 +1,9 @@
 #pragma once
-#include "ITransformable.h"
-class RenderingNode;
-class IDrawable : public ITransformable
+class ShaderResource;
+class IDrawable
 {
 public:
 	virtual ~IDrawable() = default;
-	virtual void draw(RenderingNode *rendering_node) const = 0;
+	virtual void draw(ShaderResource *shader) const = 0;
 };
 

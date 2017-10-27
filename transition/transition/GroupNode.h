@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Node.h"
+#include <glm\glm.hpp>
 
 class GroupNode : public Node
 {
@@ -18,5 +19,9 @@ public:
 
 	const std::vector<Node*>& get_nodes() const;
 	void add_node(Node *node);
+
+	void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverseTransformation) override;
+
+	Node* find_by_name(const std::string& name) override;
 };
 
