@@ -9,6 +9,7 @@ class LightNode :
 protected:
 	glm::vec3 diffuse_;
 	glm::vec3 specular_;
+	glm::vec3 direction_;
 
 	float linear_;
 	float quadratic_;
@@ -53,8 +54,10 @@ public:
 
 	glm::vec3 get_direction() const
 	{
-		// TODO
-		return glm::vec3();
+		return this->direction_;
 	}
+
+	void set_transformation(const glm::mat4& trafo, const glm::mat4& itrafo) override;
+	void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) override;
 };
 

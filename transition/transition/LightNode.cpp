@@ -40,3 +40,17 @@ std::vector<LightNode*> LightNode::get_light_nodes()
 {
 	return{ this };
 }
+
+void LightNode::set_transformation(const glm::mat4& trafo, const glm::mat4& itrafo)
+{
+	TransformationNode::set_transformation(trafo, itrafo);
+	// not sure whether this is correct
+	this->direction_ = glm::transpose(itrafo)*glm::vec4(-1, 0, 0, 1);
+
+}
+
+void LightNode::apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation)
+{
+	TransformationNode::apply_transformation(transformation, inverse_transformation);
+	this->direction_ = transformation * glm::vec4(this->direction_, 1.0);
+}

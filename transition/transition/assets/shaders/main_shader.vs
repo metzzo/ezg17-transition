@@ -19,9 +19,9 @@ uniform MVP mvp;
 
 void main()
 {
-	gl_Position = mvp.projection * mvp.view * mvp.model * vec4(aPos, 1.0);
-	
 	vs_out.frag_pos = vec3(mvp.model * vec4(aPos, 1.0));
-	vs_out.normal = aNormal;
+	vs_out.normal = mat3(transpose(inverse(mvp.model)))*aNormal;
 	vs_out.tex_coords = aTex;
+	
+	gl_Position = mvp.projection * mvp.view * vec4(vs_out.frag_pos, 1.0);
 }

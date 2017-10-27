@@ -60,12 +60,15 @@ void main() {
 }
 
 vec3 calc_dir_light(Light light, vec3 normal, vec3 view_dir) {
-    vec3 color = texture(material.diffuse_tex, fs_in.tex_coords).rgb;
-	vec3 light_dir = normalize(light.position - fs_in.frag_pos);
-    float diff = max(dot(light_dir, normal), 0.0);
-    vec3 diffuse = diff * light.diffuse * material.diffuse_color;
-    vec3 halfwayDir = normalize(light_dir + view_dir);  
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
-    vec3 specular = spec * light.specular * material.specular_color;       
-    return (material.ambient_color + diffuse + specular)*color;
+    vec3 diffuse_tex = vec3(texture(material.diffuse_tex, fs_in.tex_coords));
+	
+	vec3 light_dir = normalize(-light.direction);
+    float diff = max(dot(normal, light_dir), 0.0);
+    vec3 diffuse = diff * (light.diffuse + material.diffuse_color);
+    
+	vec3 reflect_dir = reflect(-light_dir, normal);
+    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
+	vec3 specular = spec * (light.specular + material.specular_color);       
+    
+	return (material.ambient_color + diffuse + specular)*diffuse_tex;
 }
