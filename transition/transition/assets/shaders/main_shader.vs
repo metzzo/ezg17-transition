@@ -22,6 +22,6 @@ void main()
 	gl_Position = mvp.projection * mvp.view * mvp.model * vec4(aPos, 1.0);
 	
 	vs_out.frag_pos = vec3(mvp.model * vec4(aPos, 1.0));
-	vs_out.normal = normalize(aNormal);
+	vs_out.normal = aNormal;
 	vs_out.tex_coords = aTex;
 }

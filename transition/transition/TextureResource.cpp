@@ -24,11 +24,11 @@ void TextureResource::init() {
 	glGenTextures(1, &handle_);
 	glBindTexture(GL_TEXTURE_2D, handle_);
 
-	auto formato = FreeImage_GetFileType(texture_path_.c_str(), 0);
+	const auto formato = FreeImage_GetFileType(texture_path_.c_str(), 0);
 	FIBITMAP* imagen = FreeImage_Load(formato, texture_path_.c_str());
-	unsigned int width = FreeImage_GetWidth(imagen);
-	unsigned int height = FreeImage_GetHeight(imagen);
-	char* data = (char*)FreeImage_GetBits(imagen);
+	const unsigned int width = FreeImage_GetWidth(imagen);
+	const unsigned int height = FreeImage_GetHeight(imagen);
+	char* data = reinterpret_cast<char*>(FreeImage_GetBits(imagen));
 	if (!imagen) {
 		std::cerr << "Texture could not be loaded: " << texture_path_.c_str() << std::endl;
 	}
@@ -47,7 +47,8 @@ const std::string TextureResource::get_texture_path() const {
 	return this->texture_path_;
 }
 
-void TextureResource::bind(GLuint unit) {
+void TextureResource::bind(const GLuint unit) const
+{
 	glActiveTexture(GL_TEXTURE0 + unit);
 	glBindTexture(GL_TEXTURE_2D, this->handle_);
 }

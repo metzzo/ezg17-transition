@@ -27,6 +27,8 @@ int main()
 	root->add_node(world);
 
 	const auto dir_light = new DirectionalLightNode("dir_light1");
+	dir_light->set_params(0.5, 0.05);
+	dir_light->set_color(glm::vec3(0.99, 0.99, 0.99), glm::vec3(0.99, 0.99, 0.99));
 	dir_light->set_view_matrix(glm::lookAt(glm::vec3(-5, -5, 5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
 	root->add_node(dir_light);
 

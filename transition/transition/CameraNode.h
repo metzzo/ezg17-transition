@@ -11,6 +11,6 @@ public:
 
 	void before_render(const std::vector<LightNode*> &light_nodes) const override;
 
-	ShaderResource* get_shader() const override;
+	MainShader* get_shader() const override;
 };
 

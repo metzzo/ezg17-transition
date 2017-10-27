@@ -51,12 +51,6 @@ public:
 		return quadratic_;
 	}
 
-	glm::vec3 get_position() const
-	{
-		// TODO
-		return glm::vec3();
-	}
-
 	glm::vec3 get_direction() const
 	{
 		// TODO

@@ -67,16 +67,16 @@ void RenderingEngine::run()
 	//Set DebugContext Callback
 #if _DEBUG
 	// Query the OpenGL function to register your callback function.
-	PFNGLDEBUGMESSAGECALLBACKPROC _glDebugMessageCallback = (PFNGLDEBUGMESSAGECALLBACKPROC)glfwGetProcAddress("glDebugMessageCallback");
+	const PFNGLDEBUGMESSAGECALLBACKPROC _glDebugMessageCallback = PFNGLDEBUGMESSAGECALLBACKPROC(glfwGetProcAddress("glDebugMessageCallback"));
 
 	// Register your callback function.
-	if (_glDebugMessageCallback != NULL) {
-		_glDebugMessageCallback(DebugCallback, NULL);
+	if (_glDebugMessageCallback != nullptr) {
+		_glDebugMessageCallback(DebugCallback, nullptr);
 	}
 
 	// Enable synchronous callback. This ensures that your callback function is called
 	// right after an error has occurred. 
-	if (_glDebugMessageCallback != NULL) {
+	if (_glDebugMessageCallback != nullptr) {
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	}
 #endif
@@ -97,7 +97,7 @@ void RenderingEngine::run()
 	this->light_nodes_ = this->root_node_->get_light_nodes();
 
 	float currentscale = 1.0f;
-	float scalemult = 1.001f;
+	float scalemult = 1.005f;
 	Node* gitti = this->root_node_->find_by_name("Sphere");
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 	while (!glfwWindowShouldClose(window))
@@ -111,7 +111,7 @@ void RenderingEngine::run()
 			rendering_node->render(this->drawables_, this->light_nodes_);
 		}
 
-		gitti->apply_transformation_by_object(Transformation::scale(glm::vec3(scalemult, 1.0f, 1.0f)));
+		gitti->apply_transformation(Transformation::scale(glm::vec3(scalemult, 1.0f, 1.0f)));
 		currentscale *= scalemult;
 		if ((currentscale > 3.0f && scalemult > 1.0f) || (currentscale < 0.5f && scalemult < 1.0f)) {
 			scalemult = 1 / scalemult;

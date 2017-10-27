@@ -4,7 +4,7 @@
 
 class Material {
 private:
-	glm::vec3 ambient_color_		= glm::vec3(0.0,0.0,0.0);
+	glm::vec3 ambient_color_		= glm::vec3(0.0, 0.0, 0.0);
 	glm::vec3 diffuse_color_		= glm::vec3(0.0, 0.0, 0.0);
 	glm::vec3 specular_color_		= glm::vec3(0.0, 0.0, 0.0);
 	float shininess_				= 1;

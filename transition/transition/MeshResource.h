@@ -38,7 +38,7 @@ public:
 		return num_vertices_;
 	}
 
-	Material get_material() const {
+	const Material& get_material() const {
 		return material_;
 	}
 };

@@ -6,7 +6,7 @@
 class TextureResource : public IResource
 {
 public:
-	TextureResource(const std::string& texture_path);
+	explicit TextureResource(const std::string& texture_path);
 	~TextureResource();
 
 	int get_resource_id() const override;
@@ -14,7 +14,7 @@ public:
 
 	const std::string get_texture_path() const;
 
-	void bind(GLuint unit);
+	void bind(GLuint unit) const;
 
 private:
 	std::string texture_path_;

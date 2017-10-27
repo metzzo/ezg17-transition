@@ -31,10 +31,7 @@ public:
 	*/
 	virtual void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) = 0;
 
-	/*
-	TODO: I wanted to call this function apply_transformation as well, however somehow other classes couldn't find the function like that
-	*/
-	void apply_transformation_by_object(const Transformation& transformation) {
+	void apply_transformation(const Transformation& transformation) {
 		apply_transformation(transformation.get_transformation_matrix(), transformation.get_inverse_transformation_matrix());
 	}
 

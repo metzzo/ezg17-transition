@@ -76,9 +76,9 @@ void GroupNode::add_node(Node* node)
 	node->set_parent(this);
 }
 
-void GroupNode::apply_transformation(const glm::mat4& transformation, const glm::mat4& inverseTransformation) {
+void GroupNode::apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) {
 	for (auto& node : get_nodes()) {
-		node->apply_transformation(transformation, inverseTransformation);
+		node->apply_transformation(transformation, inverse_transformation);
 	}
 }
 

@@ -54,7 +54,7 @@ MeshResource::MeshResource()
 
 }
 
-MeshResource::MeshResource(float *vertices, float *normals, float *uvs, int num_vertices, unsigned int *indices, int num_indices, const Material& material) {
+MeshResource::MeshResource(float *vertices, float *normals, float *uvs, const int num_vertices, unsigned int *indices, const int num_indices, const Material& material) {
 	this->vao_ = -1;
 	this->vbo_positions_ = -1;
 	this->vbo_normals_ = -1;
@@ -100,24 +100,21 @@ void MeshResource::init()
 
 	glBindVertexArray(vao_);
 
+	//Bind Positions to Shader-Location 0
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo_positions_);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*this->num_vertices_*3, this->vertices_, GL_STATIC_DRAW);
-
-	//Bind Positions to Shader-Location 0
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-	
-	glBindBuffer(GL_ARRAY_BUFFER, this->vbo_uvs_);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*this->num_vertices_ * 2, this->uvs_, GL_STATIC_DRAW);
 
 	//Bind UVs to Shader-Location 1
+	glBindBuffer(GL_ARRAY_BUFFER, this->vbo_uvs_);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*this->num_vertices_ * 2, this->uvs_, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
 
+	//Bind Normals to Shader-Location 2
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo_normals_);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*this->num_vertices_*3, this->normals_, GL_STATIC_DRAW);
-
-	//Bind Normals to Shader-Location 2
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 

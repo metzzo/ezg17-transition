@@ -14,7 +14,7 @@ class MainShader :
 	GLint model_uniform_;
 	GLint view_uniform_;
 	GLint projection_uniform_;
-	GLint diffuse_texture_uniform_;
+	GLint material_diffuse_tex_uniform_;
 
 	GLint num_lights_uniform_;
 	GLint light_type_uniform_[max_nr_lights];
@@ -24,9 +24,11 @@ class MainShader :
 	GLint quadratic_uniform_[max_nr_lights];
 	GLint diffuse_uniform_[max_nr_lights];
 	GLint specular_uniform_[max_nr_lights];
-
-	int get_uniform(const std::string name) const;
-	int get_uniform(const std::string name, const std::string attribute, const int index) const;
+	GLint view_pos_uniform_;
+	GLint material_shininess_;
+	GLint material_ambient_color_;
+	GLint material_diffuse_color_;
+	GLint material_specular_color_;
 public:
 	MainShader();
 	~MainShader();

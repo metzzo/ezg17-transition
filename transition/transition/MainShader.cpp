@@ -6,7 +6,12 @@ MainShader::MainShader() : ShaderResource("assets/shaders/main_shader.vs", "asse
 	this->model_uniform_ = -1;
 	this->view_uniform_ = -1;
 	this->projection_uniform_ = -1;
-	this->diffuse_texture_uniform_ = -1;
+	this->material_diffuse_tex_uniform_ = -1;
+	this->material_shininess_ = -1;
+	this->material_ambient_color_ = -1;
+	this->material_diffuse_color_ = -1;
+	this->material_specular_color_ = -1;
+	this->view_pos_uniform_ = -1;
 	
 	this->num_lights_uniform_ = -1;
 	for (auto i = 0; i < max_nr_lights; i++)
@@ -25,21 +30,28 @@ MainShader::MainShader() : ShaderResource("assets/shaders/main_shader.vs", "asse
 void MainShader::set_camera_uniforms(const RenderingNode* node) {
 	assert(this->view_uniform_ >= 0);
 	assert(this->projection_uniform_ >= 0);
-	glUniformMatrix4fv(this->view_uniform_, 1, GL_FALSE, &(node->get_view_matrix())[0][0]);
-	glUniformMatrix4fv(this->projection_uniform_, 1, GL_FALSE, &(node->get_projection_matrix())[0][0]);
+	assert(this->view_pos_uniform_ >= 0);
+
+	glUniformMatrix4fv(this->view_uniform_, 1, GL_FALSE, &node->get_view_matrix()[0][0]);
+	glUniformMatrix4fv(this->projection_uniform_, 1, GL_FALSE, &node->get_projection_matrix()[0][0]);
+	glUniform3fv(this->view_pos_uniform_, 1, &node->get_position()[0]);
 }
 
 void MainShader::set_model_uniforms(const GeometryNode* node) {
 	//Check Existance of Uniforms
 	assert(this->model_uniform_ >= 0);
-	assert(this->diffuse_texture_uniform_ >= 0);
+	assert(this->material_diffuse_tex_uniform_ >= 0);
 	//Give Model to Shader
-	glUniformMatrix4fv(this->model_uniform_, 1, GL_FALSE, &(node->get_transformation())[0][0]);
+	glUniformMatrix4fv(this->model_uniform_, 1, GL_FALSE, &node->get_transformation()[0][0]);
 	//Bind Texture and give it to Shader 
 	auto material = node->get_mesh_resource()->get_material();
-	auto texture = material.get_texture();
+	const auto texture = material.get_texture();
 	texture->bind(0);
-	glUniform1i(this->diffuse_texture_uniform_, 0);
+	glUniform1i(this->material_diffuse_tex_uniform_, 0);
+	glUniform1f(this->material_shininess_, material.get_shininess());
+	glUniform3fv(this->material_ambient_color_, 1, &material.get_ambient_color()[0]);
+	glUniform3fv(this->material_diffuse_color_, 1, &material.get_diffuse_color()[0]);
+	glUniform3fv(this->material_specular_color_, 1, &material.get_specular_color()[0]);
 }
 
 void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
@@ -55,7 +67,7 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 		assert(this->diffuse_uniform_[light_index] >= 0);
 		assert(this->specular_uniform_[light_index] >= 0);
 
-		glUniform1i(this->linear_uniform_[light_index], light->get_light_type());
+		glUniform1i(this->light_type_uniform_[light_index], light->get_light_type());
 		glUniform3fv(this->position_uniform_[light_index], 1, &light->get_position()[0]);
 		glUniform3fv(this->direction_uniform_[light_index], 1, &light->get_direction()[0]);
 		glUniform1f(this->linear_uniform_[light_index], light->get_linear());
@@ -65,8 +77,9 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 
 		light_index++;
 	}
+	assert(this->num_lights_uniform_ >= 0);
+	glUniform1i(this->num_lights_uniform_, light_index);
 }
-
 
 MainShader::~MainShader()
 {
@@ -80,7 +93,12 @@ void MainShader::init()
 	this->model_uniform_ = get_uniform("mvp.model");
 	this->view_uniform_ = get_uniform("mvp.view");
 	this->projection_uniform_ = get_uniform("mvp.projection");
-	this->diffuse_texture_uniform_ = get_uniform("material.diffuse_tex");
+	this->view_pos_uniform_ = get_uniform("view_pos");
+	this->material_diffuse_tex_uniform_ = get_uniform("material.diffuse_tex");
+	this->material_shininess_ = get_uniform("material.shininess");
+	this->material_ambient_color_ = get_uniform("material.ambient_color");
+	this->material_diffuse_color_ = get_uniform("material.diffuse_color");
+	this->material_specular_color_ = get_uniform("material.specular_color");
 
 	this->num_lights_uniform_ = get_uniform("num_lights");
 	for (auto i = 0; i < max_nr_lights; i++)
@@ -93,14 +111,4 @@ void MainShader::init()
 		this->diffuse_uniform_[i] = get_uniform("lights", "diffuse", i);
 		this->specular_uniform_[i] = get_uniform("lights", "specular", i);
 	}
-}
-
-int MainShader::get_uniform(const std::string name) const
-{
-	return glGetUniformLocation(this->ShaderResource::get_resource_id(), name.c_str());
-}
-
-int MainShader::get_uniform(const std::string name, const std::string attribute, const int index) const
-{
-	return glGetUniformLocation(this->ShaderResource::get_resource_id(), (name + "[" + std::to_string(index) + "]." + attribute).c_str());
 }

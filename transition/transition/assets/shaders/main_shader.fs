@@ -1,7 +1,7 @@
 #version 330 core
 #define MAX_NR_LIGHTS 10
 
-in FS_IN {
+in VS_OUT {
     vec3 frag_pos;
     vec3 normal;
     vec2 tex_coords;
@@ -30,6 +30,10 @@ struct Material {
 	sampler2D diffuse_tex;
 	sampler2D specular_tex;
 	float shininess;
+	
+	vec3 ambient_color;
+	vec3 diffuse_color;
+	vec3 specular_color;
 };
 uniform Material material;
 
@@ -39,7 +43,7 @@ vec3 calc_dir_light(Light light, vec3 normal, vec3 view_dir);
 
 void main() {
 	vec3 color = vec3(0,0,0);
-	vec3 normal = fs_in.normal;
+	vec3 normal = normalize(fs_in.normal);
     vec3 view_dir = normalize(view_pos - fs_in.frag_pos);
 	
 	for (int i = 0; i < num_lights; i++) {
@@ -56,14 +60,12 @@ void main() {
 }
 
 vec3 calc_dir_light(Light light, vec3 normal, vec3 view_dir) {
-	vec3 light_dir = normalize(-light.direction);
-    // diffuse shading
-    float diff = max(dot(normal, light_dir), 0.0);
-    // specular shading
-    vec3 reflect_dir = reflect(-light_dir, normal);
-    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
-    // combine results
-    vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse_tex, fs_in.tex_coords));
-    vec3 specular = light.specular * spec * vec3(texture(material.specular_tex, fs_in.tex_coords));    
-    return diffuse + specular;
+    vec3 color = texture(material.diffuse_tex, fs_in.tex_coords).rgb;
+	vec3 light_dir = normalize(light.position - fs_in.frag_pos);
+    float diff = max(dot(light_dir, normal), 0.0);
+    vec3 diffuse = diff * light.diffuse * material.diffuse_color;
+    vec3 halfwayDir = normalize(light_dir + view_dir);  
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
+    vec3 specular = spec * light.specular * material.specular_color;       
+    return (material.ambient_color + diffuse + specular)*color;
 }

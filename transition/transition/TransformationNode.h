@@ -11,7 +11,7 @@ class TransformationNode : public Node {
 	glm::mat4 trafo_;
 	glm::mat4 itrafo_;
 public:
-	TransformationNode(const std::string& name) : Node(name) {
+	explicit TransformationNode(const std::string& name) : Node(name) {
 		trafo_ = itrafo_ = glm::mat4(1.0f);
 	};
 	virtual ~TransformationNode() = default;
@@ -27,7 +27,7 @@ public:
 		this->itrafo_ = glm::inverse(trafo);
 	}
 
-	virtual void apply_transformation(const glm::mat4& mat, const glm::mat4& imat) override {
+	void apply_transformation(const glm::mat4& mat, const glm::mat4& imat) override {
 		this->trafo_ = mat * this->trafo_;
 		this->itrafo_ = this->itrafo_ * imat;
 	}
@@ -39,5 +39,10 @@ public:
 
 	virtual const glm::mat4& get_inverse_transformation() const {
 		return this->itrafo_;
+	}
+
+	virtual const glm::vec3& get_position() const
+	{
+		return glm::vec3(this->trafo_[3]);
 	}
 };

@@ -109,7 +109,7 @@
       <Filter>Headerdateien\SceneGraph\Light</Filter>
     </ClInclude>
     <ClInclude Include="TransformationNode.h">
-      <Filter>Headerdateien\SceneGraph\Light</Filter>
+      <Filter>Headerdateien\SceneGraph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
