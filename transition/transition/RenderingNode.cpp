@@ -26,7 +26,7 @@ void RenderingNode::after_render() const
 {
 }
 
-void RenderingNode::render(const std::vector<IDrawable*>& drawables, const std::vector<LightNode*>& light_nodes)
+void RenderingNode::render(const std::vector<IDrawable*>& drawables, const std::vector<LightNode*>& light_nodes) const
 {
 	before_render(light_nodes);
 	
