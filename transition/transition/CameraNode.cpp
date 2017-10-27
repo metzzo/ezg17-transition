@@ -18,16 +18,11 @@ void CameraNode::before_render(const std::vector<LightNode*>& light_nodes) const
 	const auto shader = this->get_rendering_engine()->get_main_shader();
 	const auto program_id = shader->get_resource_id();
 	glUseProgram(program_id);
-	/*auto light_index = 0;
-	for (auto& light : light_nodes)
-	{
-		light->apply_to_shader(shader, light_index);
-		light_index++;
-	}*/
+
 	shader->set_light_uniforms(light_nodes);
 	shader->set_camera_uniforms(this);
 }
 
-ShaderResource* CameraNode::getShader() const {
+ShaderResource* CameraNode::get_shader() const {
 	return this->get_rendering_engine()->get_main_shader();
 }

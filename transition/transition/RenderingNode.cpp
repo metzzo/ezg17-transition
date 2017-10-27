@@ -32,7 +32,7 @@ void RenderingNode::render(const std::vector<IDrawable*>& drawables, const std::
 	
 	for (auto &drawable : drawables)
 	{
-		drawable->draw(this->getShader());
+		drawable->draw(this->get_shader());
 	}
 
 	after_render();

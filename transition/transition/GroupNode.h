@@ -8,7 +8,7 @@ class GroupNode : public Node
 	std::vector<Node*> nodes_;
 public:
 
-	GroupNode(const std::string& name);
+	explicit GroupNode(const std::string& name);
 	~GroupNode();
 
 	void init(RenderingEngine* rendering_engine) override;
@@ -20,7 +20,7 @@ public:
 	const std::vector<Node*>& get_nodes() const;
 	void add_node(Node *node);
 
-	void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverseTransformation) override;
+	void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) override;
 
 	Node* find_by_name(const std::string& name) override;
 };

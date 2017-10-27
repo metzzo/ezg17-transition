@@ -21,7 +21,7 @@ public:
 	virtual void after_render() const;
 	void render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes);
 
-	virtual ShaderResource* getShader() const = 0;
+	virtual ShaderResource* get_shader() const = 0;
 
 	glm::mat4 get_projection_matrix() const;
 	glm::mat4 get_view_matrix() const;
