@@ -155,12 +155,15 @@
   <ItemGroup>
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="ColladaImporter.h" />
+    <ClInclude Include="DirectionalLightNode.h" />
     <ClInclude Include="GeometryNode.h" />
     <ClInclude Include="glheaders.h" />
     <ClInclude Include="GroupNode.h" />
     <ClInclude Include="IDrawable.h" />
+    <ClInclude Include="ILightShader.h" />
     <ClInclude Include="IResource.h" />
     <ClInclude Include="ITransformable.h" />
+    <ClInclude Include="LightNode.h" />
     <ClInclude Include="MeshResource.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="MainShader.h" />
@@ -172,9 +175,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CameraNode.cpp" />
+    <ClCompile Include="DirectionalLightNode.cpp" />
     <ClCompile Include="GeometryNode.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="GroupNode.cpp" />
+    <ClCompile Include="LightNode.cpp" />
     <ClCompile Include="MeshResource.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="MainShader.cpp" />
