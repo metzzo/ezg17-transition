@@ -45,8 +45,14 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 	glUniformMatrix4fv(this->model_uniform_, 1, GL_FALSE, &node->get_transformation()[0][0]);
 	//Bind Texture and give it to Shader 
 	auto material = node->get_mesh_resource()->get_material();
-	const auto texture = material.get_texture();
-	texture->bind(0);
+	const TextureResource* texture = material.get_texture();
+	if (texture != nullptr) {
+		texture->bind(0);
+		glUniform1i(this->material_has_diffuse_tex_uniform_, 1);
+	}
+	else {
+		glUniform1i(this->material_diffuse_tex_uniform_, 0);
+	}
 	glUniform1i(this->material_diffuse_tex_uniform_, 0);
 	glUniform1f(this->material_shininess_, material.get_shininess());
 	glUniform3fv(this->material_ambient_color_, 1, &material.get_ambient_color()[0]);
@@ -95,6 +101,7 @@ void MainShader::init()
 	this->projection_uniform_ = get_uniform("mvp.projection");
 	this->view_pos_uniform_ = get_uniform("view_pos");
 	this->material_diffuse_tex_uniform_ = get_uniform("material.diffuse_tex");
+	this->material_has_diffuse_tex_uniform_ = get_uniform("material.has_diffuse_tex");
 	this->material_shininess_ = get_uniform("material.shininess");
 	this->material_ambient_color_ = get_uniform("material.ambient_color");
 	this->material_diffuse_color_ = get_uniform("material.diffuse_color");

@@ -27,6 +27,7 @@ uniform Light lights[MAX_NR_LIGHTS];
 uniform int num_lights;
 
 struct Material {
+	bool has_diffuse_tex;
 	sampler2D diffuse_tex;
 	sampler2D specular_tex;
 	float shininess;
@@ -60,7 +61,12 @@ void main() {
 }
 
 vec3 calc_dir_light(Light light, vec3 normal, vec3 view_dir) {
-    vec3 diffuse_tex = vec3(texture(material.diffuse_tex, fs_in.tex_coords));
+	vec3 diffuse_tex;
+	if (material.has_diffuse_tex) {
+		diffuse_tex = vec3(texture(material.diffuse_tex, fs_in.tex_coords));
+	} else {
+		diffuse_tex = vec3(1,1,1);
+	}
 	
 	vec3 light_dir = normalize(-light.direction);
     float diff = max(dot(normal, light_dir), 0.0);

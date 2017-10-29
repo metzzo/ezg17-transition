@@ -23,7 +23,7 @@ int main()
 	root->add_node(cam);
 
 	auto importer = new ColladaImporter(engine);
-	const auto world = importer->load_node("assets/models/gitti.dae");
+	const auto world = importer->load_node("assets/models/gitti_d.dae");
 	root->add_node(world);
 
 	const auto dir_light = new DirectionalLightNode("dir_light1");

@@ -15,6 +15,7 @@ class MainShader :
 	GLint view_uniform_;
 	GLint projection_uniform_;
 	GLint material_diffuse_tex_uniform_;
+	GLint material_has_diffuse_tex_uniform_;
 
 	GLint num_lights_uniform_;
 	GLint light_type_uniform_[max_nr_lights];
