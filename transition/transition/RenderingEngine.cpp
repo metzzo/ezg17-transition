@@ -8,10 +8,12 @@
 #include "GLDebugContext.h"
 #include "Node.h"
 
-RenderingEngine::RenderingEngine(const glm::ivec2 viewport)
+RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int refresh_rate)
 {
 	this->root_node_ = new GroupNode("root");
 	this->viewport_ = viewport;
+	this->fullscreen_ = fullscreen;
+	this->refresh_rate_ = refresh_rate;
 
 	this->main_shader_ = new MainShader();
 	this->register_resource(this->main_shader_);
@@ -47,7 +49,13 @@ void RenderingEngine::run()
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	const auto window = glfwCreateWindow(this->viewport_.x, this->viewport_.y, "Transition", nullptr, nullptr);
+	GLFWmonitor* monitor = nullptr;
+	if (fullscreen_) {
+		monitor = glfwGetPrimaryMonitor();
+		glfwWindowHint(GLFW_REFRESH_RATE, refresh_rate_);
+	}
+
+	const auto window = glfwCreateWindow(this->viewport_.x, this->viewport_.y, "Transition", monitor, nullptr);
 	if (window == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -96,8 +104,6 @@ void RenderingEngine::run()
 	this->rendering_nodes_ = this->root_node_->get_rendering_nodes();
 	this->light_nodes_ = this->root_node_->get_light_nodes();
 
-	float currentscale = 1.0f;
-	float scalemult = 1.005f;
 	Node* gitti = this->root_node_->find_by_name("Sphere");
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 	while (!glfwWindowShouldClose(window))
@@ -111,12 +117,7 @@ void RenderingEngine::run()
 			rendering_node->render(this->drawables_, this->light_nodes_);
 		}
 
-		gitti->apply_transformation(Transformation::scale(glm::vec3(scalemult, 1.0f, 1.0f)));
-		currentscale *= scalemult;
-		if ((currentscale > 3.0f && scalemult > 1.0f) || (currentscale < 0.5f && scalemult < 1.0f)) {
-			scalemult = 1 / scalemult;
-		}
-		std::cout << currentscale << std::endl;
+		gitti->apply_transformation(Transformation::rotate_around_point(0.5, glm::vec3(0, 1, 0), glm::vec3(-4, 0, 0)));
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

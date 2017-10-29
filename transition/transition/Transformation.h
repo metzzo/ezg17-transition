@@ -34,6 +34,13 @@ public:
 		return Transformation(glm::scale(scaling), glm::scale(glm::vec3(1.0) / scaling));
 	}
 
-	//TODO: Rotation
+	static Transformation rotate_around_world_origin(float angle, const glm::vec3& axis) {
+		return Transformation(glm::rotate(glm::radians(angle), axis), glm::rotate(glm::radians(-angle), axis));
+	}
+
+	static Transformation rotate_around_point(float angle, const glm::vec3& axis, const glm::vec3& center) {
+		return Transformation(glm::translate(center) * glm::rotate(glm::radians(angle), axis) * glm::translate(-center),
+			glm::translate(center) * glm::rotate(glm::radians(-angle), axis) * glm::translate(-center));
+	}
 
 };

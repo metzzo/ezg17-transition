@@ -16,10 +16,12 @@ class RenderingEngine
 	std::vector<IResource*>  resources_;
 	std::vector<LightNode*> light_nodes_;
 	glm::ivec2 viewport_;
+	bool fullscreen_;
+	int refresh_rate_;
 
 	MainShader *main_shader_;
 public:
-	explicit RenderingEngine::RenderingEngine(const glm::ivec2 viewport);
+	explicit RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int refresh_rate);
 	~RenderingEngine();
 
 	void register_resource(IResource *resource);
