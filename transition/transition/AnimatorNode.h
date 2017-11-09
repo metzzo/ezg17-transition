@@ -9,15 +9,9 @@ public:
 	{
 
 	}
-	virtual void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) override
-	{
-		// do nothing
-	}
+	virtual void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) override;
 
-	std::vector<AnimatorNode*> get_animator_nodes() override
-	{
-		return{ this };
-	}
+	std::vector<AnimatorNode*> get_animator_nodes() override;
 
 	virtual void update(double delta) = 0;
 };

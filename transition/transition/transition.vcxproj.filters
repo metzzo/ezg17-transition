@@ -155,5 +155,8 @@
     <ClCompile Include="glad.c">
       <Filter>Quelldateien\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="AnimatorNode.cpp">
+      <Filter>Quelldateien\SceneGraph</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

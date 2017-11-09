@@ -177,6 +177,7 @@
     <ClInclude Include="TransformationNode.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimatorNode.cpp" />
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="ColladaImporter.cpp" />
     <ClCompile Include="GeometryNode.cpp" />
