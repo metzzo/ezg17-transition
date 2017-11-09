@@ -3,6 +3,12 @@
 #include "RenderingNode.h"
 class ILightShader;
 
+enum LightType
+{
+	DIRECTIONAL_LIGHT = 1,
+	POINT_LIGHT = 2
+};
+
 class LightNode :
 	public RenderingNode
 {
@@ -14,13 +20,15 @@ protected:
 	float linear_;
 	float quadratic_;
 
+	LightType light_type_;
+
 	bool is_shadow_casting_;
 public:
-	explicit LightNode(const std::string& name);
+	explicit LightNode(const std::string& name, LightType light_type);
 	~LightNode();
 
-	virtual void set_color(const glm::vec3 diffuse, const glm::vec3 specular);
-	virtual void set_params(const float linear, const float quadratic);
+	void set_color(const glm::vec3 diffuse, const glm::vec3 specular);
+	void set_params(const float linear, const float quadratic);
 
 	std::vector<RenderingNode*> get_rendering_nodes() override;
 	std::vector<LightNode*> get_light_nodes() override;
@@ -30,7 +38,10 @@ public:
 		return nullptr;
 	}
 
-	virtual int get_light_type() = 0;
+	LightType get_light_type() const
+	{
+		return light_type_;
+	}
 
 	glm::vec3 get_diffuse() const
 	{

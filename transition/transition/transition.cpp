@@ -8,7 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "GroupNode.h"
 #include "ColladaImporter.h"
-#include "DirectionalLightNode.h"
+#include "LightNode.h"
 
 int main()
 {
@@ -31,13 +31,21 @@ int main()
 	const auto world = importer->load_node("assets/models/gitti_d.dae");
 	root->add_node(world);
 
-	const auto dir_light = new DirectionalLightNode("dir_light1");
-	dir_light->set_params(0.22, 0.20);
+	const auto dir_light = new LightNode("dir_light1", DIRECTIONAL_LIGHT);
 	dir_light->set_color(glm::vec3(1), glm::vec3(1));
 
-	auto mat = glm::lookAt(glm::vec3(5, 5, 5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-	dir_light->set_transformation(mat, inverse(mat));
-	root->add_node(dir_light);
+	auto mat_dir = glm::lookAt(glm::vec3(5, 5, 5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	dir_light->set_transformation(mat_dir, inverse(mat_dir));
+	//root->add_node(dir_light);
+
+
+	const auto point_light = new LightNode("point_light1", POINT_LIGHT);
+	point_light->set_params(0.07, 0.017);
+	point_light->set_color(glm::vec3(1), glm::vec3(1));
+
+	auto mat_point = glm::lookAt(glm::vec3(-5, 5, 5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	point_light->set_transformation(mat_point, inverse(mat_point));
+	root->add_node(point_light);
 
 	engine->run();
 

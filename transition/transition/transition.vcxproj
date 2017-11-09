@@ -155,7 +155,6 @@
   <ItemGroup>
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="ColladaImporter.h" />
-    <ClInclude Include="DirectionalLightNode.h" />
     <ClInclude Include="GeometryNode.h" />
     <ClInclude Include="GLDebugContext.h" />
     <ClInclude Include="glheaders.h" />
@@ -178,7 +177,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CameraNode.cpp" />
-    <ClCompile Include="DirectionalLightNode.cpp" />
     <ClCompile Include="ColladaImporter.cpp" />
     <ClCompile Include="GeometryNode.cpp" />
     <ClCompile Include="glad.c" />

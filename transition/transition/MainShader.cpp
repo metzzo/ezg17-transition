@@ -7,6 +7,7 @@ MainShader::MainShader() : ShaderResource("assets/shaders/main_shader.vs", "asse
 	this->view_uniform_ = -1;
 	this->projection_uniform_ = -1;
 	this->material_diffuse_tex_uniform_ = -1;
+	this->material_has_diffuse_tex_uniform_ = -1;
 	this->material_shininess_ = -1;
 	this->material_ambient_color_ = -1;
 	this->material_diffuse_color_ = -1;

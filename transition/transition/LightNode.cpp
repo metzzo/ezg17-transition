@@ -2,11 +2,12 @@
 #include "ILightShader.h"
 
 
-LightNode::LightNode(const std::string& name): RenderingNode(name, glm::ivec2(), glm::mat4())
+LightNode::LightNode(const std::string& name, LightType light_type): RenderingNode(name, glm::ivec2(), glm::mat4())
 {
 	this->linear_ = 0;
 	this->quadratic_ = 0;
 	this->is_shadow_casting_ = false;
+	this->light_type_ = light_type;
 }
 
 LightNode::~LightNode()

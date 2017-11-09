@@ -40,17 +40,39 @@ uniform Material material;
 
 uniform vec3 view_pos;
 
-vec3 calc_dir_light(Light light, vec3 normal, vec3 view_dir);
+vec3 calc_dir_light(
+	Light light, 
+	vec3 diffuse_material, 
+	vec3 normal, 
+	vec3 view_dir
+);
+
+vec3 calc_point_light(
+	Light light, 
+	vec3 diffuse_material, 
+	vec3 normal, 
+	vec3 view_dir
+);
 
 void main() {
-	vec3 color = vec3(0,0,0);
+	vec3 diffuse_tex;
+	if (material.has_diffuse_tex) {
+		diffuse_tex = vec3(texture(material.diffuse_tex, fs_in.tex_coords));
+	} else {
+		diffuse_tex = vec3(1,1,1);
+	}
+
+	vec3 color = material.ambient_color * diffuse_tex;
 	vec3 normal = normalize(fs_in.normal);
     vec3 view_dir = normalize(view_pos - fs_in.frag_pos);
 	
 	for (int i = 0; i < num_lights; i++) {
 		switch (lights[i].light_type) {
 		case 1:
-			color += calc_dir_light(lights[i], normal, view_dir);
+			color += calc_dir_light(lights[i], diffuse_tex, normal, view_dir);
+			break;
+		case 2:
+			color += calc_point_light(lights[i], diffuse_tex, normal, view_dir);
 			break;
 		default:
 			color = vec3(0.0,1.0,0.0);
@@ -60,21 +82,48 @@ void main() {
 	FragColor = vec4(color, 1.0f);
 }
 
-vec3 calc_dir_light(Light light, vec3 normal, vec3 view_dir) {
-	vec3 diffuse_tex;
-	if (material.has_diffuse_tex) {
-		diffuse_tex = vec3(texture(material.diffuse_tex, fs_in.tex_coords));
-	} else {
-		diffuse_tex = vec3(1,1,1);
-	}
+vec3 calc_dir_light(
+	Light light, 
+	vec3 diffuse_material, 
+	vec3 normal, 
+	vec3 view_dir) {
 	
 	vec3 light_dir = normalize(-light.direction);
+	
+	// diffuse
     float diff = max(dot(normal, light_dir), 0.0);
     vec3 diffuse = diff * (light.diffuse + material.diffuse_color);
     
+	// specular
 	vec3 reflect_dir = reflect(-light_dir, normal);
     float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
 	vec3 specular = spec * (light.specular + material.specular_color);       
     
-	return (material.ambient_color + diffuse + specular)*diffuse_tex;
+	return (diffuse + specular)*diffuse_material;
+}
+
+vec3 calc_point_light(
+	Light light, 
+	vec3 diffuse_material, 
+	vec3 normal,
+	vec3 view_dir) {
+	
+	// diffuse 
+    vec3 light_dir = normalize(light.position - fs_in.frag_pos);
+    float diff = max(dot(normal, light_dir), 0.0);
+    vec3 diffuse = diff * (light.diffuse + material.diffuse_color);
+    
+    // specular
+    vec3 reflect_dir = reflect(-light_dir, normal);  
+    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
+	vec3 specular = spec * (light.specular + material.specular_color);      
+    
+    // attenuation
+    float distance    = length(light.position - fs_in.frag_pos);
+    float attenuation = 1.0 / (1.0 + light.linear * distance + light.quadratic * (distance * distance));    
+
+    diffuse  *= attenuation;
+    specular *= attenuation;   
+    
+    return (diffuse + specular)*diffuse_material;
 }
