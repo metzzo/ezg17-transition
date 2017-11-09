@@ -102,6 +102,9 @@
     <ClInclude Include="LightNode.h">
       <Filter>Headerdateien\SceneGraph</Filter>
     </ClInclude>
+    <ClInclude Include="AnimatorNode.h">
+      <Filter>Headerdateien\SceneGraph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">

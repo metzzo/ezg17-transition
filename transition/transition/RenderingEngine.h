@@ -7,14 +7,18 @@ class IDrawable;
 class RenderingNode;
 class MainShader;
 class LightNode;
+class AnimatorNode;
 
 class RenderingEngine
 {
 	GroupNode *root_node_;
+
 	std::vector<IDrawable*> drawables_;
 	std::vector<RenderingNode*> rendering_nodes_;
 	std::vector<IResource*>  resources_;
 	std::vector<LightNode*> light_nodes_;
+	std::vector<AnimatorNode*> animator_nodes_;
+
 	glm::ivec2 viewport_;
 	bool fullscreen_;
 	int refresh_rate_;

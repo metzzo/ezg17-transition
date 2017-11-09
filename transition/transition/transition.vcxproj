@@ -153,6 +153,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimatorNode.h" />
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="ColladaImporter.h" />
     <ClInclude Include="GeometryNode.h" />

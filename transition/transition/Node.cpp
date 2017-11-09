@@ -31,3 +31,8 @@ std::vector<LightNode*> Node::get_light_nodes()
 {
 	return std::vector<LightNode*>();
 }
+
+std::vector<AnimatorNode*> Node::get_animator_nodes()
+{
+	return std::vector<AnimatorNode*>();
+}

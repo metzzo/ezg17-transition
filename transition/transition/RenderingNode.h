@@ -5,12 +5,15 @@
 #include "IDrawable.h"
 #include "ShaderResource.h"
 
+class AnimatorNode;
+
 class RenderingNode :
 	public TransformationNode
 {
 protected:
 	glm::ivec2 viewport_;
 	glm::mat4 projection_;
+	std::vector<AnimatorNode*> animators_;
 public:
 	RenderingNode(const std::string& name, const glm::ivec2 viewport, const glm::mat4 projection);
 	~RenderingNode();

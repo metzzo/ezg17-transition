@@ -9,6 +9,30 @@
 #include "GroupNode.h"
 #include "ColladaImporter.h"
 #include "LightNode.h"
+#include "AnimatorNode.h"
+
+class GittenbergerNode : public AnimatorNode
+{
+	Node *gitti_;
+public:
+	explicit GittenbergerNode(const std::string& name)
+		: AnimatorNode(name)
+	{
+		this->gitti_ = nullptr;
+	}
+
+	void init(RenderingEngine* rendering_engine) override
+	{
+		AnimatorNode::init(rendering_engine);
+
+		this->gitti_ = rendering_engine->get_root_node()->find_by_name("Sphere");
+	}
+
+	void update(float delta) override
+	{
+		this->gitti_->apply_transformation(Transformation::rotate_around_point(0.5, glm::vec3(0, 1, 0), glm::vec3(-4, 0, 0)));
+	}
+};
 
 int main()
 {
@@ -46,6 +70,9 @@ int main()
 	auto mat_point = glm::lookAt(glm::vec3(-5, 5, 5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	point_light->set_transformation(mat_point, inverse(mat_point));
 	root->add_node(point_light);
+
+	auto gitti = new GittenbergerNode("gitti_animator");
+	root->add_node(gitti);
 
 	engine->run();
 

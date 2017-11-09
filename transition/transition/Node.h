@@ -8,6 +8,7 @@ class IDrawable;
 class RenderingEngine;
 class RenderingNode;
 class LightNode;
+class AnimatorNode;
 
 class Node
 {
@@ -24,6 +25,7 @@ public:
 	virtual std::vector<IDrawable*> get_drawables();
 	virtual std::vector<RenderingNode*> get_rendering_nodes();
 	virtual std::vector<LightNode*> get_light_nodes();
+	virtual std::vector<AnimatorNode*> get_animator_nodes();
 
 	/*
 	Applies a transformation to the Node. The inverse transformation is given as well, as this might be used for the normal-transformation-matrix 

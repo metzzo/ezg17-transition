@@ -4,6 +4,11 @@
 #include <iostream>
 
 static std::string FormatDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, const char* msg) {
+	if (id == 131185)
+	{
+		return "";
+	}
+
 	std::stringstream stringStream;
 	std::string sourceString;
 	std::string typeString;

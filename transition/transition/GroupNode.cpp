@@ -62,6 +62,19 @@ std::vector<LightNode*> GroupNode::get_light_nodes()
 	return vec;
 }
 
+std::vector<AnimatorNode*> GroupNode::get_animator_nodes()
+{
+	auto vec = std::vector<AnimatorNode*>();
+
+	for (auto& node : get_nodes())
+	{
+		auto animator_nodes = node->get_animator_nodes();
+		vec.insert(vec.end(), animator_nodes.begin(), animator_nodes.end());
+	}
+
+	return vec;
+}
+
 const std::vector<Node*>& GroupNode::get_nodes() const
 {
 	return nodes_;

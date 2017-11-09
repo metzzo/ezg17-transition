@@ -6,7 +6,7 @@
 #include "IResource.h"
 #include "MainShader.h"
 #include "GLDebugContext.h"
-#include "Node.h"
+#include "AnimatorNode.h"
 
 RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int refresh_rate)
 {
@@ -103,8 +103,8 @@ void RenderingEngine::run()
 	this->drawables_ = this->root_node_->get_drawables();
 	this->rendering_nodes_ = this->root_node_->get_rendering_nodes();
 	this->light_nodes_ = this->root_node_->get_light_nodes();
+	this->animator_nodes_ = this->root_node_->get_animator_nodes();
 
-	Node* gitti = this->root_node_->find_by_name("Sphere");
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 	while (!glfwWindowShouldClose(window))
 	{
@@ -112,12 +112,16 @@ void RenderingEngine::run()
 			glfwSetWindowShouldClose(window, true);
 		}
 
+		for (auto& animator_node : this->animator_nodes_)
+		{
+			animator_node->update(0.1);
+		}
+
 		for (auto& rendering_node : this->rendering_nodes_)
 		{
 			rendering_node->render(this->drawables_, this->light_nodes_);
 		}
 
-		gitti->apply_transformation(Transformation::rotate_around_point(0.5, glm::vec3(0, 1, 0), glm::vec3(-4, 0, 0)));
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
