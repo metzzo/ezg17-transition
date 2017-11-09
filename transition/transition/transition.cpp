@@ -28,9 +28,9 @@ public:
 		this->gitti_ = rendering_engine->get_root_node()->find_by_name("Sphere");
 	}
 
-	void update(float delta) override
+	void update(double delta) override
 	{
-		this->gitti_->apply_transformation(Transformation::rotate_around_point(0.5, glm::vec3(0, 1, 0), glm::vec3(-4, 0, 0)));
+		this->gitti_->apply_transformation(Transformation::rotate_around_point(25.0 * delta, glm::vec3(0, 1, 0), glm::vec3(-4, 0, 0)));
 	}
 };
 

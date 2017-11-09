@@ -34,6 +34,12 @@
     <Filter Include="Headerdateien\Resource\Shader">
       <UniqueIdentifier>{daa5ea4a-08b9-45ea-9044-8c38442bbf9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Utility">
+      <UniqueIdentifier>{86308a5a-7329-4059-bcdd-bfe5ac469483}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Utility">
+      <UniqueIdentifier>{17803714-2e49-4b6e-ba6a-46356b9867ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -72,26 +78,11 @@
     <ClInclude Include="TextureResource.h">
       <Filter>Headerdateien\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="ColladaImporter.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="glheaders.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="ShaderResource.h">
       <Filter>Headerdateien\Resource\Shader</Filter>
     </ClInclude>
     <ClInclude Include="MainShader.h">
       <Filter>Headerdateien\Resource\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="GLDebugContext.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Transformation.h">
-      <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="ILightShader.h">
       <Filter>Headerdateien\Interfaces</Filter>
@@ -104,6 +95,21 @@
     </ClInclude>
     <ClInclude Include="AnimatorNode.h">
       <Filter>Headerdateien\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="GLDebugContext.h">
+      <Filter>Headerdateien\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ColladaImporter.h">
+      <Filter>Headerdateien\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="glheaders.h">
+      <Filter>Headerdateien\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Headerdateien\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Transformation.h">
+      <Filter>Headerdateien\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -134,12 +140,6 @@
     <ClCompile Include="TextureResource.cpp">
       <Filter>Quelldateien\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="glad.c">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="ColladaImporter.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="ShaderResource.cpp">
       <Filter>Quelldateien\Resource\Shader</Filter>
     </ClCompile>
@@ -148,6 +148,12 @@
     </ClCompile>
     <ClCompile Include="LightNode.cpp">
       <Filter>Quelldateien\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="ColladaImporter.cpp">
+      <Filter>Quelldateien\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Quelldateien\Utility</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

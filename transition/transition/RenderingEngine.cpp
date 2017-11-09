@@ -106,15 +106,20 @@ void RenderingEngine::run()
 	this->animator_nodes_ = this->root_node_->get_animator_nodes();
 
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+	double last_time = glfwGetTime();
 	while (!glfwWindowShouldClose(window))
 	{
+		double current_time = glfwGetTime();
+		double delta = current_time - last_time;
+		last_time = current_time;
+
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 			glfwSetWindowShouldClose(window, true);
 		}
 
 		for (auto& animator_node : this->animator_nodes_)
 		{
-			animator_node->update(0.1);
+			animator_node->update(delta);
 		}
 
 		for (auto& rendering_node : this->rendering_nodes_)
