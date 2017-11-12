@@ -67,7 +67,7 @@ int main()
 	point_light->set_params(0.07, 0.017);
 	point_light->set_color(glm::vec3(1), glm::vec3(1));
 
-	auto mat_point = glm::lookAt(glm::vec3(-5, 5, 5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	auto mat_point = glm::translate(glm::mat4(), glm::vec3(-5.0f, 5.0f, 5.0f));
 	point_light->set_transformation(mat_point, inverse(mat_point));
 	root->add_node(point_light);
 

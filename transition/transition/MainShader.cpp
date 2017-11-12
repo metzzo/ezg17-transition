@@ -42,6 +42,7 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 	//Check Existance of Uniforms
 	assert(this->model_uniform_ >= 0);
 	assert(this->material_diffuse_tex_uniform_ >= 0);
+	assert(this->material_has_diffuse_tex_uniform_ >= 0);
 	//Give Model to Shader
 	glUniformMatrix4fv(this->model_uniform_, 1, GL_FALSE, &node->get_transformation()[0][0]);
 	//Bind Texture and give it to Shader 
@@ -50,12 +51,15 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 	if (texture != nullptr) {
 		texture->bind(0);
 		glUniform1i(this->material_has_diffuse_tex_uniform_, 1);
+		glUniform1i(this->material_diffuse_tex_uniform_, 0);
+		glUniform1f(this->material_shininess_, material.get_shininess());
 	}
 	else {
-		glUniform1i(this->material_diffuse_tex_uniform_, 0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glUniform1i(this->material_has_diffuse_tex_uniform_, 0);
 	}
-	glUniform1i(this->material_diffuse_tex_uniform_, 0);
-	glUniform1f(this->material_shininess_, material.get_shininess());
 	glUniform3fv(this->material_ambient_color_, 1, &material.get_ambient_color()[0]);
 	glUniform3fv(this->material_diffuse_color_, 1, &material.get_diffuse_color()[0]);
 	glUniform3fv(this->material_specular_color_, 1, &material.get_specular_color()[0]);
@@ -74,9 +78,13 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 		assert(this->diffuse_uniform_[light_index] >= 0);
 		assert(this->specular_uniform_[light_index] >= 0);
 
+		// for some fkin reasons, this needs to be temporarly stored in its own variable?!?!
+		glm::vec3 pos = light->get_position();
+		glm::vec3 dir = light->get_direction();
+
 		glUniform1i(this->light_type_uniform_[light_index], light->get_light_type());
-		glUniform3fv(this->position_uniform_[light_index], 1, &light->get_position()[0]);
-		glUniform3fv(this->direction_uniform_[light_index], 1, &light->get_direction()[0]);
+		glUniform3fv(this->position_uniform_[light_index], 1, &pos[0]);
+		glUniform3fv(this->direction_uniform_[light_index], 1, &dir[0]);
 		glUniform1f(this->linear_uniform_[light_index], light->get_linear());
 		glUniform1f(this->quadratic_uniform_[light_index], light->get_quadratic());
 		glUniform3fv(this->diffuse_uniform_[light_index], 1, &light->get_diffuse()[0]);

@@ -69,10 +69,20 @@ void main() {
 	for (int i = 0; i < num_lights; i++) {
 		switch (lights[i].light_type) {
 		case 1:
-			color += calc_dir_light(lights[i], diffuse_tex, normal, view_dir);
+			color += calc_dir_light(
+				lights[i], 
+				diffuse_tex, 
+				normal, 
+				view_dir
+			);
 			break;
 		case 2:
-			color += calc_point_light(lights[i], diffuse_tex, normal, view_dir);
+			color += calc_point_light(
+				lights[i], 
+				diffuse_tex, 
+				normal, 
+				view_dir
+			);
 			break;
 		default:
 			color = vec3(0.0,1.0,0.0);
@@ -84,7 +94,7 @@ void main() {
 
 vec3 calc_dir_light(
 	Light light, 
-	vec3 diffuse_material, 
+	vec3 diffuse_tex, 
 	vec3 normal, 
 	vec3 view_dir) {
 	
@@ -99,17 +109,19 @@ vec3 calc_dir_light(
     float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
 	vec3 specular = spec * (light.specular + material.specular_color);       
     
-	return (diffuse + specular)*diffuse_material;
+	return (diffuse + specular)*diffuse_tex;
 }
 
 vec3 calc_point_light(
 	Light light, 
-	vec3 diffuse_material, 
+	vec3 diffuse_tex, 
 	vec3 normal,
 	vec3 view_dir) {
 	
+	vec3 light_delta = light.position - fs_in.frag_pos;
+	
 	// diffuse 
-    vec3 light_dir = normalize(light.position - fs_in.frag_pos);
+    vec3 light_dir = normalize(light_delta);
     float diff = max(dot(normal, light_dir), 0.0);
     vec3 diffuse = diff * (light.diffuse + material.diffuse_color);
     
@@ -119,11 +131,11 @@ vec3 calc_point_light(
 	vec3 specular = spec * (light.specular + material.specular_color);      
     
     // attenuation
-    float distance    = length(light.position - fs_in.frag_pos);
+    float distance    = length(light_delta);
     float attenuation = 1.0 / (1.0 + light.linear * distance + light.quadratic * (distance * distance));    
 
     diffuse  *= attenuation;
     specular *= attenuation;   
     
-    return (diffuse + specular)*diffuse_material;
+    return (diffuse + specular)*diffuse_tex;
 }
