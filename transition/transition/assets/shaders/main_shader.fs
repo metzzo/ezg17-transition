@@ -105,9 +105,12 @@ vec3 calc_dir_light(
     vec3 diffuse = diff * (light.diffuse + material.diffuse_color);
     
 	// specular
-	vec3 reflect_dir = reflect(-light_dir, normal);
-    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
-	vec3 specular = spec * (light.specular + material.specular_color);       
+	vec3 specular = vec3(0.0f);
+	if (diff > 0) {
+		vec3 reflect_dir = reflect(-light_dir, normal);
+		float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
+		specular = spec * (light.specular + material.specular_color); 
+	}
     
 	return (diffuse + specular)*diffuse_tex;
 }
@@ -126,9 +129,12 @@ vec3 calc_point_light(
     vec3 diffuse = diff * (light.diffuse + material.diffuse_color);
     
     // specular
-    vec3 reflect_dir = reflect(-light_dir, normal);  
-    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
-	vec3 specular = spec * (light.specular + material.specular_color);      
+	vec3 specular = vec3(0.0f);
+	if (diff > 0) {
+		vec3 reflect_dir = reflect(-light_dir, normal);  
+		float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
+		specular = spec * (light.specular + material.specular_color);      
+	}
     
     // attenuation
     float distance    = length(light_delta);
