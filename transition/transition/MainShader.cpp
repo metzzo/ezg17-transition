@@ -20,6 +20,7 @@ MainShader::MainShader() : ShaderResource("assets/shaders/main_shader.vs", "asse
 		this->light_type_uniform_[i] = -1;
 		this->position_uniform_[i] = -1;
 		this->direction_uniform_[i] = -1;
+		this->constant_uniform_[i] = -1;
 		this->linear_uniform_[i] = -1;
 		this->quadratic_uniform_[i] = -1;
 		this->diffuse_uniform_[i] = -1;
@@ -74,6 +75,7 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 		assert(this->position_uniform_[light_index] >= 0);
 		assert(this->direction_uniform_[light_index] >= 0);
 		assert(this->linear_uniform_[light_index] >= 0);
+		assert(this->linear_uniform_[light_index] >= 0);
 		assert(this->quadratic_uniform_[light_index] >= 0);
 		assert(this->diffuse_uniform_[light_index] >= 0);
 		assert(this->specular_uniform_[light_index] >= 0);
@@ -85,6 +87,7 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 		glUniform1i(this->light_type_uniform_[light_index], light->get_light_type());
 		glUniform3fv(this->position_uniform_[light_index], 1, &pos[0]);
 		glUniform3fv(this->direction_uniform_[light_index], 1, &dir[0]);
+		glUniform1f(this->constant_uniform_[light_index], light->get_constant());
 		glUniform1f(this->linear_uniform_[light_index], light->get_linear());
 		glUniform1f(this->quadratic_uniform_[light_index], light->get_quadratic());
 		glUniform3fv(this->diffuse_uniform_[light_index], 1, &light->get_diffuse()[0]);
@@ -122,6 +125,7 @@ void MainShader::init()
 		this->light_type_uniform_[i] = get_uniform("lights", "light_type", i);
 		this->position_uniform_[i] = get_uniform("lights", "position", i);
 		this->direction_uniform_[i] = get_uniform("lights", "direction", i);
+		this->constant_uniform_[i] = get_uniform("lights", "constant", i);
 		this->linear_uniform_[i] = get_uniform("lights", "linear", i);
 		this->quadratic_uniform_[i] = get_uniform("lights", "quadratic", i);
 		this->diffuse_uniform_[i] = get_uniform("lights", "diffuse", i);

@@ -105,12 +105,13 @@ void RenderingEngine::run()
 	this->light_nodes_ = this->root_node_->get_light_nodes();
 	this->animator_nodes_ = this->root_node_->get_animator_nodes();
 
-	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	double last_time = glfwGetTime();
 	while (!glfwWindowShouldClose(window))
 	{
 		double current_time = glfwGetTime();
 		double delta = current_time - last_time;
+		//std::cout << 1/delta << std::endl;
 		last_time = current_time;
 
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {

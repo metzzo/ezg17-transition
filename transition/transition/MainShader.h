@@ -21,6 +21,7 @@ class MainShader :
 	GLint light_type_uniform_[max_nr_lights];
 	GLint position_uniform_[max_nr_lights];
 	GLint direction_uniform_[max_nr_lights];
+	GLint constant_uniform_[max_nr_lights];
 	GLint linear_uniform_[max_nr_lights];
 	GLint quadratic_uniform_[max_nr_lights];
 	GLint diffuse_uniform_[max_nr_lights];

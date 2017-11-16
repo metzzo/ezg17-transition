@@ -32,6 +32,11 @@ public:
 		this->itrafo_ = this->itrafo_ * imat;
 	}
 
+	//This has to be redefined, or else the other method is hiding it...
+	void apply_transformation(const Transformation& transformation) override {
+		Node::apply_transformation(transformation);
+	}
+
 	virtual const glm::mat4& get_transformation() const
 	{
 		return this->trafo_;

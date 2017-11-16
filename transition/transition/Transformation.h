@@ -26,21 +26,12 @@ public:
 		return inverse_transformation;
 	}
 
-	static Transformation translate(const glm::vec3& translation) {
-		return Transformation(glm::translate(translation), glm::translate(-translation));
-	}
+	static Transformation translate(const glm::vec3& translation);
 
-	static Transformation scale(const glm::vec3& scaling) {
-		return Transformation(glm::scale(scaling), glm::scale(glm::vec3(1.0) / scaling));
-	}
+	static Transformation scale(const glm::vec3& scaling);
 
-	static Transformation rotate_around_world_origin(float angle, const glm::vec3& axis) {
-		return Transformation(glm::rotate(glm::radians(angle), axis), glm::rotate(glm::radians(-angle), axis));
-	}
+	static Transformation rotate_around_world_origin(float angle, const glm::vec3& axis);
 
-	static Transformation rotate_around_point(float angle, const glm::vec3& axis, const glm::vec3& center) {
-		return Transformation(glm::translate(center) * glm::rotate(glm::radians(angle), axis) * glm::translate(-center),
-			glm::translate(center) * glm::rotate(glm::radians(-angle), axis) * glm::translate(-center));
-	}
+	static Transformation rotate_around_point(float angle, const glm::vec3& axis, const glm::vec3& center);
 
 };

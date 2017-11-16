@@ -158,5 +158,8 @@
     <ClCompile Include="AnimatorNode.cpp">
       <Filter>Quelldateien\SceneGraph</Filter>
     </ClCompile>
+    <ClCompile Include="Transformation.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

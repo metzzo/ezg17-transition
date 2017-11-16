@@ -5,6 +5,7 @@
 #include "Material.h"
 #include "MeshResource.h"
 #include <iostream>
+#include "LightNode.h"
 
 ColladaImporter::ColladaImporter(RenderingEngine* engine) {
 	this->engine_ = engine;
@@ -34,10 +35,23 @@ void ColladaImporter::processLights(const aiScene* scene, std::vector<Node*>& li
 	for (int i = 0; i < scene->mNumLights; i++) {
 		aiLight* light = scene->mLights[i];
 		if (light->mType == aiLightSource_POINT) {
-			//TODO
+			LightNode* ln = LightNode::createPointLight(
+				std::string(light->mName.C_Str()),
+				glm::vec3(light->mColorDiffuse.r, light->mColorDiffuse.g, light->mColorDiffuse.b),
+				glm::vec3(light->mColorSpecular.r, light->mColorSpecular.g, light->mColorSpecular.b),
+				glm::vec3(light->mPosition.x, light->mPosition.y, light->mPosition.z),
+				glm::vec3(light->mAttenuationConstant, light->mAttenuationLinear, light->mAttenuationQuadratic)
+			);
+			lights.push_back(ln);
 		}
 		else if (light->mType == aiLightSource_DIRECTIONAL) {
-			//TODO
+			LightNode* ln = LightNode::createDirectionalLight(
+				std::string(light->mName.C_Str()),
+				glm::vec3(light->mColorDiffuse.r, light->mColorDiffuse.g, light->mColorDiffuse.b),
+				glm::vec3(light->mColorSpecular.r, light->mColorSpecular.g, light->mColorSpecular.b),
+				glm::vec3(light->mDirection.x, light->mDirection.y, light->mDirection.z)
+			);
+			lights.push_back(ln);
 		}
 	}
 }
@@ -139,14 +153,19 @@ MeshResource* ColladaImporter::processMesh(aiMesh* mesh, const aiScene* scene, s
 				}
 			}
 			else if (std::string(prop->mKey.C_Str()) == "$clr.diffuse" && prop->mType == aiPTI_Float) {
-				float* data = reinterpret_cast<float*>(prop->mData);
-				int len = (prop->mDataLength * sizeof(char)) / sizeof(float);
-				if (len < 3) {
-					std::cerr << "ModelLoader: Unexpected Length in $clr.diffuse: " << len << std::endl;
+				if (diffuseMaps.size() != 0) {
 					material.set_diffuse_color(glm::vec3(1, 1, 1));
 				}
 				else {
-					material.set_diffuse_color(glm::vec3(data[0], data[1], data[2]));
+					float* data = reinterpret_cast<float*>(prop->mData);
+					int len = (prop->mDataLength * sizeof(char)) / sizeof(float);
+					if (len < 3) {
+						std::cerr << "ModelLoader: Unexpected Length in $clr.diffuse: " << len << std::endl;
+						material.set_diffuse_color(glm::vec3(1, 1, 1));
+					}
+					else {
+						material.set_diffuse_color(glm::vec3(data[0], data[1], data[2]));
+					}
 				}
 			}
 			else if (std::string(prop->mKey.C_Str()) == "$clr.specular" && prop->mType == aiPTI_Float) {

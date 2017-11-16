@@ -17,6 +17,7 @@ struct Light {
 	vec3 position;
     vec3 direction;
   
+	float constant;
     float linear;
     float quadratic;
   
@@ -102,14 +103,14 @@ vec3 calc_dir_light(
 	
 	// diffuse
     float diff = max(dot(normal, light_dir), 0.0);
-    vec3 diffuse = diff * (light.diffuse + material.diffuse_color);
+    vec3 diffuse = diff * (light.diffuse * material.diffuse_color);
     
 	// specular
 	vec3 specular = vec3(0.0f);
 	if (diff > 0) {
 		vec3 reflect_dir = reflect(-light_dir, normal);
 		float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
-		specular = spec * (light.specular + material.specular_color); 
+		specular = spec * (light.specular * material.specular_color); 
 	}
     
 	return (diffuse + specular)*diffuse_tex;
@@ -126,19 +127,19 @@ vec3 calc_point_light(
 	// diffuse 
     vec3 light_dir = normalize(light_delta);
     float diff = max(dot(normal, light_dir), 0.0);
-    vec3 diffuse = diff * (light.diffuse + material.diffuse_color);
+    vec3 diffuse = diff * (light.diffuse * material.diffuse_color);
     
     // specular
 	vec3 specular = vec3(0.0f);
 	if (diff > 0) {
 		vec3 reflect_dir = reflect(-light_dir, normal);  
 		float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
-		specular = spec * (light.specular + material.specular_color);      
+		specular = spec * (light.specular * material.specular_color);      
 	}
     
     // attenuation
     float distance    = length(light_delta);
-    float attenuation = 1.0 / (1.0 + light.linear * distance + light.quadratic * (distance * distance));    
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
 
     diffuse  *= attenuation;
     specular *= attenuation;   

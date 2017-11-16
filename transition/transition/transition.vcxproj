@@ -191,6 +191,7 @@
     <ClCompile Include="RenderingNode.cpp" />
     <ClCompile Include="ShaderResource.cpp" />
     <ClCompile Include="TextureResource.cpp" />
+    <ClCompile Include="Transformation.cpp" />
     <ClCompile Include="transition.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

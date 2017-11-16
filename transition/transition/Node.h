@@ -33,7 +33,7 @@ public:
 	*/
 	virtual void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) = 0;
 
-	void apply_transformation(const Transformation& transformation) {
+	virtual void apply_transformation(const Transformation& transformation) {
 		apply_transformation(transformation.get_transformation_matrix(), transformation.get_inverse_transformation_matrix());
 	}
 
