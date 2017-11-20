@@ -141,8 +141,19 @@ MeshResource* ColladaImporter::processMesh(aiMesh* mesh, const aiScene* scene, s
 				int len = (prop->mDataLength * sizeof(char)) / sizeof(float);
 				material.set_opacity(data[0]);
 			}
-			else if (std::string(prop->mKey.C_Str()) == "$clr.ambient" && prop->mType == aiPTI_Float) {
+			else if (std::string(prop->mKey.C_Str()) == "$clr.emissive" && prop->mType == aiPTI_Float) {
 				float* data = reinterpret_cast<float*>(prop->mData);
+				int len = (prop->mDataLength * sizeof(char)) / sizeof(float);
+				if (len < 3) {
+					std::cerr << "Unexpected Length in $clr.emissive: " << len << std::endl;
+					material.set_ambient_color(glm::vec3(0, 0, 0));
+				}
+				else {
+					material.set_ambient_color(glm::vec3(data[0], data[1], data[2]));
+				}
+			}
+			else if (std::string(prop->mKey.C_Str()) == "$clr.ambient" && prop->mType == aiPTI_Float) {
+				/*float* data = reinterpret_cast<float*>(prop->mData);
 				int len = (prop->mDataLength * sizeof(char)) / sizeof(float);
 				if (len < 3) {
 					std::cerr << "Unexpected Length in $clr.ambient: " << len << std::endl;
@@ -150,7 +161,8 @@ MeshResource* ColladaImporter::processMesh(aiMesh* mesh, const aiScene* scene, s
 				}
 				else {
 					material.set_ambient_color(glm::vec3(data[0], data[1], data[2]));
-				}
+				}*/
+				//Ambient is ignored, as not supported by blender
 			}
 			else if (std::string(prop->mKey.C_Str()) == "$clr.diffuse" && prop->mType == aiPTI_Float) {
 				if (diffuseMaps.size() != 0) {

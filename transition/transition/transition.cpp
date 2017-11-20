@@ -14,6 +14,7 @@
 
 class CameraAnimationNode : public AnimatorNode {
 	CameraNode *camera_;
+	int dir = 2;
 public:
 	explicit CameraAnimationNode(const std::string& name, CameraNode* camera) :AnimatorNode(name) {
 		this->camera_ = camera;
@@ -22,7 +23,11 @@ public:
 	void update(double delta) override {
 		//VERY WEIRD: If I do not store the position in the variable pos first, but give it to the function right away, everything gets crazy
 		glm::vec3 pos = this->camera_->get_position();
-		this->camera_->apply_transformation(Transformation::rotate_around_point(25 * delta, glm::vec3(0, 1, 0), pos));
+		this->camera_->apply_transformation(Transformation::rotate_around_point(-25 * delta, glm::vec3(0, 1, 0), pos));
+		this->camera_->apply_transformation(Transformation::translate(glm::vec3(0, 0, delta*dir)));
+		if (abs(this->camera_->get_position().z) >= 10) {
+			dir = -dir;
+		}
 	}
 };
 
@@ -40,7 +45,7 @@ int main()
 		engine->get_viewport(),
 		glm::perspective(glm::radians(60.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f)		
 	);
-	cam->set_view_matrix(glm::lookAt(glm::vec3(0, 5, 0), glm::vec3(-10, 5, 0), glm::vec3(0, 1, 0)));
+	cam->set_view_matrix(glm::lookAt(glm::vec3(0, 5, 0), glm::vec3(-10, 3, 0), glm::vec3(0, 1, 0)));
 	root->add_node(cam);
 
 	auto importer = new ColladaImporter(engine);
