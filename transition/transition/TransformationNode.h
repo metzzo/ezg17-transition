@@ -46,7 +46,7 @@ public:
 		return this->itrafo_;
 	}
 
-	virtual const glm::vec3& get_position() const
+	virtual glm::vec3 get_position() const
 	{
 		return glm::vec3(this->trafo_[3]);
 	}

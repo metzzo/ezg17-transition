@@ -8,9 +8,11 @@ class RenderingNode;
 class MainShader;
 class LightNode;
 class AnimatorNode;
+struct GLFWwindow;
 
 class RenderingEngine
 {
+	GLFWwindow *window_;
 	GroupNode *root_node_;
 
 	std::vector<IDrawable*> drawables_;
@@ -45,6 +47,10 @@ public:
 	MainShader *get_main_shader() const
 	{
 		return this->main_shader_;
+	}
+
+	GLFWwindow* get_window() const {
+		return this->window_;
 	}
 };
 

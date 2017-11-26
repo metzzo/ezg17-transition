@@ -111,6 +111,9 @@
     <ClInclude Include="Transformation.h">
       <Filter>Headerdateien\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>Quelldateien\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">
@@ -159,7 +162,10 @@
       <Filter>Quelldateien\SceneGraph</Filter>
     </ClCompile>
     <ClCompile Include="Transformation.cpp">
-      <Filter>Quelldateien</Filter>
+      <Filter>Quelldateien\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraController.cpp">
+      <Filter>Quelldateien\Utility</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

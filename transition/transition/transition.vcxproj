@@ -154,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimatorNode.h" />
+    <ClInclude Include="CameraController.h" />
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="ColladaImporter.h" />
     <ClInclude Include="GeometryNode.h" />
@@ -178,6 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimatorNode.cpp" />
+    <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="ColladaImporter.cpp" />
     <ClCompile Include="GeometryNode.cpp" />
