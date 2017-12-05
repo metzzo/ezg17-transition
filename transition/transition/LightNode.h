@@ -15,7 +15,6 @@ class LightNode :
 protected:
 	glm::vec3 diffuse_;
 	glm::vec3 specular_;
-	glm::vec3 direction_;
 
 	float constant_;
 	float linear_;
@@ -27,11 +26,9 @@ protected:
 	int shadow_map_size_;
 	GLuint depth_map_fbo_;
 	GLuint depth_map_;
+
+	glm::vec3 direction_;
 public:
-
-	static LightNode* create_directional_light(const std::string& name, const glm::vec3& diffuse, const glm::vec3& specular, const glm::vec3& direction);
-	static LightNode* create_point_light(const std::string& name, const glm::vec3& diffuse, const glm::vec3& specular, const glm::vec3& position, const glm::vec3& attenuation);
-
 	explicit LightNode(const std::string& name, LightType light_type);
 	~LightNode();
 
@@ -45,6 +42,10 @@ public:
 	void init(RenderingEngine* rendering_engine) override;
 	void before_render(const std::vector<LightNode*>& light_nodes) const override;
 	void after_render() const override;
+
+	void set_transformation(const glm::mat4& trafo, const glm::mat4& itrafo) override;
+	void set_transformation(const glm::mat4& trafo) override;
+	void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) override;
 
 	ShaderResource* get_shader() const override;
 
@@ -78,12 +79,10 @@ public:
 		return quadratic_;
 	}
 
+
 	glm::vec3 get_direction() const
 	{
-		return glm::transpose(this->get_inverse_transformation()) * glm::vec4(this->direction_,0);
+		return this->direction_;
 	}
-
-	void set_transformation(const glm::mat4& trafo, const glm::mat4& itrafo) override;
-	void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) override;
 };
 

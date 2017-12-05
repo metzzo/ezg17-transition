@@ -3,22 +3,6 @@
 #include "RenderingEngine.h"
 #include "DepthOnlyShader.h"
 
-
-LightNode* LightNode::create_directional_light(const std::string& name, const glm::vec3& diffuse, const glm::vec3& specular, const glm::vec3& direction) {
-	LightNode* n = new LightNode(name, DIRECTIONAL_LIGHT);
-	n->set_color(diffuse, specular);
-	n->direction_ = direction;
-	return n;
-}
-
-LightNode* LightNode::create_point_light(const std::string& name, const glm::vec3& diffuse, const glm::vec3& specular, const glm::vec3& position, const glm::vec3& attenuation) {
-	LightNode* n = new LightNode(name, POINT_LIGHT);
-	n->set_color(diffuse, specular);
-	n->set_attenuation(attenuation.x, attenuation.y, attenuation.z);
-	n->set_transformation(glm::translate(position), glm::translate(-position));
-	return n;
-}
-
 LightNode::LightNode(const std::string& name, const LightType light_type): RenderingNode(name, glm::ivec2(),
                                                                                          glm::mat4())
 {
@@ -127,9 +111,17 @@ void LightNode::set_transformation(const glm::mat4& trafo, const glm::mat4& itra
 {
 	TransformationNode::set_transformation(trafo, itrafo);
 
+	this->direction_ = glm::transpose(itrafo)*glm::vec4(-1, 0, 0, 1);
 }
 
-void LightNode::apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation)
+void LightNode::set_transformation(const glm::mat4& trafo)
 {
-	TransformationNode::apply_transformation(transformation, inverse_transformation);
+	this->set_transformation(trafo, glm::inverse(trafo));
+}
+
+void LightNode::apply_transformation(const glm::mat4& trafo, const glm::mat4& itrafo)
+{
+	TransformationNode::apply_transformation(trafo, itrafo);
+
+	this->direction_ = glm::transpose(itrafo)*glm::vec4(-1, 0, 0, 1);
 }

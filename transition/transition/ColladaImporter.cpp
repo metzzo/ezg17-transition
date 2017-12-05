@@ -25,43 +25,46 @@ Node* ColladaImporter::load_node(const std::string& path) {
 
 	std::vector<Node*> lights;
 	std::vector<TextureResource*> textures;
-	processLights(scene, lights);
+	process_lights(scene, lights);
 	GroupNode* node = new GroupNode(std::string(scene->mRootNode->mName.C_Str()));
-	processNode(scene->mRootNode, scene, lights, textures, node);
+	process_node(scene->mRootNode, scene, lights, textures, node);
 	return node;
 }
 
-void ColladaImporter::processLights(const aiScene* scene, std::vector<Node*>& lights) {
+void ColladaImporter::process_lights(const aiScene* scene, std::vector<Node*>& lights) {
 	for (int i = 0; i < scene->mNumLights; i++) {
 		aiLight* light = scene->mLights[i];
+		LightType light_type;
 		if (light->mType == aiLightSource_POINT) {
-			LightNode* ln = LightNode::create_point_light(
-				std::string(light->mName.C_Str()),
-				glm::vec3(light->mColorDiffuse.r, light->mColorDiffuse.g, light->mColorDiffuse.b),
-				glm::vec3(light->mColorSpecular.r, light->mColorSpecular.g, light->mColorSpecular.b),
-				glm::vec3(light->mPosition.x, light->mPosition.y, light->mPosition.z),
-				glm::vec3(light->mAttenuationConstant, light->mAttenuationLinear, light->mAttenuationQuadratic)
-			);
-			lights.push_back(ln);
+			light_type = POINT_LIGHT;
+		} else if (light->mType == aiLightSource_DIRECTIONAL)
+		{
+			light_type = DIRECTIONAL_LIGHT;
+		} else
+		{
+			// unsupported light type
+			continue;
 		}
-		else if (light->mType == aiLightSource_DIRECTIONAL) {
-			LightNode* ln = LightNode::create_directional_light(
-				std::string(light->mName.C_Str()),
-				glm::vec3(light->mColorDiffuse.r, light->mColorDiffuse.g, light->mColorDiffuse.b),
-				glm::vec3(light->mColorSpecular.r, light->mColorSpecular.g, light->mColorSpecular.b),
-				glm::vec3(light->mDirection.x, light->mDirection.y, light->mDirection.z)
-			);
-			lights.push_back(ln);
-		}
+
+		const glm::vec3 pos = glm::vec3(light->mPosition.x, light->mPosition.y, light->mPosition.z);
+		const glm::vec3 dir = glm::vec3(light->mDirection.x, light->mDirection.y, light->mDirection.z);
+
+		LightNode *light_node = new LightNode(std::string(light->mName.C_Str()), light_type);
+		light_node->set_color(glm::vec3(light->mColorDiffuse.r, light->mColorDiffuse.g, light->mColorDiffuse.b), glm::vec3(light->mColorSpecular.r, light->mColorSpecular.g, light->mColorSpecular.b));
+		light_node->set_attenuation(light->mAttenuationConstant, light->mAttenuationLinear, light->mAttenuationQuadratic);
+		light_node->set_view_matrix(glm::lookAt(pos, pos + dir, glm::vec3(0, 1, 0)));
+
+		lights.push_back(light_node);
+
 	}
 }
 
-void ColladaImporter::processNode(aiNode* node, const aiScene* scene, std::vector<Node*>& lights, std::vector<TextureResource*>& textures, GroupNode* parent) {
+void ColladaImporter::process_node(aiNode* node, const aiScene* scene, std::vector<Node*>& lights, std::vector<TextureResource*>& textures, GroupNode* parent) {
 
 	//Alle aktuellen Meshes durchgehen und Objekte erzeugen
 	for (int i = 0; i < node->mNumMeshes; i++) {
 		aiMesh* aiMesh = scene->mMeshes[node->mMeshes[i]];
-		MeshResource* mesh = processMesh(aiMesh, scene, textures);
+		MeshResource* mesh = process_mesh(aiMesh, scene, textures);
 		GeometryNode* geoNode = new GeometryNode(parent->get_name() + "_" + std::to_string(i), mesh);
 		parent->add_node(geoNode);
 	}
@@ -81,7 +84,7 @@ void ColladaImporter::processNode(aiNode* node, const aiScene* scene, std::vecto
 		}
 		if (!light) {
 			GroupNode* sub = new GroupNode(std::string(node->mChildren[i]->mName.C_Str()));
-			processNode(node->mChildren[i], scene, lights, textures, sub);
+			process_node(node->mChildren[i], scene, lights, textures, sub);
 			parent->add_node(sub);
 		}
 	}
@@ -92,7 +95,7 @@ void ColladaImporter::processNode(aiNode* node, const aiScene* scene, std::vecto
 	parent->apply_transformation(transformation, glm::inverse(transformation));
 }
 
-MeshResource* ColladaImporter::processMesh(aiMesh* mesh, const aiScene* scene, std::vector<TextureResource*>& textures) {
+MeshResource* ColladaImporter::process_mesh(aiMesh* mesh, const aiScene* scene, std::vector<TextureResource*>& textures) {
 	float *vertices_positions = new float[mesh->mNumVertices*3];
 	float *vertices_normals = new float[mesh->mNumVertices * 3];
 	float *vertices_uvs = new float[mesh->mNumVertices * 2];
@@ -129,7 +132,7 @@ MeshResource* ColladaImporter::processMesh(aiMesh* mesh, const aiScene* scene, s
 	//Process materials
 	if (mesh->mMaterialIndex >= 0) {
 		aiMaterial* aimaterial = scene->mMaterials[mesh->mMaterialIndex];
-		std::vector<TextureResource*> diffuseMaps = loadMaterialTextures(aimaterial, aiTextureType_DIFFUSE, textures);
+		std::vector<TextureResource*> diffuseMaps = load_material_textures(aimaterial, aiTextureType_DIFFUSE, textures);
 		if (diffuseMaps.size() != 0) {
 			material.set_texture(diffuseMaps.at(0));
 		}
@@ -210,7 +213,7 @@ MeshResource* ColladaImporter::processMesh(aiMesh* mesh, const aiScene* scene, s
 	return res;
 }
 
-std::vector<TextureResource*> ColladaImporter::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::vector<TextureResource*>& loaded_textures) {
+std::vector<TextureResource*> ColladaImporter::load_material_textures(aiMaterial* mat, aiTextureType type, std::vector<TextureResource*>& loaded_textures) {
 	std::vector<TextureResource*> textures;
 	for (int i = 0; i < mat->GetTextureCount(type); i++) {
 		aiString str;
