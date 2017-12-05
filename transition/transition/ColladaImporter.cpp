@@ -35,7 +35,7 @@ void ColladaImporter::processLights(const aiScene* scene, std::vector<Node*>& li
 	for (int i = 0; i < scene->mNumLights; i++) {
 		aiLight* light = scene->mLights[i];
 		if (light->mType == aiLightSource_POINT) {
-			LightNode* ln = LightNode::createPointLight(
+			LightNode* ln = LightNode::create_point_light(
 				std::string(light->mName.C_Str()),
 				glm::vec3(light->mColorDiffuse.r, light->mColorDiffuse.g, light->mColorDiffuse.b),
 				glm::vec3(light->mColorSpecular.r, light->mColorSpecular.g, light->mColorSpecular.b),
@@ -45,7 +45,7 @@ void ColladaImporter::processLights(const aiScene* scene, std::vector<Node*>& li
 			lights.push_back(ln);
 		}
 		else if (light->mType == aiLightSource_DIRECTIONAL) {
-			LightNode* ln = LightNode::createDirectionalLight(
+			LightNode* ln = LightNode::create_directional_light(
 				std::string(light->mName.C_Str()),
 				glm::vec3(light->mColorDiffuse.r, light->mColorDiffuse.g, light->mColorDiffuse.b),
 				glm::vec3(light->mColorSpecular.r, light->mColorSpecular.g, light->mColorSpecular.b),

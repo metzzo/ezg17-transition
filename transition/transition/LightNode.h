@@ -26,8 +26,8 @@ protected:
 	bool is_shadow_casting_;
 public:
 
-	static LightNode* createDirectionalLight(const std::string& name, const glm::vec3& diffuse, const glm::vec3& specular, const glm::vec3& direction);
-	static LightNode* createPointLight(const std::string& name, const glm::vec3& diffuse, const glm::vec3& specular, const glm::vec3& position, const glm::vec3& attenuation);
+	static LightNode* create_directional_light(const std::string& name, const glm::vec3& diffuse, const glm::vec3& specular, const glm::vec3& direction);
+	static LightNode* create_point_light(const std::string& name, const glm::vec3& diffuse, const glm::vec3& specular, const glm::vec3& position, const glm::vec3& attenuation);
 
 	explicit LightNode(const std::string& name, LightType light_type);
 	~LightNode();

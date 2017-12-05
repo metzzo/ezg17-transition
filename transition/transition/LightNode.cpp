@@ -2,14 +2,14 @@
 #include "ILightShader.h"
 
 
-LightNode* LightNode::createDirectionalLight(const std::string& name, const glm::vec3& diffuse, const glm::vec3& specular, const glm::vec3& direction) {
+LightNode* LightNode::create_directional_light(const std::string& name, const glm::vec3& diffuse, const glm::vec3& specular, const glm::vec3& direction) {
 	LightNode* n = new LightNode(name, DIRECTIONAL_LIGHT);
 	n->set_color(diffuse, specular);
 	n->direction_ = direction;
 	return n;
 }
 
-LightNode* LightNode::createPointLight(const std::string& name, const glm::vec3& diffuse, const glm::vec3& specular, const glm::vec3& position, const glm::vec3& attenuation) {
+LightNode* LightNode::create_point_light(const std::string& name, const glm::vec3& diffuse, const glm::vec3& specular, const glm::vec3& position, const glm::vec3& attenuation) {
 	LightNode* n = new LightNode(name, POINT_LIGHT);
 	n->set_color(diffuse, specular);
 	n->set_attenuation(attenuation.x, attenuation.y, attenuation.z);
