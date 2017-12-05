@@ -7,6 +7,9 @@ class LightNode;
 class DepthOnlyShader :
 	public ShaderResource
 {
+	GLint model_uniform_;
+	GLint view_uniform_;
+	GLint projection_uniform_;
 public:
 	DepthOnlyShader();
 	~DepthOnlyShader();

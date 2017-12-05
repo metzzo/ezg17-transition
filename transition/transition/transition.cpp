@@ -33,6 +33,12 @@ int main()
 	//const auto world = importer->load_node("assets/models/gitti_d.dae");
 	const auto world = importer->load_node("assets/models/world1.dae");
 	root->add_node(world);
+
+	auto dir_light = new LightNode("test", DIRECTIONAL_LIGHT);
+	dir_light->set_attenuation(1.0, 0.25, 0.44);
+	dir_light->set_color(glm::vec3(0.5, 0.0, 0.0), glm::vec3(0.7, 0.0, 0.0));
+	dir_light->set_shadow_casting(true, 1024);
+	root->add_node(dir_light);
 	
 	auto anim = new CameraController("cam_anim", cam, engine);
 	root->add_node(anim);

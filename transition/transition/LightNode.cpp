@@ -1,5 +1,7 @@
 #include "LightNode.h"
 #include "ILightShader.h"
+#include "RenderingEngine.h"
+#include "DepthOnlyShader.h"
 
 
 LightNode* LightNode::create_directional_light(const std::string& name, const glm::vec3& diffuse, const glm::vec3& specular, const glm::vec3& direction) {
@@ -17,7 +19,8 @@ LightNode* LightNode::create_point_light(const std::string& name, const glm::vec
 	return n;
 }
 
-LightNode::LightNode(const std::string& name, const LightType light_type): RenderingNode(name, glm::ivec2(), glm::mat4())
+LightNode::LightNode(const std::string& name, const LightType light_type): RenderingNode(name, glm::ivec2(),
+                                                                                         glm::mat4())
 {
 	this->linear_ = 0;
 	this->quadratic_ = 0;
@@ -25,6 +28,9 @@ LightNode::LightNode(const std::string& name, const LightType light_type): Rende
 	this->is_shadow_casting_ = false;
 	this->shadow_map_size_ = 0;
 	this->light_type_ = light_type;
+
+	this->depth_map_fbo_ = -1;
+	this->depth_map_ = -1;
 }
 
 LightNode::~LightNode()
@@ -72,6 +78,8 @@ std::vector<LightNode*> LightNode::get_light_nodes()
 
 void LightNode::init(RenderingEngine* rendering_engine)
 {
+	RenderingNode::init(rendering_engine);
+
 	if (this->is_shadow_casting_) {
 		glGenFramebuffers(1, &this->depth_map_fbo_);
 		glGenTextures(1, &this->depth_map_);
@@ -98,12 +106,21 @@ void LightNode::before_render(const std::vector<LightNode*>& light_nodes) const
 
 	glBindFramebuffer(GL_FRAMEBUFFER, this->depth_map_fbo_);
 	glClear(GL_DEPTH_BUFFER_BIT);
+
+	const auto shader = this->get_shader();
+	shader->use();
+	shader->set_camera_uniforms(this);
 }
 
 void LightNode::after_render() const
 {
 	RenderingNode::after_render();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+ShaderResource* LightNode::get_shader() const
+{
+	return this->get_rendering_engine()->get_depth_only_shader();
 }
 
 void LightNode::set_transformation(const glm::mat4& trafo, const glm::mat4& itrafo)

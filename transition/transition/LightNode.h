@@ -46,10 +46,7 @@ public:
 	void before_render(const std::vector<LightNode*>& light_nodes) const override;
 	void after_render() const override;
 
-	ShaderResource* get_shader() const override
-	{
-		return nullptr;
-	}
+	ShaderResource* get_shader() const override;
 
 	LightType get_light_type() const
 	{

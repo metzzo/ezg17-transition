@@ -7,6 +7,7 @@
 #include "MainShader.h"
 #include "GLDebugContext.h"
 #include "AnimatorNode.h"
+#include "DepthOnlyShader.h"
 
 RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int refresh_rate)
 {
@@ -18,6 +19,9 @@ RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int
 
 	this->main_shader_ = new MainShader();
 	this->register_resource(this->main_shader_);
+
+	this->depth_only_shader_ = new DepthOnlyShader();
+	this->register_resource(this->depth_only_shader_);
 }
 
 RenderingEngine::~RenderingEngine()
