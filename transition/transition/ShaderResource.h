@@ -2,7 +2,7 @@
 #include "IResource.h"
 #include <string>
 #include <glad/glad.h>
-#include <glm/glm.hpp>
+
 class RenderingNode;
 class GeometryNode;
 

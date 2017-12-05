@@ -157,6 +157,7 @@
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="ColladaImporter.h" />
+    <ClInclude Include="DepthOnlyShader.h" />
     <ClInclude Include="GeometryNode.h" />
     <ClInclude Include="GLDebugContext.h" />
     <ClInclude Include="glheaders.h" />
@@ -182,6 +183,7 @@
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="ColladaImporter.cpp" />
+    <ClCompile Include="DepthOnlyShader.cpp" />
     <ClCompile Include="GeometryNode.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="GroupNode.cpp" />

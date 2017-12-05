@@ -1,5 +1,7 @@
 #include "MainShader.h"
 #include "LightNode.h"
+#include "TextureResource.h"
+#include "GeometryNode.h"
 
 MainShader::MainShader() : ShaderResource("assets/shaders/main_shader.vs", "assets/shaders/main_shader.fs")
 {

@@ -24,6 +24,9 @@ protected:
 	LightType light_type_;
 
 	bool is_shadow_casting_;
+	int shadow_map_size_;
+	GLuint depth_map_fbo_;
+	GLuint depth_map_;
 public:
 
 	static LightNode* create_directional_light(const std::string& name, const glm::vec3& diffuse, const glm::vec3& specular, const glm::vec3& direction);
@@ -34,9 +37,14 @@ public:
 
 	void set_color(const glm::vec3 diffuse, const glm::vec3 specular);
 	void set_attenuation(const float constant, const float linear, const float quadratic);
+	void set_shadow_casting(bool is_shadow_casting, int shadow_map_size);
 
 	std::vector<RenderingNode*> get_rendering_nodes() override;
 	std::vector<LightNode*> get_light_nodes() override;
+
+	void init(RenderingEngine* rendering_engine) override;
+	void before_render(const std::vector<LightNode*>& light_nodes) const override;
+	void after_render() const override;
 
 	ShaderResource* get_shader() const override
 	{

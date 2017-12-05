@@ -1,8 +1,6 @@
 #pragma once
 #include "ShaderResource.h"
 #include "ILightShader.h"
-#include "GeometryNode.h"
-#include "RenderingNode.h"
 
 class LightNode;
 

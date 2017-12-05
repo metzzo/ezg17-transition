@@ -19,7 +19,6 @@ std::vector<RenderingNode*> RenderingNode::get_rendering_nodes()
 void RenderingNode::before_render(const std::vector<LightNode*>& light_nodes) const
 {
 	glViewport(0, 0, this->viewport_.x, this->viewport_.y);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void RenderingNode::after_render() const

@@ -14,6 +14,7 @@ CameraNode::~CameraNode()
 void CameraNode::before_render(const std::vector<LightNode*>& light_nodes) const
 {
 	RenderingNode::before_render(light_nodes);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	const auto shader = this->get_shader();
 	shader->use();

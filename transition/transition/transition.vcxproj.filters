@@ -114,6 +114,9 @@
     <ClInclude Include="CameraController.h">
       <Filter>Quelldateien\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="DepthOnlyShader.h">
+      <Filter>Headerdateien\Resource\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">
@@ -166,6 +169,9 @@
     </ClCompile>
     <ClCompile Include="CameraController.cpp">
       <Filter>Quelldateien\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthOnlyShader.cpp">
+      <Filter>Quelldateien\Resource\Shader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

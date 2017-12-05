@@ -1,4 +1,5 @@
 #include "CameraController.h"
+#include <GLFW/glfw3.h>
 
 CameraController::CameraController(const std::string name, CameraNode *camera, RenderingEngine *engine) : AnimatorNode(name)
 {
