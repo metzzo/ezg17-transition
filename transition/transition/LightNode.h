@@ -1,6 +1,8 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "RenderingNode.h"
+#include "TextureResource.h"
+
 class ILightShader;
 
 enum LightType
@@ -10,7 +12,8 @@ enum LightType
 };
 
 class LightNode :
-	public RenderingNode
+	public RenderingNode,
+	public TextureRenderable
 {
 protected:
 	glm::vec3 diffuse_;
@@ -47,6 +50,7 @@ public:
 	void set_transformation(const glm::mat4& trafo) override;
 	void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) override;
 
+	int get_resource_id() const override;
 	ShaderResource* get_shader() const override;
 
 	LightType get_light_type() const

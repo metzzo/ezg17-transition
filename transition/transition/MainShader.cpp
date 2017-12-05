@@ -50,7 +50,7 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 	glUniformMatrix4fv(this->model_uniform_, 1, GL_FALSE, &node->get_transformation()[0][0]);
 	//Bind Texture and give it to Shader 
 	auto material = node->get_mesh_resource()->get_material();
-	const TextureResource* texture = material.get_texture();
+	const auto texture = material.get_texture();
 	if (texture != nullptr) {
 		texture->bind(0);
 		glUniform1i(this->material_has_diffuse_tex_uniform_, 1);

@@ -9,7 +9,7 @@ private:
 	glm::vec3 specular_color_		= glm::vec3(0.0, 0.0, 0.0);
 	float shininess_				= 1;
 	float opacity_					= 1;
-	TextureResource* texture_		= nullptr;
+	TextureRenderable* texture_		= nullptr;
 
 public:
 	Material() {};
@@ -46,10 +46,10 @@ public:
 	bool has_texture() const {
 		return texture_ != nullptr;
 	}
-	TextureResource* get_texture() const {
+	TextureRenderable* get_texture() const {
 		return texture_;
 	}
-	void set_texture(TextureResource* texture) {
+	void set_texture(TextureRenderable* texture) {
 		this->texture_ = texture;
 	}
 };

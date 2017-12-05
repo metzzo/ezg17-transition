@@ -42,6 +42,7 @@ void LightNode::set_shadow_casting(const bool is_shadow_casting, const int shado
 	this->viewport_ = glm::ivec2(this->shadow_map_size_, this->shadow_map_size_);
 
 	// TODO: set projection matrix
+	this->projection_ = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 100.0f);
 }
 
 std::vector<RenderingNode*> LightNode::get_rendering_nodes()
@@ -124,4 +125,9 @@ void LightNode::apply_transformation(const glm::mat4& trafo, const glm::mat4& it
 	TransformationNode::apply_transformation(trafo, itrafo);
 
 	this->direction_ = glm::transpose(itrafo)*glm::vec4(-1, 0, 0, 1);
+}
+
+int LightNode::get_resource_id() const
+{
+	return this->depth_map_;
 }
