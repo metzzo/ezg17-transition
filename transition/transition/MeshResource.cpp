@@ -27,7 +27,7 @@ MeshResource *MeshResource::create_sprite(TextureRenderable* resource)
 
 	unsigned int indices[] = {
 		0, 1, 2, // first triangle
-		2, 3, 1  // second triangle
+		3, 2, 1  // second triangle
 	};
 
 	float *quad_vertices = new float[12];
@@ -55,7 +55,7 @@ MeshResource *MeshResource::create_sprite(TextureRenderable* resource)
 		quad_uvs,
 		4,
 		quad_indices,
-		2,
+		6,
 		mat
 	);
 }
