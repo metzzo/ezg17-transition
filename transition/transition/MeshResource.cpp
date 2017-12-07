@@ -2,7 +2,7 @@
 #include <cstring>
 #include "glheaders.h"
 
-MeshResource *MeshResource::create_sprite(const TextureRenderable* resource)
+MeshResource *MeshResource::create_sprite(TextureRenderable* resource)
 {
 	float vertices[] = {
 		-1.0f,  1.0f, 0.0f,
@@ -26,26 +26,28 @@ MeshResource *MeshResource::create_sprite(const TextureRenderable* resource)
 	};
 
 	unsigned int indices[] = {
-		0, 1, 3, // first triangle
-		1, 2, 3  // second triangle
+		0, 1, 2, // first triangle
+		2, 3, 1  // second triangle
 	};
 
 	float *quad_vertices = new float[12];
-	memcpy(quad_vertices, &vertices, sizeof(vertices));
+	memcpy(quad_vertices, &vertices, 12 * sizeof(float));
 
 	float *quad_normals = new float[12];
-	memcpy(quad_normals, &normals, sizeof(normals));
+	memcpy(quad_normals, &normals, 12 * sizeof(float));
 
 	float *quad_uvs = new float[8];
-	memcpy(quad_uvs, &uvs, sizeof(uvs));
+	memcpy(quad_uvs, &uvs, 8 * sizeof(float));
 
 	unsigned int *quad_indices = new unsigned int[6];
-	memcpy(quad_indices, &indices, sizeof(indices));
+	memcpy(quad_indices, &indices, 6 * sizeof(unsigned int));
 
 	Material mat;
 	mat.set_ambient_color(glm::vec3(1, 1, 1));
-	mat.set_diffuse_color(glm::vec3(0, 0, 0));
-	mat.set_specular_color(glm::vec3(0, 0, 0));
+	mat.set_diffuse_color(glm::vec3(1, 1, 1));
+	mat.set_specular_color(glm::vec3(1, 1, 1));
+
+	mat.set_texture(resource);
 
 	return new MeshResource(
 		quad_vertices,
@@ -106,7 +108,7 @@ void MeshResource::init()
 
 	//Bind Positions to Shader-Location 0
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo_positions_);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*this->num_vertices_*3, this->vertices_, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*this->num_vertices_ * 3, this->vertices_, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 
