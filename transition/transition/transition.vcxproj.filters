@@ -117,6 +117,21 @@
     <ClInclude Include="DepthOnlyShader.h">
       <Filter>Headerdateien\Resource\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="PostProcessingEffect.h">
+      <Filter>Headerdateien\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="BloomEffect.h">
+      <Filter>Headerdateien\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureFBO.h">
+      <Filter>Headerdateien\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="BloomGaussShader.h">
+      <Filter>Headerdateien\Resource\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="BloomAddShader.h">
+      <Filter>Headerdateien\Resource\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">
@@ -173,5 +188,22 @@
     <ClCompile Include="DepthOnlyShader.cpp">
       <Filter>Quelldateien\Resource\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="TextureFBO.cpp">
+      <Filter>Quelldateien\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="BloomGaussShader.cpp">
+      <Filter>Quelldateien\Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="BloomEffect.cpp">
+      <Filter>Quelldateien\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="BloomAddShader.cpp">
+      <Filter>Quelldateien\Resource\Shader</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\postprocess.vs" />
+    <None Include="assets\shaders\bloom_gauss.fs" />
+    <None Include="assets\shaders\bloom_add.fs" />
   </ItemGroup>
 </Project>

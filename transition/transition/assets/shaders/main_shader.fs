@@ -7,7 +7,8 @@ in VS_OUT {
     vec2 tex_coords;
 } fs_in;
 
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 BrightColor;
 
 struct Light {
 	// light_type=1: directional light
@@ -91,6 +92,12 @@ void main() {
 	}
 	
 	FragColor = vec4(color, 1.0f);
+	float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+	if (brightness > 0.8) {
+		BrightColor = FragColor;
+	} else {
+		BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
+	}
 }
 
 vec3 calc_dir_light(

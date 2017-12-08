@@ -11,6 +11,7 @@
 #include "LightNode.h"
 #include "CameraController.h"
 #include "GeometryNode.h"
+#include "BloomEffect.h"
 
 
 int main()
@@ -29,6 +30,9 @@ int main()
 	);
 	cam->set_view_matrix(glm::lookAt(glm::vec3(0, 5, 0), glm::vec3(-10, 3, 0), glm::vec3(0, 1, 0)));
 	root->add_node(cam);
+
+	BloomEffect* effect = new BloomEffect(1);
+	cam->add_post_processing_effect(effect);
 
 	auto importer = new ColladaImporter(engine);
 	//const auto world = importer->load_node("assets/models/gitti_d.dae");
@@ -50,7 +54,8 @@ int main()
 
 
 	auto depth_sprite = new GeometryNode("test2", sprite);
-	depth_sprite->set_transformation(glm::scale(glm::mat4(), glm::vec3(100, 100, 100)));
+	//depth_sprite->set_transformation(glm::scale(glm::mat4(), glm::vec3(100, 100, 100)));
+	depth_sprite->apply_transformation(Transformation::translate(glm::vec3(0, 2, 0)));
 	root->add_node(depth_sprite);
 	
 	auto anim = new CameraController("cam_anim", cam, engine);
