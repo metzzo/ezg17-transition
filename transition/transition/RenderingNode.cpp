@@ -32,6 +32,11 @@ void RenderingNode::render(const std::vector<IDrawable*>& drawables, const std::
 	after_render(drawables, light_nodes);
 }
 
+bool RenderingNode::is_rendering_enabled()
+{
+	return true;
+}
+
 glm::mat4 RenderingNode::get_projection_matrix() const {
 	return projection_;
 }

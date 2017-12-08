@@ -74,14 +74,6 @@ void LightNode::init(RenderingEngine* rendering_engine)
 	}
 }
 
-void LightNode::render(const std::vector<IDrawable*>& drawables, const std::vector<LightNode*>& light_nodes) const
-{
-	if (this->is_shadow_casting_)
-	{
-		RenderingNode::render(drawables, light_nodes);
-	}
-}
-
 void LightNode::before_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const
 {
 	RenderingNode::before_render(drawables, light_nodes);
@@ -98,6 +90,11 @@ void LightNode::after_render(const std::vector<IDrawable*> &drawables, const std
 {
 	RenderingNode::after_render(drawables, light_nodes);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+bool LightNode::is_rendering_enabled()
+{
+	return this->is_shadow_casting_;
 }
 
 ShaderResource* LightNode::get_shader() const

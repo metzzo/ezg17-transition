@@ -20,9 +20,10 @@ public:
 
 	virtual void before_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const;
 	virtual void after_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const;
-	virtual void render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const;
+	void render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const;
 
 	virtual ShaderResource* get_shader() const = 0;
+	virtual bool is_rendering_enabled();
 
 	glm::mat4 get_projection_matrix() const;
 	glm::mat4 get_view_matrix() const;
