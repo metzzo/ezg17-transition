@@ -5,6 +5,7 @@ in VS_OUT {
     vec3 frag_pos;
     vec3 normal;
     vec2 tex_coords;
+    vec4 frag_pos_lightspace[MAX_NR_LIGHTS];
 } fs_in;
 
 out vec4 FragColor;
@@ -23,9 +24,27 @@ struct Light {
   
     vec3 diffuse;
     vec3 specular;
+	
+	bool shadow_casting;
+	int shadow_map_index;
 };
 uniform Light lights[MAX_NR_LIGHTS];
+uniform sampler2D shadow_maps[5];
 uniform int num_lights;
+
+#define SHADOW_MAP(A,B,C,X) \
+	if (B == 0) { \
+		X = A(shadow_maps[0], C); \
+	} else if (B == 1) { \
+		X = A(shadow_maps[1], C); \
+	} else if (B == 2) { \
+		X = A(shadow_maps[2], C); \
+	} else if (B == 3) { \
+		X = A(shadow_maps[3], C); \
+	} else if (B == 4) { \
+		X = A(shadow_maps[4], C); \
+	} 
+	
 
 struct Material {
 	bool has_diffuse_tex;
@@ -59,9 +78,9 @@ vec3 calc_point_light(
 	vec3 view_dir
 );
 
-
-
 vec3 render_type_debug_depth(vec3 diffuse_tex);
+
+float shadow_calculation(Light light, vec4 frag_pos_lightspace);
 
 void main() {
 	vec3 diffuse_tex;
@@ -85,9 +104,16 @@ void main() {
     vec3 view_dir = normalize(view_pos - fs_in.frag_pos);
 	
 	for (int i = 0; i < num_lights; i++) {
+		float shadow = 0.0;
+		
+		if (lights[i].shadow_casting) {
+			shadow = shadow_calculation(lights[i], fs_in.frag_pos_lightspace[i]);
+		}
+		
+		vec3 add_color;
 		switch (lights[i].light_type) {
 		case 1:
-			color += calc_dir_light(
+			add_color = calc_dir_light(
 				lights[i], 
 				diffuse_tex, 
 				normal, 
@@ -95,7 +121,7 @@ void main() {
 			);
 			break;
 		case 2:
-			color += calc_point_light(
+			add_color = calc_point_light(
 				lights[i], 
 				diffuse_tex, 
 				normal, 
@@ -105,6 +131,7 @@ void main() {
 		default:
 			color = vec3(0.0,1.0,0.0);
 		}
+		color += (1.0 - shadow)*add_color;
 	}
 	
 	FragColor = vec4(color, 1.0f);
@@ -170,4 +197,24 @@ vec3 calc_point_light(
     specular *= attenuation;   
     
     return (diffuse + specular)*diffuse_tex;
+}
+
+float shadow_calculation(Light light, vec4 frag_pos_lightspace) {
+    // perform perspective divide
+    vec3 proj_coords = frag_pos_lightspace.xyz / frag_pos_lightspace.w;
+    
+	// transform to [0,1] range
+    proj_coords = proj_coords * 0.5 + 0.5;
+    
+	// get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+	vec4 closest_depth;
+	SHADOW_MAP(texture, light.shadow_map_index, proj_coords.xy, closest_depth)
+    
+	// get depth of current fragment from light's perspective
+    float current_depth = proj_coords.z;
+    
+	// check whether current frag pos is in shadow
+    float shadow = current_depth > closest_depth.r  ? 1.0 : 0.0;
+
+    return shadow;
 }

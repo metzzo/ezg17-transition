@@ -28,6 +28,13 @@ MainShader::MainShader() : ShaderResource("assets/shaders/main_shader.vs", "asse
 		this->quadratic_uniform_[i] = -1;
 		this->diffuse_uniform_[i] = -1;
 		this->specular_uniform_[i] = -1;
+		this->shadow_casting_uniform_[i] = -1;
+		this->shadow_map_index_uniform_[i] = -1;
+	}
+
+	for (auto i = 0; i < max_nr_shadow_maps; i++)
+	{
+		this->shadow_maps_uniform_[i] = -1;
 	}
 }
 
@@ -75,6 +82,10 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 {
 	auto light_index = 0;
+	// attention: if there is more than 1 diffuse texture (or specular highlights)
+	// then this must be increased accordingly:
+	auto shadow_map_index = 1;
+	// same for the binding of the texture for the shadow maps!
 	for (auto& light : light_nodes)
 	{
 		assert(this->light_type_uniform_[light_index] >= 0);
@@ -85,6 +96,25 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 		assert(this->quadratic_uniform_[light_index] >= 0);
 		assert(this->diffuse_uniform_[light_index] >= 0);
 		assert(this->specular_uniform_[light_index] >= 0);
+		assert(this->shadow_casting_uniform_[light_index] >= 0);
+		assert(this->shadow_map_index_uniform_[light_index] >= 0);
+
+		if (light->is_rendering_enabled())
+		{
+			light->bind(shadow_map_index);
+
+			assert(this->shadow_maps_uniform_[shadow_map_index - 1] >= 0);
+
+			glUniform1i(this->shadow_maps_uniform_[shadow_map_index - 1], shadow_map_index);
+			glUniform1i(this->shadow_casting_uniform_[light_index], 1);
+			glUniform1i(this->shadow_map_index_uniform_[light_index], shadow_map_index - 1);
+
+			shadow_map_index++;
+		} else
+		{
+			glUniform1i(this->shadow_casting_uniform_[light_index], 0);
+			
+		}
 
 		glUniform1i(this->light_type_uniform_[light_index], light->get_light_type());
 		glUniform3fv(this->position_uniform_[light_index], 1, &light->get_position()[0]);
@@ -133,5 +163,11 @@ void MainShader::init()
 		this->quadratic_uniform_[i] = get_uniform("lights", "quadratic", i);
 		this->diffuse_uniform_[i] = get_uniform("lights", "diffuse", i);
 		this->specular_uniform_[i] = get_uniform("lights", "specular", i);
+		this->shadow_casting_uniform_[i] = get_uniform("lights", "shadow_casting", i);
+		this->shadow_map_index_uniform_[i] = get_uniform("lights", "shadow_map_index", i);
+	}
+	for (auto i = 0; i < max_nr_shadow_maps; i++)
+	{
+		this->shadow_maps_uniform_[i] = get_uniform("shadow_maps", i);
 	}
 }

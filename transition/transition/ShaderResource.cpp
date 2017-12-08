@@ -146,6 +146,11 @@ GLint ShaderResource::get_uniform(const std::string name) const
 	return glGetUniformLocation(this->ShaderResource::get_resource_id(), name.c_str());
 }
 
+GLint ShaderResource::get_uniform(const std::string name, const int index) const
+{
+	return glGetUniformLocation(this->ShaderResource::get_resource_id(), (name + "[" + std::to_string(index) + "]").c_str());
+}
+
 GLint ShaderResource::get_uniform(const std::string name, const std::string attribute, const int index) const
 {
 	return glGetUniformLocation(this->ShaderResource::get_resource_id(), (name + "[" + std::to_string(index) + "]." + attribute).c_str());
