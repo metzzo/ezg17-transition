@@ -117,6 +117,9 @@
     <ClInclude Include="DepthOnlyShader.h">
       <Filter>Headerdateien\Resource\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="TextureRenderable.h">
+      <Filter>Headerdateien\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">
@@ -172,6 +175,12 @@
     </ClCompile>
     <ClCompile Include="DepthOnlyShader.cpp">
       <Filter>Quelldateien\Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureRenderable.cpp">
+      <Filter>Quelldateien\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Quelldateien\Utility</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

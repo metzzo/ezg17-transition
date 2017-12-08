@@ -29,6 +29,7 @@ class MainShader :
 	GLint material_ambient_color_;
 	GLint material_diffuse_color_;
 	GLint material_specular_color_;
+	GLint material_material_type_;
 public:
 	MainShader();
 	~MainShader();

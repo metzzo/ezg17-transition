@@ -39,8 +39,12 @@ int main()
 	dir_light->set_attenuation(1.0, 0.07, 0.017);
 	dir_light->set_color(glm::vec3(0.8, 0.0, 0.0), glm::vec3(1.0, 0.0, 0.0));
 	dir_light->set_shadow_casting(true, 1024);
-	dir_light->set_transformation(glm::lookAt(glm::vec3(0, 5, 0), glm::vec3(-10, 3, 0), glm::vec3(0, 1, 0)));
+	dir_light->set_view_matrix(glm::lookAt(glm::vec3(0, 5, 0), glm::vec3(-10, 3, 0), glm::vec3(0, 1, 0)));
+	
 	root->add_node(dir_light);
+
+	auto tmp = new TextureResource("assets/gfx/bg-tucard.jpg");
+	engine->register_resource(tmp);
 
 	auto sprite = MeshResource::create_sprite(dir_light);
 	engine->register_resource(sprite);

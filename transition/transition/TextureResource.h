@@ -2,15 +2,8 @@
 #include "IResource.h"
 #include "glheaders.h"
 #include <iostream>
-
-class TextureRenderable
-{
-public:
-	virtual ~TextureRenderable() = default;
-
-	virtual int get_resource_id() const = 0;
-	void bind(GLuint unit) const;
-};
+#include "Material.h"
+#include "TextureRenderable.h"
 
 class TextureResource : public IResource, public TextureRenderable
 {

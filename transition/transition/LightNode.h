@@ -37,7 +37,7 @@ public:
 
 	void set_color(const glm::vec3 diffuse, const glm::vec3 specular);
 	void set_attenuation(const float constant, const float linear, const float quadratic);
-	void set_shadow_casting(bool is_shadow_casting, int shadow_map_size);
+	void set_shadow_casting(bool is_shadow_casting, int shadow_map_size, float near_plane = 1.0, float far_plane = 100.0);
 
 	std::vector<LightNode*> get_light_nodes() override;
 
@@ -52,6 +52,8 @@ public:
 	void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) override;
 
 	int get_resource_id() const override;
+	MaterialType get_material_type() override;
+
 	ShaderResource* get_shader() const override;
 
 	LightType get_light_type() const

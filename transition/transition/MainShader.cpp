@@ -14,6 +14,7 @@ MainShader::MainShader() : ShaderResource("assets/shaders/main_shader.vs", "asse
 	this->material_ambient_color_ = -1;
 	this->material_diffuse_color_ = -1;
 	this->material_specular_color_ = -1;
+	this->material_material_type_ = -1;
 	this->view_pos_uniform_ = -1;
 	
 	this->num_lights_uniform_ = -1;
@@ -56,16 +57,19 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 		glUniform1i(this->material_has_diffuse_tex_uniform_, 1);
 		glUniform1i(this->material_diffuse_tex_uniform_, 0);
 		glUniform1f(this->material_shininess_, material.get_shininess());
+		glUniform1i(this->material_material_type_, material.get_material_type());
 	}
 	else {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		glUniform1i(this->material_has_diffuse_tex_uniform_, 0);
+		glUniform1i(this->material_material_type_, REGULAR_MATERIAL);
 	}
 	glUniform3fv(this->material_ambient_color_, 1, &material.get_ambient_color()[0]);
 	glUniform3fv(this->material_diffuse_color_, 1, &material.get_diffuse_color()[0]);
 	glUniform3fv(this->material_specular_color_, 1, &material.get_specular_color()[0]);
+
 }
 
 void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
@@ -116,6 +120,7 @@ void MainShader::init()
 	this->material_ambient_color_ = get_uniform("material.ambient_color");
 	this->material_diffuse_color_ = get_uniform("material.diffuse_color");
 	this->material_specular_color_ = get_uniform("material.specular_color");
+	this->material_material_type_ = get_uniform("material.material_type");
 
 	this->num_lights_uniform_ = get_uniform("num_lights");
 	for (auto i = 0; i < max_nr_lights; i++)

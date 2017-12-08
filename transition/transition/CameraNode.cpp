@@ -28,6 +28,7 @@ void CameraNode::before_render(const std::vector<IDrawable*> &drawables, const s
 	shader->set_camera_uniforms(this);
 }
 
-MainShader* CameraNode::get_shader() const {
+MainShader* CameraNode::get_shader() const 
+{
 	return this->get_rendering_engine()->get_main_shader();
 }

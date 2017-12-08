@@ -34,7 +34,7 @@ void LightNode::set_attenuation(const float constant, const float linear, const 
 	this->quadratic_ = quadratic;
 }
 
-void LightNode::set_shadow_casting(const bool is_shadow_casting, const int shadow_map_size)
+void LightNode::set_shadow_casting(const bool is_shadow_casting, const int shadow_map_size, const float near_plane, const float far_plane)
 {
 	this->is_shadow_casting_ = is_shadow_casting;
 	this->shadow_map_size_ = shadow_map_size;
@@ -42,7 +42,7 @@ void LightNode::set_shadow_casting(const bool is_shadow_casting, const int shado
 	this->viewport_ = glm::ivec2(this->shadow_map_size_, this->shadow_map_size_);
 
 	// TODO: set projection matrix
-	this->projection_ = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 100.0f);
+	this->projection_ = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
 }
 
 std::vector<LightNode*> LightNode::get_light_nodes()
@@ -127,4 +127,9 @@ void LightNode::apply_transformation(const glm::mat4& trafo, const glm::mat4& it
 int LightNode::get_resource_id() const
 {
 	return this->depth_map_;
+}
+
+MaterialType LightNode::get_material_type()
+{
+	return DEBUG_DEPTH_MATERIAL;
 }

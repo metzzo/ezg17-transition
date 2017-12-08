@@ -36,6 +36,10 @@ struct Material {
 	vec3 ambient_color;
 	vec3 diffuse_color;
 	vec3 specular_color;
+	
+	// 0= regular
+	// 1= debug depth render type
+	int material_type;
 };
 uniform Material material;
 
@@ -55,12 +59,25 @@ vec3 calc_point_light(
 	vec3 view_dir
 );
 
+
+
+vec3 render_type_debug_depth(vec3 diffuse_tex);
+
 void main() {
 	vec3 diffuse_tex;
 	if (material.has_diffuse_tex) {
 		diffuse_tex = vec3(texture(material.diffuse_tex, fs_in.tex_coords));
 	} else {
 		diffuse_tex = vec3(1,1,1);
+	}
+	
+	switch (material.material_type) {
+		case 0: break; // do not touch the color
+		case 1:
+			diffuse_tex = render_type_debug_depth(diffuse_tex);
+			break;
+		default:
+			diffuse_tex = vec3(1.0, 0.0, 0.0);
 	}
 
 	vec3 color = material.ambient_color * diffuse_tex;
@@ -91,6 +108,14 @@ void main() {
 	}
 	
 	FragColor = vec4(color, 1.0f);
+}
+
+vec3 render_type_debug_depth(vec3 diffuse_tex) {
+	float depth_value = diffuse_tex.r;
+	float near_plane = 1.0;
+	float far_plane = 100.0;
+	float z = depth_value * 2.0 - 1.0;
+	return vec3(vec3(((2.0 * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane))) / far_plane));
 }
 
 vec3 calc_dir_light(

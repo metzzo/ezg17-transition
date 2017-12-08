@@ -1,6 +1,7 @@
 #include "MeshResource.h"
 #include <cstring>
 #include "glheaders.h"
+#include "TextureRenderable.h"
 
 MeshResource *MeshResource::create_sprite(TextureRenderable* resource)
 {
