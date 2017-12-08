@@ -82,13 +82,9 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 		assert(this->diffuse_uniform_[light_index] >= 0);
 		assert(this->specular_uniform_[light_index] >= 0);
 
-		// for some fkin reasons, this needs to be temporarly stored in its own variable?!?!
-		glm::vec3 pos = light->get_position();
-		glm::vec3 dir = light->get_direction();
-
 		glUniform1i(this->light_type_uniform_[light_index], light->get_light_type());
-		glUniform3fv(this->position_uniform_[light_index], 1, &pos[0]);
-		glUniform3fv(this->direction_uniform_[light_index], 1, &dir[0]);
+		glUniform3fv(this->position_uniform_[light_index], 1, &light->get_position()[0]);
+		glUniform3fv(this->direction_uniform_[light_index], 1, &light->get_direction()[0]);
 		glUniform1f(this->constant_uniform_[light_index], light->get_constant());
 		glUniform1f(this->linear_uniform_[light_index], light->get_linear());
 		glUniform1f(this->quadratic_uniform_[light_index], light->get_quadratic());

@@ -11,30 +11,25 @@ RenderingNode::~RenderingNode()
 {
 }
 
-std::vector<RenderingNode*> RenderingNode::get_rendering_nodes()
-{
-	return { this };
-}
-
-void RenderingNode::before_render(const std::vector<LightNode*>& light_nodes) const
+void RenderingNode::before_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const
 {
 	glViewport(0, 0, this->viewport_.x, this->viewport_.y);
 }
 
-void RenderingNode::after_render() const
+void RenderingNode::after_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const
 {
 }
 
 void RenderingNode::render(const std::vector<IDrawable*>& drawables, const std::vector<LightNode*>& light_nodes) const
 {
-	before_render(light_nodes);
+	before_render(drawables, light_nodes);
 	
 	for (auto &drawable : drawables)
 	{
 		drawable->draw(this->get_shader());
 	}
 
-	after_render();
+	after_render(drawables, light_nodes);
 }
 
 glm::mat4 RenderingNode::get_projection_matrix() const {

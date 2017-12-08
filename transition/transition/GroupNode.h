@@ -14,7 +14,6 @@ public:
 	void init(RenderingEngine* rendering_engine) override;
 
 	std::vector<IDrawable*> get_drawables() override;
-	std::vector<RenderingNode*> get_rendering_nodes() override;
 	std::vector<LightNode*> get_light_nodes() override;
 	std::vector<AnimatorNode*> get_animator_nodes() override;
 

@@ -45,17 +45,6 @@ void LightNode::set_shadow_casting(const bool is_shadow_casting, const int shado
 	this->projection_ = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 100.0f);
 }
 
-std::vector<RenderingNode*> LightNode::get_rendering_nodes()
-{
-	if (this->is_shadow_casting_)
-	{
-		return{ this };
-	} else
-	{
-		return std::vector<RenderingNode*>();
-	}
-}
-
 std::vector<LightNode*> LightNode::get_light_nodes()
 {
 	return{ this };
@@ -85,9 +74,17 @@ void LightNode::init(RenderingEngine* rendering_engine)
 	}
 }
 
-void LightNode::before_render(const std::vector<LightNode*>& light_nodes) const
+void LightNode::render(const std::vector<IDrawable*>& drawables, const std::vector<LightNode*>& light_nodes) const
 {
-	RenderingNode::before_render(light_nodes);
+	if (this->is_shadow_casting_)
+	{
+		RenderingNode::render(drawables, light_nodes);
+	}
+}
+
+void LightNode::before_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const
+{
+	RenderingNode::before_render(drawables, light_nodes);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, this->depth_map_fbo_);
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -97,9 +94,9 @@ void LightNode::before_render(const std::vector<LightNode*>& light_nodes) const
 	shader->set_camera_uniforms(this);
 }
 
-void LightNode::after_render() const
+void LightNode::after_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const
 {
-	RenderingNode::after_render();
+	RenderingNode::after_render(drawables, light_nodes);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

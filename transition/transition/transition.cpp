@@ -42,10 +42,7 @@ int main()
 	dir_light->set_transformation(glm::lookAt(glm::vec3(0, 5, 0), glm::vec3(-10, 3, 0), glm::vec3(0, 1, 0)));
 	root->add_node(dir_light);
 
-	auto res = new TextureResource("assets/gfx/bg-tucard.jpg");
-	engine->register_resource(res);
-
-	auto sprite = MeshResource::create_sprite(res);
+	auto sprite = MeshResource::create_sprite(dir_light);
 	engine->register_resource(sprite);
 
 

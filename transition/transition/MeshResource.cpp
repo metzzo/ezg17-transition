@@ -44,8 +44,8 @@ MeshResource *MeshResource::create_sprite(TextureRenderable* resource)
 
 	Material mat;
 	mat.set_ambient_color(glm::vec3(1, 1, 1));
-	mat.set_diffuse_color(glm::vec3(1, 1, 1));
-	mat.set_specular_color(glm::vec3(1, 1, 1));
+	mat.set_diffuse_color(glm::vec3(0, 0, 0));
+	mat.set_specular_color(glm::vec3(0, 0, 0));
 
 	mat.set_texture(resource);
 

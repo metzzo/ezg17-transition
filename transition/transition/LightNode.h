@@ -39,12 +39,13 @@ public:
 	void set_attenuation(const float constant, const float linear, const float quadratic);
 	void set_shadow_casting(bool is_shadow_casting, int shadow_map_size);
 
-	std::vector<RenderingNode*> get_rendering_nodes() override;
 	std::vector<LightNode*> get_light_nodes() override;
 
 	void init(RenderingEngine* rendering_engine) override;
-	void before_render(const std::vector<LightNode*>& light_nodes) const override;
-	void after_render() const override;
+
+	void render(const std::vector<IDrawable*>& drawables, const std::vector<LightNode*>& light_nodes) const override;
+	void before_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodess) const override;
+	void after_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const override;
 
 	void set_transformation(const glm::mat4& trafo, const glm::mat4& itrafo) override;
 	void set_transformation(const glm::mat4& trafo) override;
