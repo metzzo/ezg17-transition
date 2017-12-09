@@ -161,6 +161,8 @@
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="ColladaImporter.h" />
     <ClInclude Include="DepthOnlyShader.h" />
+    <ClInclude Include="DummyEffect.h" />
+    <ClInclude Include="DummyShader.h" />
     <ClInclude Include="GeometryNode.h" />
     <ClInclude Include="GLDebugContext.h" />
     <ClInclude Include="glheaders.h" />
@@ -192,6 +194,8 @@
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="ColladaImporter.cpp" />
     <ClCompile Include="DepthOnlyShader.cpp" />
+    <ClCompile Include="DummyEffect.cpp" />
+    <ClCompile Include="DummyShader.cpp" />
     <ClCompile Include="GeometryNode.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="GroupNode.cpp" />
@@ -210,6 +214,7 @@
   <ItemGroup>
     <None Include="assets\shaders\bloom_add.fs" />
     <None Include="assets\shaders\bloom_gauss.fs" />
+    <None Include="assets\shaders\dummy.fs" />
     <None Include="assets\shaders\postprocess.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

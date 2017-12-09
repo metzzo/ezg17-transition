@@ -3,22 +3,21 @@
 #include "TextureResource.h"
 
 /*
-Shader for adding two images
+Dummy-PostProcessing-Shader for just displaying the given texture
 */
-class BloomAddShader : public ShaderResource {
+class DummyShader : public ShaderResource {
 
 private:
-	GLint texture1_uniform_;
-	GLint texture2_uniform_;
+	GLint texture_uniform_;
 
 public:
-	BloomAddShader();
-	~BloomAddShader();
+	DummyShader();
+	~DummyShader();
 
 	void init() override;
 
 	void set_camera_uniforms(const RenderingNode* node) override;
 	void set_model_uniforms(const GeometryNode* node) override;
 
-	void set_textures(TextureRenderable *tex1, TextureRenderable *tex2);
+	void set_texture(TextureRenderable *tex);
 };

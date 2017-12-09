@@ -35,6 +35,7 @@ TextureFBO::TextureFBO(int width, int height, unsigned int textureCount)
 		system("PAUSE");
 		exit(EXIT_FAILURE);
 	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 TextureFBO::~TextureFBO()

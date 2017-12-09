@@ -31,7 +31,7 @@ int main()
 	cam->set_view_matrix(glm::lookAt(glm::vec3(0, 5, 0), glm::vec3(-10, 3, 0), glm::vec3(0, 1, 0)));
 	root->add_node(cam);
 
-	BloomEffect* effect = new BloomEffect(1);
+	BloomEffect* effect = new BloomEffect(2);
 	cam->add_post_processing_effect(effect);
 
 	auto importer = new ColladaImporter(engine);
