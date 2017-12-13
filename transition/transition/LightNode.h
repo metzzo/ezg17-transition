@@ -37,7 +37,7 @@ public:
 
 	void set_color(const glm::vec3 diffuse, const glm::vec3 specular);
 	void set_attenuation(const float constant, const float linear, const float quadratic);
-	void set_shadow_casting(bool is_shadow_casting, int shadow_map_size, float near_plane = 1.0, float far_plane = 20.0);
+	void set_shadow_casting(bool is_shadow_casting, int shadow_map_size, float near_plane = 1.0, float far_plane = 100.0);
 
 	std::vector<LightNode*> get_light_nodes() override;
 

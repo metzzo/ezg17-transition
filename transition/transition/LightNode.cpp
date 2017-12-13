@@ -63,8 +63,10 @@ void LightNode::init(RenderingEngine* rendering_engine)
 			this->shadow_map_size_, this->shadow_map_size_, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		float border_color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, this->depth_map_fbo_);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, this->depth_map_, 0);
@@ -84,12 +86,15 @@ void LightNode::before_render(const std::vector<IDrawable*> &drawables, const st
 	const auto shader = this->get_shader();
 	shader->use();
 	shader->set_camera_uniforms(this);
+
+	glCullFace(GL_FRONT);
 }
 
 void LightNode::after_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const
 {
-	RenderingNode::after_render(drawables, light_nodes);
+	glCullFace(GL_BACK);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	RenderingNode::after_render(drawables, light_nodes);
 }
 
 bool LightNode::is_rendering_enabled() const
