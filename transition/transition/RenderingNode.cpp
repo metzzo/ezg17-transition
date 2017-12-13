@@ -22,6 +22,11 @@ void RenderingNode::after_render(const std::vector<IDrawable*> &drawables, const
 
 void RenderingNode::render(const std::vector<IDrawable*>& drawables, const std::vector<LightNode*>& light_nodes) const
 {
+	if (!this->is_rendering_enabled())
+	{
+		return;
+	}
+
 	before_render(drawables, light_nodes);
 	
 	for (auto &drawable : drawables)
@@ -32,7 +37,7 @@ void RenderingNode::render(const std::vector<IDrawable*>& drawables, const std::
 	after_render(drawables, light_nodes);
 }
 
-bool RenderingNode::is_rendering_enabled()
+bool RenderingNode::is_rendering_enabled() const
 {
 	return true;
 }

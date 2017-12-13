@@ -1,11 +1,12 @@
 #version 330 core
-#define MAX_NR_LIGHTS 10
+#define MAX_NR_LIGHTS (10)
+#define MAX_NR_SHADOWS (5)
 
 in VS_OUT {
     vec3 frag_pos;
     vec3 normal;
     vec2 tex_coords;
-    vec4 frag_pos_lightspace[MAX_NR_LIGHTS];
+    vec4 frag_pos_lightspace[MAX_NR_SHADOWS];
 } fs_in;
 
 out vec4 FragColor;
@@ -29,7 +30,7 @@ struct Light {
 	int shadow_map_index;
 };
 uniform Light lights[MAX_NR_LIGHTS];
-uniform sampler2D shadow_maps[5];
+uniform sampler2D shadow_maps[MAX_NR_SHADOWS];
 uniform int num_lights;
 
 #define SHADOW_MAP(A,B,C,X) \
@@ -80,7 +81,7 @@ vec3 calc_point_light(
 
 vec3 render_type_debug_depth(vec3 diffuse_tex);
 
-float shadow_calculation(Light light, vec4 frag_pos_lightspace);
+float shadow_calculation(Light light);
 
 void main() {
 	vec3 diffuse_tex;
@@ -107,10 +108,10 @@ void main() {
 		float shadow = 0.0;
 		
 		if (lights[i].shadow_casting) {
-			shadow = shadow_calculation(lights[i], fs_in.frag_pos_lightspace[i]);
+			shadow = shadow_calculation(lights[i]);
 		}
 		
-		vec3 add_color;
+		vec3 add_color = vec3(0.0, 0.0, 0.0);
 		switch (lights[i].light_type) {
 		case 1:
 			add_color = calc_dir_light(
@@ -140,7 +141,7 @@ void main() {
 vec3 render_type_debug_depth(vec3 diffuse_tex) {
 	float depth_value = diffuse_tex.r;
 	float near_plane = 1.0;
-	float far_plane = 100.0;
+	float far_plane = 20.0;
 	float z = depth_value * 2.0 - 1.0;
 	return vec3(vec3(((2.0 * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane))) / far_plane));
 }
@@ -151,7 +152,7 @@ vec3 calc_dir_light(
 	vec3 normal, 
 	vec3 view_dir) {
 	
-	vec3 light_dir = normalize(-light.direction);
+	vec3 light_dir = normalize(light.direction);
 	
 	// diffuse
     float diff = max(dot(normal, light_dir), 0.0);
@@ -199,7 +200,9 @@ vec3 calc_point_light(
     return (diffuse + specular)*diffuse_tex;
 }
 
-float shadow_calculation(Light light, vec4 frag_pos_lightspace) {
+float shadow_calculation(Light light) {
+	vec4 frag_pos_lightspace = fs_in.frag_pos_lightspace[light.shadow_map_index];
+	
     // perform perspective divide
     vec3 proj_coords = frag_pos_lightspace.xyz / frag_pos_lightspace.w;
     
@@ -214,7 +217,5 @@ float shadow_calculation(Light light, vec4 frag_pos_lightspace) {
     float current_depth = proj_coords.z;
     
 	// check whether current frag pos is in shadow
-    float shadow = current_depth > closest_depth.r  ? 1.0 : 0.0;
-
-    return shadow;
+    return current_depth > closest_depth.r ? 1.0 : 0.0;
 }

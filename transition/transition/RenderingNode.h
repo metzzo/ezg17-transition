@@ -23,7 +23,7 @@ public:
 	void render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const;
 
 	virtual ShaderResource* get_shader() const = 0;
-	virtual bool is_rendering_enabled();
+	virtual bool is_rendering_enabled() const;
 
 	glm::mat4 get_projection_matrix() const;
 	glm::mat4 get_view_matrix() const;

@@ -35,6 +35,7 @@ MainShader::MainShader() : ShaderResource("assets/shaders/main_shader.vs", "asse
 	for (auto i = 0; i < max_nr_shadow_maps; i++)
 	{
 		this->shadow_maps_uniform_[i] = -1;
+		this->light_space_matrices_uniform_[i] = -1;
 	}
 }
 
@@ -82,10 +83,7 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 {
 	auto light_index = 0;
-	// attention: if there is more than 1 diffuse texture (or specular highlights)
-	// then this must be increased accordingly:
-	auto shadow_map_index = 1;
-	// same for the binding of the texture for the shadow maps!
+	auto shadow_map_index = 0;
 	for (auto& light : light_nodes)
 	{
 		assert(this->light_type_uniform_[light_index] >= 0);
@@ -101,13 +99,19 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 
 		if (light->is_rendering_enabled())
 		{
-			light->bind(shadow_map_index);
+			// attention: if there is more than 1 diffuse texture (or specular tex)
+			// then this must be increased accordingly:
+			light->bind(shadow_map_index + 1);
 
-			assert(this->shadow_maps_uniform_[shadow_map_index - 1] >= 0);
+			assert(this->shadow_maps_uniform_[shadow_map_index] >= 0);
+			assert(this->light_space_matrices_uniform_[shadow_map_index] >= 0);
 
-			glUniform1i(this->shadow_maps_uniform_[shadow_map_index - 1], shadow_map_index);
-			glUniform1i(this->shadow_casting_uniform_[light_index], 1);
-			glUniform1i(this->shadow_map_index_uniform_[light_index], shadow_map_index - 1);
+			auto light_space_matrix = light->get_projection_matrix() * light->get_view_matrix();
+
+			glUniform1i(this->shadow_maps_uniform_[shadow_map_index], shadow_map_index + 1); // binds shadow map sampler
+			glUniformMatrix4fv(this->light_space_matrices_uniform_[shadow_map_index], 1, GL_FALSE, &light_space_matrix[0][0]); // trafo to transform into light space
+			glUniform1i(this->shadow_map_index_uniform_[light_index], shadow_map_index); // tells the exact index of the shadow map
+			glUniform1i(this->shadow_casting_uniform_[light_index], 1); // boolean whether it is a shadow casting light
 
 			shadow_map_index++;
 		} else
@@ -169,5 +173,6 @@ void MainShader::init()
 	for (auto i = 0; i < max_nr_shadow_maps; i++)
 	{
 		this->shadow_maps_uniform_[i] = get_uniform("shadow_maps", i);
+		this->light_space_matrices_uniform_[i] = get_uniform("light_space_matrices", i);
 	}
 }

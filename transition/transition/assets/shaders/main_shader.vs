@@ -1,5 +1,5 @@
 #version 330 core
-#define MAX_NR_LIGHTS 10
+#define MAX_NR_SHADOWS (5)
 
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec2 aTex;
@@ -9,11 +9,11 @@ out VS_OUT {
     vec3 frag_pos;
     vec3 normal;
     vec2 tex_coords;
-    vec4 frag_pos_lightspace[MAX_NR_LIGHTS];
+    vec4 frag_pos_lightspace[MAX_NR_SHADOWS];
 } vs_out;
 
 
-uniform mat4 light_space_matrices[MAX_NR_LIGHTS];
+uniform mat4 light_space_matrices[MAX_NR_SHADOWS];
 uniform int num_lights;
 
 struct MVP {
@@ -30,7 +30,7 @@ void main()
 	vs_out.normal = mat3(transpose(inverse(mvp.model)))*aNormal;
 	vs_out.tex_coords = aTex;
 	
-	for (int i = 0; i < num_lights; i++) {
+	for (int i = 0; i < MAX_NR_SHADOWS; i++) {
 		vs_out.frag_pos_lightspace[i] = light_space_matrices[i] * vec4(vs_out.frag_pos, 1.0);
 	}
 	

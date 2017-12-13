@@ -29,6 +29,7 @@ class MainShader :
 	GLint shadow_casting_uniform_[max_nr_lights];
 	GLint shadow_map_index_uniform_[max_nr_lights];
 	GLint shadow_maps_uniform_[max_nr_shadow_maps];
+	GLint light_space_matrices_uniform_[max_nr_shadow_maps];
 	GLint view_pos_uniform_;
 	GLint material_shininess_;
 	GLint material_ambient_color_;

@@ -41,7 +41,7 @@ void LightNode::set_shadow_casting(const bool is_shadow_casting, const int shado
 
 	this->viewport_ = glm::ivec2(this->shadow_map_size_, this->shadow_map_size_);
 
-	// TODO: set projection matrix
+	// TODO: set projection matrix properly
 	this->projection_ = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
 }
 
@@ -92,7 +92,7 @@ void LightNode::after_render(const std::vector<IDrawable*> &drawables, const std
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-bool LightNode::is_rendering_enabled()
+bool LightNode::is_rendering_enabled() const
 {
 	return this->is_shadow_casting_;
 }
@@ -106,7 +106,7 @@ void LightNode::set_transformation(const glm::mat4& trafo, const glm::mat4& itra
 {
 	TransformationNode::set_transformation(trafo, itrafo);
 
-	this->direction_ = glm::transpose(itrafo)*glm::vec4(-1, 0, 0, 1);
+	this->direction_ = -glm::vec3(itrafo[2][0], itrafo[2][1], itrafo[2][2]);
 }
 
 void LightNode::set_transformation(const glm::mat4& trafo)
@@ -118,7 +118,8 @@ void LightNode::apply_transformation(const glm::mat4& trafo, const glm::mat4& it
 {
 	TransformationNode::apply_transformation(trafo, itrafo);
 
-	this->direction_ = glm::transpose(itrafo)*glm::vec4(-1, 0, 0, 1);
+	auto new_itrafo = this->get_inverse_transformation();
+	this->direction_ = -glm::vec3(new_itrafo[2][0], new_itrafo[2][1], new_itrafo[2][2]);
 }
 
 int LightNode::get_resource_id() const

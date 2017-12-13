@@ -43,16 +43,13 @@ int main()
 	
 	root->add_node(dir_light);
 
-	auto tmp = new TextureResource("assets/gfx/bg-tucard.jpg");
-	engine->register_resource(tmp);
-
-	auto sprite = MeshResource::create_sprite(dir_light);
-	engine->register_resource(sprite);
-
-
-	auto depth_sprite = new GeometryNode("test2", sprite);
-	depth_sprite->set_transformation(glm::scale(glm::mat4(), glm::vec3(100, 100, 100)));
-	root->add_node(depth_sprite);
+	//auto tmp = new TextureResource("assets/gfx/bg-tucard.jpg");
+	//engine->register_resource(tmp);
+	//auto sprite = MeshResource::create_sprite(dir_light);
+	//engine->register_resource(sprite);
+	//auto depth_sprite = new GeometryNode("test2", sprite);
+	//depth_sprite->set_transformation(glm::scale(glm::mat4(), glm::vec3(10, 10, 10)));
+	//root->add_node(depth_sprite);
 	
 	auto anim = new CameraController("cam_anim", cam, engine);
 	root->add_node(anim);
