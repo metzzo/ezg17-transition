@@ -12,6 +12,10 @@ LightNode::LightNode(const std::string& name, const LightType light_type): Rende
 	this->is_shadow_casting_ = false;
 	this->shadow_map_size_ = 0;
 	this->light_type_ = light_type;
+	this->near_plane_ = 0.0f;
+	this->far_plane_ = 0.0f;
+	this->cutoff_ = 0.0f;
+	this->outer_cutoff_ = 0.0f;
 
 	this->depth_map_fbo_ = -1;
 	this->depth_map_ = -1;
@@ -38,11 +42,16 @@ void LightNode::set_shadow_casting(const bool is_shadow_casting, const int shado
 {
 	this->is_shadow_casting_ = is_shadow_casting;
 	this->shadow_map_size_ = shadow_map_size;
+	this->near_plane_ = near_plane;
+	this->far_plane_ = far_plane;
 
 	this->viewport_ = glm::ivec2(this->shadow_map_size_, this->shadow_map_size_);
+}
 
-	// TODO: set projection matrix properly
-	this->projection_ = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+void LightNode::set_cutoff(const float cutoff, const float outer_cutoff)
+{
+	this->cutoff_ = cutoff;
+	this->outer_cutoff_ = outer_cutoff;
 }
 
 std::vector<LightNode*> LightNode::get_light_nodes()
@@ -55,6 +64,14 @@ void LightNode::init(RenderingEngine* rendering_engine)
 	RenderingNode::init(rendering_engine);
 
 	if (this->is_shadow_casting_) {
+		if (this->light_type_ == SPOT_LIGHT)
+		{
+			this->projection_ = glm::perspective(glm::radians(2 * this->outer_cutoff_), 1.0f, this->near_plane_, this->far_plane_);
+		} else if (this->light_type_ == DIRECTIONAL_LIGHT)
+		{
+			this->projection_ = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, this->near_plane_, this->far_plane_);
+		}
+
 		glGenFramebuffers(1, &this->depth_map_fbo_);
 		glGenTextures(1, &this->depth_map_);
 
@@ -111,7 +128,7 @@ void LightNode::set_transformation(const glm::mat4& trafo, const glm::mat4& itra
 {
 	TransformationNode::set_transformation(trafo, itrafo);
 
-	this->direction_ = -glm::vec3(itrafo[2][0], itrafo[2][1], itrafo[2][2]);
+	this->direction_ = glm::transpose(itrafo) * glm::vec4(0, 0, -1, 0);
 }
 
 void LightNode::set_transformation(const glm::mat4& trafo)
@@ -123,8 +140,7 @@ void LightNode::apply_transformation(const glm::mat4& trafo, const glm::mat4& it
 {
 	TransformationNode::apply_transformation(trafo, itrafo);
 
-	auto new_itrafo = this->get_inverse_transformation();
-	this->direction_ = -glm::vec3(new_itrafo[2][0], new_itrafo[2][1], new_itrafo[2][2]);
+	this->direction_ = glm::transpose(this->get_inverse_transformation()) * glm::vec4(0, 0, -1, 0);
 }
 
 int LightNode::get_resource_id() const

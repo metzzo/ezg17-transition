@@ -8,7 +8,8 @@ class ILightShader;
 enum LightType
 {
 	DIRECTIONAL_LIGHT = 1,
-	POINT_LIGHT = 2
+	POINT_LIGHT = 2,
+	SPOT_LIGHT = 3
 };
 
 class LightNode :
@@ -23,6 +24,9 @@ protected:
 	float linear_;
 	float quadratic_;
 
+	float cutoff_;
+	float outer_cutoff_;
+
 	LightType light_type_;
 
 	bool is_shadow_casting_;
@@ -31,6 +35,8 @@ protected:
 	GLuint depth_map_;
 
 	glm::vec3 direction_;
+	float near_plane_;
+	float far_plane_;
 public:
 	explicit LightNode(const std::string& name, LightType light_type);
 	~LightNode();
@@ -38,6 +44,7 @@ public:
 	void set_color(const glm::vec3 diffuse, const glm::vec3 specular);
 	void set_attenuation(const float constant, const float linear, const float quadratic);
 	void set_shadow_casting(bool is_shadow_casting, int shadow_map_size, float near_plane = 1.0, float far_plane = 100.0);
+	void set_cutoff(const float cutoff, const float outer_cutoff);
 
 	std::vector<LightNode*> get_light_nodes() override;
 
@@ -86,10 +93,18 @@ public:
 		return quadratic_;
 	}
 
-
 	glm::vec3 get_direction() const
 	{
 		return this->direction_;
+	}
+
+	float get_cutoff() const
+	{
+		return this->cutoff_;
+	}
+	float get_outer_cutoff() const
+	{
+		return this->outer_cutoff_;
 	}
 };
 

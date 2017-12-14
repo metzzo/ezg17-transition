@@ -1,9 +1,10 @@
 #include "CameraController.h"
 #include <GLFW/glfw3.h>
+#include "RenderingNode.h"
+#include "RenderingEngine.h"
 
-CameraController::CameraController(const std::string name, CameraNode *camera, RenderingEngine *engine) : AnimatorNode(name)
+CameraController::CameraController(const std::string name, RenderingNode *camera) : AnimatorNode(name)
 {
-	this->engine_ = engine;
 	this->camera_ = camera;
 }
 
@@ -15,7 +16,7 @@ void CameraController::update(double delta)
 	sidedirection.y = 0;
 	viewdirection = glm::normalize(viewdirection);
 	sidedirection = glm::normalize(sidedirection);
-	GLFWwindow* window = engine_->get_window();
+	GLFWwindow* window = get_rendering_engine()->get_window();
 	if (glfwGetKey(window, GLFW_KEY_W)) {
 		camera_->apply_transformation(Transformation::translate(viewdirection*speed_*(float)delta));
 	}

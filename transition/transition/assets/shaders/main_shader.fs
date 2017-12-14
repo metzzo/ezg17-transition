@@ -16,6 +16,7 @@ out vec4 FragColor;
 struct Light {
 	// light_type=1: directional light
 	// light_type=2: point light
+	// light_type=3: spot light
 	int light_type;
 	
 	vec3 position;
@@ -30,6 +31,10 @@ struct Light {
 	
 	bool shadow_casting;
 	int shadow_map_index;
+	
+	// Spotlight
+	float cutoff;
+	float outer_cutoff;
 };
 uniform Light lights[MAX_NR_LIGHTS];
 uniform sampler2D shadow_maps[MAX_NR_SHADOWS];
@@ -83,6 +88,14 @@ vec3 calc_point_light(
 	out float bias
 );
 
+vec3 calc_spot_light(
+	Light light, 
+	vec3 diffuse_tex, 
+	vec3 normal, 
+	vec3 view_dir,
+	out float bias
+);
+
 vec3 render_type_debug_depth(vec3 diffuse_tex);
 
 float shadow_calculation(Light light, float bias);
@@ -131,6 +144,15 @@ void main() {
 				bias
 			);
 			break;
+		case 3:
+			add_color = calc_spot_light(
+				lights[i], 
+				diffuse_tex, 
+				normal, 
+				view_dir,
+				bias
+			);
+			break;
 		default:
 			color = vec3(0.0,1.0,0.0);
 		}
@@ -144,12 +166,20 @@ void main() {
 	FragColor = vec4(color, 1.0f);
 }
 
+#define DEBUG_PERSPECTIVE_DEPTH
+
 vec3 render_type_debug_depth(vec3 diffuse_tex) {
 	float depth_value = diffuse_tex.r;
 	float near_plane = 1.0;
-	float far_plane = 20.0;
+	float far_plane = 100.0;
+
+#ifdef DEBUG_PERSPECTIVE_DEPTH
+	float z = depth_value * 2.0 - 1.0; // Back to NDC 
+    return vec3((2.0 * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane)));	
+#else
 	float z = depth_value * 2.0 - 1.0;
-	return vec3(vec3(((2.0 * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane))) / far_plane));
+	return vec3(((2.0 * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane))) / far_plane);
+#endif
 }
 
 vec3 calc_dir_light(
@@ -159,7 +189,7 @@ vec3 calc_dir_light(
 	vec3 view_dir,
 	out float bias) {
 	
-	vec3 light_dir = normalize(light.direction);
+	vec3 light_dir = normalize(-light.direction);
 	bias = max(SHADOW_BIAS_MAX * (1.0 - dot(normal, light_dir)), SHADOW_BIAS_MIN);  
 	
 	// diffuse
@@ -201,6 +231,47 @@ vec3 calc_point_light(
 		specular = spec * (light.specular * material.specular_color);      
 	}
     
+    // attenuation
+    float distance    = length(light_delta);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
+
+    diffuse  *= attenuation;
+    specular *= attenuation;   
+    
+    return (diffuse + specular)*diffuse_tex;
+}
+
+vec3 calc_spot_light(
+	Light light, 
+	vec3 diffuse_tex, 
+	vec3 normal,
+	vec3 view_dir,
+	out float bias) {
+	
+	vec3 light_delta = light.position - fs_in.frag_pos;
+	
+	// diffuse 
+    vec3 light_dir = normalize(light_delta);
+	bias = max(SHADOW_BIAS_MAX * (1.0 - dot(normal, light_dir)), SHADOW_BIAS_MIN);  
+	
+    float diff = max(dot(normal, light_dir), 0.0);
+    vec3 diffuse = diff * (light.diffuse * material.diffuse_color);
+    
+    // specular
+	vec3 specular = vec3(0.0f);
+	if (diff > 0) {
+		vec3 reflect_dir = reflect(-light_dir, normal);  
+		float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess);
+		specular = spec * (light.specular * material.specular_color);      
+	}
+    
+	// spotlight (soft edges)
+    float theta = dot(light_dir, normalize(-light.direction)); 
+    float epsilon = (light.cutoff - light.outer_cutoff);
+    float intensity = clamp((theta - light.outer_cutoff) / epsilon, 0.0, 1.0);
+    diffuse  *= intensity;
+    specular *= intensity;
+	
     // attenuation
     float distance    = length(light_delta);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    

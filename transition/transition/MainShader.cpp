@@ -30,6 +30,8 @@ MainShader::MainShader() : ShaderResource("assets/shaders/main_shader.vs", "asse
 		this->specular_uniform_[i] = -1;
 		this->shadow_casting_uniform_[i] = -1;
 		this->shadow_map_index_uniform_[i] = -1;
+		this->outer_cutoff_uniform_[i] = -1;
+		this->cutoff_uniform_[i] = -1;
 	}
 
 	for (auto i = 0; i < max_nr_shadow_maps; i++)
@@ -128,6 +130,8 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 		glUniform1f(this->quadratic_uniform_[light_index], light->get_quadratic());
 		glUniform3fv(this->diffuse_uniform_[light_index], 1, &light->get_diffuse()[0]);
 		glUniform3fv(this->specular_uniform_[light_index], 1, &light->get_specular()[0]);
+		glUniform1f(this->cutoff_uniform_[light_index], glm::cos(glm::radians(light->get_cutoff())));
+		glUniform1f(this->outer_cutoff_uniform_[light_index], glm::cos(glm::radians(light->get_outer_cutoff())));
 
 		light_index++;
 	}
@@ -169,6 +173,8 @@ void MainShader::init()
 		this->specular_uniform_[i] = get_uniform("lights", "specular", i);
 		this->shadow_casting_uniform_[i] = get_uniform("lights", "shadow_casting", i);
 		this->shadow_map_index_uniform_[i] = get_uniform("lights", "shadow_map_index", i);
+		this->cutoff_uniform_[i] = get_uniform("lights", "cutoff", i);
+		this->outer_cutoff_uniform_[i] = get_uniform("lights", "outer_cutoff", i);
 	}
 	for (auto i = 0; i < max_nr_shadow_maps; i++)
 	{
