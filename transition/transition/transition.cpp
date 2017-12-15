@@ -10,6 +10,8 @@
 #include "ColladaImporter.h"
 #include "LightNode.h"
 #include "CameraController.h"
+#include "GeometryNode.h"
+#include "DirectionalShadowStrategy.h"
 
 
 int main()
@@ -26,16 +28,48 @@ int main()
 		engine->get_viewport(),
 		glm::perspective(glm::radians(60.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f)		
 	);
-	cam->set_view_matrix(glm::lookAt(glm::vec3(0, 5, 0), glm::vec3(-10, 3, 0), glm::vec3(0, 1, 0)));
+	//cam->set_view_matrix(glm::lookAt(glm::vec3(0, 5, 0), glm::vec3(-10, 3, 0), glm::vec3(0, 1, 0)));
+	cam->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -2), glm::vec3(3, 0, 3), glm::vec3(0, 1, 0)));
 	root->add_node(cam);
 
 	auto importer = new ColladaImporter(engine);
 	//const auto world = importer->load_node("assets/models/gitti_d.dae");
 	const auto world = importer->load_node("assets/models/world1.dae");
 	root->add_node(world);
+
+	/*auto dir_light = new LightNode("test", DIRECTIONAL_LIGHT);
+	dir_light->set_attenuation(1.0, 0.07, 0.017);
+	dir_light->set_color(glm::vec3(0.8, 0.0, 0.0), glm::vec3(1.0, 0.0, 0.0));
+	dir_light->set_shadow_casting(true, 1024);
+	dir_light->set_view_matrix(glm::lookAt(glm::vec3(0, 5, 0), glm::vec3(-10, 3, 0), glm::vec3(0, 1, 0)));
 	
-	auto anim = new CameraController("cam_anim", cam, engine);
+	root->add_node(dir_light);*/
+
+	auto spot_light = new LightNode("test", SPOT_LIGHT);
+	spot_light->set_attenuation(1.0, 0.027, 0.0028);
+	spot_light->set_color(glm::vec3(0.8, 0.0, 0.0), glm::vec3(1.0, 0.0, 0.0));
+	spot_light->set_cutoff(12.5f, 25.0f);
+	spot_light->set_shadow_strategy(new DirectionalShadowStrategy(1024));
+	spot_light->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -2), glm::vec3(5, 0, 5), glm::vec3(0, 1, 0)));
+	root->add_node(spot_light);
+
+	auto tmp = new TextureResource("assets/gfx/bg-tucard.jpg");
+	engine->register_resource(tmp);
+	auto sprite = MeshResource::create_sprite(tmp);
+	engine->register_resource(sprite);
+	auto depth_sprite = new GeometryNode("test2", sprite);
+	auto tmpMat = glm::inverse(glm::lookAt(glm::vec3(-2, 5, -2), glm::vec3(5, 0, 5), glm::vec3(0, 1, 0)));
+	depth_sprite->set_transformation(tmpMat);
+	root->add_node(depth_sprite);
+	
+	auto anim = new CameraController("cam_anim1", spot_light);
 	root->add_node(anim);
+
+	//auto anim2 = new CameraController("cam_anim", cam);
+	//root->add_node(anim2);
+
+	auto anim3 = new CameraController("cam_anim2", depth_sprite);
+	root->add_node(anim3);
 
 	engine->run();
 

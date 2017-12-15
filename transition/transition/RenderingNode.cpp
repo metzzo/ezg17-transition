@@ -11,31 +11,40 @@ RenderingNode::~RenderingNode()
 {
 }
 
-std::vector<RenderingNode*> RenderingNode::get_rendering_nodes()
-{
-	return { this };
-}
-
-void RenderingNode::before_render(const std::vector<LightNode*>& light_nodes) const
+void RenderingNode::before_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const
 {
 	glViewport(0, 0, this->viewport_.x, this->viewport_.y);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void RenderingNode::after_render() const
+void RenderingNode::set_viewport(const glm::ivec2 viewport)
+{
+	this->viewport_ = viewport;
+}
+
+void RenderingNode::after_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const
 {
 }
 
 void RenderingNode::render(const std::vector<IDrawable*>& drawables, const std::vector<LightNode*>& light_nodes) const
 {
-	before_render(light_nodes);
+	if (!this->is_rendering_enabled())
+	{
+		return;
+	}
+
+	before_render(drawables, light_nodes);
 	
 	for (auto &drawable : drawables)
 	{
 		drawable->draw(this->get_shader());
 	}
 
-	after_render();
+	after_render(drawables, light_nodes);
+}
+
+bool RenderingNode::is_rendering_enabled() const
+{
+	return true;
 }
 
 glm::mat4 RenderingNode::get_projection_matrix() const {
@@ -47,4 +56,9 @@ glm::mat4 RenderingNode::get_view_matrix() const {
 
 void RenderingNode::set_view_matrix(const glm::mat4& mat) {
 	this->set_transformation(glm::inverse(mat), mat);
+}
+
+void RenderingNode::set_projection_matrix(const glm::mat4& mat)
+{
+	this->projection_ = mat;
 }

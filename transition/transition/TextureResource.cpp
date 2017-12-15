@@ -2,6 +2,12 @@
 #include <FreeImage.h>
 #include <iostream>
 
+void TextureRenderable::bind(GLuint unit) const
+{
+	glActiveTexture(GL_TEXTURE0 + unit);
+	glBindTexture(GL_TEXTURE_2D, this->get_resource_id());
+}
+
 TextureResource::TextureResource(const std::string& texture_path)
 {
 	this->texture_path_ = texture_path;
@@ -45,10 +51,4 @@ void TextureResource::init() {
 
 const std::string TextureResource::get_texture_path() const {
 	return this->texture_path_;
-}
-
-void TextureResource::bind(const GLuint unit) const
-{
-	glActiveTexture(GL_TEXTURE0 + unit);
-	glBindTexture(GL_TEXTURE_2D, this->handle_);
 }

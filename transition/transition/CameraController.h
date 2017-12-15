@@ -1,14 +1,13 @@
 #pragma once
 #include "AnimatorNode.h"
-#include "CameraNode.h"
-#include "RenderingEngine.h"
 #include <iostream>
+
+class TransformationNode;
 
 class CameraController : public AnimatorNode {
 
 private:
-	CameraNode *camera_;
-	RenderingEngine *engine_;
+	TransformationNode *target_;
 	const float speed_ = 10;
 	const float sensitivity_ = 0.5;
 	double cursorX_ = 0;
@@ -16,7 +15,7 @@ private:
 	float verAngle_ = 0;
 
 public:
-	CameraController(const std::string name, CameraNode *camera, RenderingEngine *engine);
+	CameraController(const std::string name, TransformationNode *camera);
 	void update(double delta) override;
 
 };

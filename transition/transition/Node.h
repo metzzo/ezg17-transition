@@ -6,7 +6,7 @@
 
 class IDrawable;
 class RenderingEngine;
-class RenderingNode;
+class CameraNode;
 class LightNode;
 class AnimatorNode;
 
@@ -23,7 +23,6 @@ public:
 	virtual void init(RenderingEngine *rendering_engine);
 
 	virtual std::vector<IDrawable*> get_drawables();
-	virtual std::vector<RenderingNode*> get_rendering_nodes();
 	virtual std::vector<LightNode*> get_light_nodes();
 	virtual std::vector<AnimatorNode*> get_animator_nodes();
 

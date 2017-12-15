@@ -7,6 +7,8 @@
 #include "MainShader.h"
 #include "GLDebugContext.h"
 #include "AnimatorNode.h"
+#include "DepthOnlyShader.h"
+#include "CameraNode.h"
 
 RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int refresh_rate)
 {
@@ -18,6 +20,9 @@ RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int
 
 	this->main_shader_ = new MainShader();
 	this->register_resource(this->main_shader_);
+
+	this->depth_only_shader_ = new DepthOnlyShader();
+	this->register_resource(this->depth_only_shader_);
 }
 
 RenderingEngine::~RenderingEngine()
@@ -104,9 +109,10 @@ void RenderingEngine::run()
 	this->root_node_->init(this);
 
 	this->drawables_ = this->root_node_->get_drawables();
-	this->rendering_nodes_ = this->root_node_->get_rendering_nodes();
 	this->light_nodes_ = this->root_node_->get_light_nodes();
 	this->animator_nodes_ = this->root_node_->get_animator_nodes();
+
+	const auto main_camera = static_cast<CameraNode*>(this->root_node_->find_by_name("MainCamera"));
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	double last_time = glfwGetTime();
@@ -126,10 +132,7 @@ void RenderingEngine::run()
 			animator_node->update(delta);
 		}
 
-		for (auto& rendering_node : this->rendering_nodes_)
-		{
-			rendering_node->render(this->drawables_, this->light_nodes_);
-		}
+		main_camera->render(this->drawables_, this->light_nodes_);
 
 		glfwSwapBuffers(window_);
 		glfwPollEvents();

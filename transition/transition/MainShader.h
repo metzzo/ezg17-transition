@@ -1,12 +1,12 @@
 #pragma once
 #include "ShaderResource.h"
 #include "ILightShader.h"
-#include "GeometryNode.h"
-#include "RenderingNode.h"
 
 class LightNode;
 
 const unsigned int max_nr_lights = 10;
+const unsigned int max_nr_shadow_maps = 5;
+
 class MainShader :
 	public ShaderResource,
 	public ILightShader
@@ -26,11 +26,18 @@ class MainShader :
 	GLint quadratic_uniform_[max_nr_lights];
 	GLint diffuse_uniform_[max_nr_lights];
 	GLint specular_uniform_[max_nr_lights];
+	GLint shadow_casting_uniform_[max_nr_lights];
+	GLint shadow_map_index_uniform_[max_nr_lights];
+	GLint cutoff_uniform_[max_nr_lights];
+	GLint outer_cutoff_uniform_[max_nr_lights];
+	GLint shadow_maps_uniform_[max_nr_shadow_maps];
+	GLint light_space_matrices_uniform_[max_nr_shadow_maps];
 	GLint view_pos_uniform_;
 	GLint material_shininess_;
 	GLint material_ambient_color_;
 	GLint material_diffuse_color_;
 	GLint material_specular_color_;
+	GLint material_material_type_;
 public:
 	MainShader();
 	~MainShader();

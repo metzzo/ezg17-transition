@@ -11,9 +11,16 @@ CameraNode::~CameraNode()
 {
 }
 
-void CameraNode::before_render(const std::vector<LightNode*>& light_nodes) const
+void CameraNode::before_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const
 {
-	RenderingNode::before_render(light_nodes);
+	for (auto &light : light_nodes)
+	{
+		light->render(drawables, std::vector<LightNode*>());
+	}
+
+	RenderingNode::before_render(drawables, light_nodes);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	const auto shader = this->get_shader();
 	shader->use();
@@ -21,6 +28,7 @@ void CameraNode::before_render(const std::vector<LightNode*>& light_nodes) const
 	shader->set_camera_uniforms(this);
 }
 
-MainShader* CameraNode::get_shader() const {
+MainShader* CameraNode::get_shader() const 
+{
 	return this->get_rendering_engine()->get_main_shader();
 }

@@ -4,11 +4,12 @@
 class GroupNode;
 class IResource;
 class IDrawable;
-class RenderingNode;
+class CameraNode;
 class MainShader;
 class LightNode;
 class AnimatorNode;
 struct GLFWwindow;
+class DepthOnlyShader;
 
 class RenderingEngine
 {
@@ -16,7 +17,6 @@ class RenderingEngine
 	GroupNode *root_node_;
 
 	std::vector<IDrawable*> drawables_;
-	std::vector<RenderingNode*> rendering_nodes_;
 	std::vector<IResource*>  resources_;
 	std::vector<LightNode*> light_nodes_;
 	std::vector<AnimatorNode*> animator_nodes_;
@@ -26,6 +26,7 @@ class RenderingEngine
 	int refresh_rate_;
 
 	MainShader *main_shader_;
+	DepthOnlyShader *depth_only_shader_;
 public:
 	explicit RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int refresh_rate);
 	~RenderingEngine();
@@ -47,6 +48,11 @@ public:
 	MainShader *get_main_shader() const
 	{
 		return this->main_shader_;
+	}
+
+	DepthOnlyShader *get_depth_only_shader() const
+	{
+		return this->depth_only_shader_;
 	}
 
 	GLFWwindow* get_window() const {

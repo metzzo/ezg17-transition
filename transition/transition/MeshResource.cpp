@@ -1,21 +1,15 @@
 #include "MeshResource.h"
 #include <cstring>
 #include "glheaders.h"
+#include "TextureRenderable.h"
 
-MeshResource::MeshResource()
+MeshResource *MeshResource::create_sprite(TextureRenderable* resource)
 {
-	this->vao_ = -1;
-	this->vbo_positions_ = -1;
-	this->vbo_normals_ = -1;
-	this->vbo_uvs_ = -1;
-	this->ebo_ = -1;
-
 	float vertices[] = {
-		// positions          // texture coords
-		0.5f,  0.5f, 0.0f,    // top right
-		0.5f, -0.5f, 0.0f,    // bottom right
-		-0.5f, -0.5f, 0.0f,   // bottom left
-		-0.5f,  0.5f, 0.0f    // top left 
+		-1.0f,  1.0f, 0.0f,
+		-1.0f, -1.0f, 0.0f,
+		 1.0f,  1.0f, 0.0f,
+		 1.0f, -1.0f, 0.0f
 	};
 
 	float normals[] = {
@@ -26,32 +20,45 @@ MeshResource::MeshResource()
 	};
 
 	float uvs[] = {
+		0.0f, 1.0f,
 		0.0f, 0.0f,
-		0.0f, 0.0f,
-		0.0f, 0.0f,
-		0.0f, 0.0f
+		1.0f, 1.0f,
+		1.0f, 0.0f
 	};
 
 	unsigned int indices[] = {
-		0, 1, 3, // first triangle
-		1, 2, 3  // second triangle
+		0, 1, 2, // first triangle
+		3, 2, 1  // second triangle
 	};
 
-	this->vertices_ = new float[12];
-	memcpy(this->vertices_, &vertices, sizeof(vertices));
-	this->num_vertices_ = 4;
+	float *quad_vertices = new float[12];
+	memcpy(quad_vertices, &vertices, 12 * sizeof(float));
 
-	this->normals_ = new float[12];
-	memcpy(this->normals_, &normals, sizeof(normals));
+	float *quad_normals = new float[12];
+	memcpy(quad_normals, &normals, 12 * sizeof(float));
 
-	this->uvs_ = new float[8];
-	memcpy(this->uvs_, &uvs, sizeof(uvs));
+	float *quad_uvs = new float[8];
+	memcpy(quad_uvs, &uvs, 8 * sizeof(float));
 
-	this->indices_ = new unsigned int[6];
-	memcpy(this->indices_, &indices, sizeof(indices));
-	this->num_indices_ = 6;
+	unsigned int *quad_indices = new unsigned int[6];
+	memcpy(quad_indices, &indices, 6 * sizeof(unsigned int));
 
+	Material mat;
+	mat.set_ambient_color(glm::vec3(1, 1, 1));
+	mat.set_diffuse_color(glm::vec3(0, 0, 0));
+	mat.set_specular_color(glm::vec3(0, 0, 0));
 
+	mat.set_texture(resource);
+
+	return new MeshResource(
+		quad_vertices,
+		quad_normals,
+		quad_uvs,
+		4,
+		quad_indices,
+		6,
+		mat
+	);
 }
 
 MeshResource::MeshResource(float *vertices, float *normals, float *uvs, const int num_vertices, unsigned int *indices, const int num_indices, const Material& material) {
@@ -102,7 +109,7 @@ void MeshResource::init()
 
 	//Bind Positions to Shader-Location 0
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo_positions_);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*this->num_vertices_*3, this->vertices_, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*this->num_vertices_ * 3, this->vertices_, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 

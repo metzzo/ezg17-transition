@@ -1,47 +1,64 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "RenderingNode.h"
+#include "TextureResource.h"
+
 class ILightShader;
+class IShadowStrategy;
 
 enum LightType
 {
 	DIRECTIONAL_LIGHT = 1,
-	POINT_LIGHT = 2
+	POINT_LIGHT = 2,
+	SPOT_LIGHT = 3
 };
 
 class LightNode :
-	public RenderingNode
+	public RenderingNode,
+	public TextureRenderable
 {
 protected:
 	glm::vec3 diffuse_;
 	glm::vec3 specular_;
-	glm::vec3 direction_;
 
 	float constant_;
 	float linear_;
 	float quadratic_;
 
+	float cutoff_;
+	float outer_cutoff_;
+
 	LightType light_type_;
 
-	bool is_shadow_casting_;
+
+	glm::vec3 direction_;
+
+	IShadowStrategy *shadow_strategy_;
 public:
-
-	static LightNode* create_directional_light(const std::string& name, const glm::vec3& diffuse, const glm::vec3& specular, const glm::vec3& direction);
-	static LightNode* create_point_light(const std::string& name, const glm::vec3& diffuse, const glm::vec3& specular, const glm::vec3& position, const glm::vec3& attenuation);
-
 	explicit LightNode(const std::string& name, LightType light_type);
 	~LightNode();
 
 	void set_color(const glm::vec3 diffuse, const glm::vec3 specular);
 	void set_attenuation(const float constant, const float linear, const float quadratic);
+	void set_shadow_strategy(IShadowStrategy *shadow_strategy);
+	void set_cutoff(const float cutoff, const float outer_cutoff);
 
-	std::vector<RenderingNode*> get_rendering_nodes() override;
 	std::vector<LightNode*> get_light_nodes() override;
 
-	ShaderResource* get_shader() const override
-	{
-		return nullptr;
-	}
+	void init(RenderingEngine* rendering_engine) override;
+
+	void before_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodess) const override;
+	void after_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const override;
+	bool is_rendering_enabled() const override;
+
+	void set_transformation(const glm::mat4& trafo, const glm::mat4& itrafo) override;
+	void set_transformation(const glm::mat4& trafo) override;
+	void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) override;
+
+	int get_resource_id() const override;
+	MaterialType get_material_type() override;
+
+	ShaderResource* get_shader() const override;
 
 	LightType get_light_type() const
 	{
@@ -75,10 +92,29 @@ public:
 
 	glm::vec3 get_direction() const
 	{
-		return glm::transpose(this->get_inverse_transformation()) * glm::vec4(this->direction_,0);
+		return this->direction_;
 	}
 
-	void set_transformation(const glm::mat4& trafo, const glm::mat4& itrafo) override;
-	void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) override;
+	float get_cutoff() const
+	{
+		return this->cutoff_;
+	}
+
+	float get_outer_cutoff() const
+	{
+		return this->outer_cutoff_;
+	}
+};
+
+class IShadowStrategy
+{
+public:
+	virtual ~IShadowStrategy() = default;
+	virtual void init(LightNode *light_node) = 0;
+
+	virtual void before_render(const LightNode *light_node) = 0;
+	virtual void after_render(const LightNode *light_node) = 0;
+	virtual ShaderResource *get_shader(const LightNode *light_node) = 0;
+	virtual int get_resource_id() const = 0;
 };
 

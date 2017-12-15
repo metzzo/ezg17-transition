@@ -21,8 +21,8 @@ public:
 private:
 	RenderingEngine* engine_;
 
-	void processLights(const aiScene* scene, std::vector<Node*>& lights);
-	void processNode(aiNode* node, const aiScene* scene, std::vector<Node*>& lights, std::vector<TextureResource*>& textures, GroupNode* parent);
-	MeshResource* processMesh(aiMesh* node, const aiScene* scene, std::vector<TextureResource*>& textures);
-	std::vector<TextureResource*> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::vector<TextureResource*>& textures);
+	void process_lights(const aiScene* scene, std::vector<Node*>& lights);
+	void process_node(aiNode* node, const aiScene* scene, std::vector<Node*>& lights, std::vector<TextureResource*>& textures, GroupNode* parent);
+	MeshResource* process_mesh(aiMesh* node, const aiScene* scene, std::vector<TextureResource*>& textures);
+	std::vector<TextureResource*> load_material_textures(aiMaterial* mat, aiTextureType type, std::vector<TextureResource*>& textures);
 };

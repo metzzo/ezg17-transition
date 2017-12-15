@@ -157,6 +157,8 @@
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="ColladaImporter.h" />
+    <ClInclude Include="DepthOnlyShader.h" />
+    <ClInclude Include="DirectionalShadowStrategy.h" />
     <ClInclude Include="GeometryNode.h" />
     <ClInclude Include="GLDebugContext.h" />
     <ClInclude Include="glheaders.h" />
@@ -173,6 +175,7 @@
     <ClInclude Include="RenderingNode.h" />
     <ClInclude Include="ShaderResource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TextureRenderable.h" />
     <ClInclude Include="TextureResource.h" />
     <ClInclude Include="Transformation.h" />
     <ClInclude Include="TransformationNode.h" />
@@ -182,16 +185,20 @@
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="ColladaImporter.cpp" />
+    <ClCompile Include="DepthOnlyShader.cpp" />
+    <ClCompile Include="DirectionalShadowStrategy.cpp" />
     <ClCompile Include="GeometryNode.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="GroupNode.cpp" />
     <ClCompile Include="LightNode.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="MeshResource.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="MainShader.cpp" />
     <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="RenderingNode.cpp" />
     <ClCompile Include="ShaderResource.cpp" />
+    <ClCompile Include="TextureRenderable.cpp" />
     <ClCompile Include="TextureResource.cpp" />
     <ClCompile Include="Transformation.cpp" />
     <ClCompile Include="transition.cpp" />
