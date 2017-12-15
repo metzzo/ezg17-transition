@@ -11,6 +11,7 @@
 #include "LightNode.h"
 #include "CameraController.h"
 #include "GeometryNode.h"
+#include "DirectionalShadowStrategy.h"
 
 
 int main()
@@ -48,7 +49,7 @@ int main()
 	spot_light->set_attenuation(1.0, 0.027, 0.0028);
 	spot_light->set_color(glm::vec3(0.8, 0.0, 0.0), glm::vec3(1.0, 0.0, 0.0));
 	spot_light->set_cutoff(12.5f, 25.0f);
-	spot_light->set_shadow_casting(true, 1024);
+	spot_light->set_shadow_strategy(new DirectionalShadowStrategy(1024));
 	spot_light->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -2), glm::vec3(5, 0, 5), glm::vec3(0, 1, 0)));
 	root->add_node(spot_light);
 

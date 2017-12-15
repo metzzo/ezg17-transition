@@ -24,9 +24,13 @@ public:
 
 	virtual ShaderResource* get_shader() const = 0;
 	virtual bool is_rendering_enabled() const;
-
+	
 	glm::mat4 get_projection_matrix() const;
 	glm::mat4 get_view_matrix() const;
+
 	void set_view_matrix(const glm::mat4& mat);
+	void set_projection_matrix(const glm::mat4& mat);
+
+	void set_viewport(const glm::ivec2 viewport);
 };
 

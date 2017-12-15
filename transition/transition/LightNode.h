@@ -4,6 +4,7 @@
 #include "TextureResource.h"
 
 class ILightShader;
+class IShadowStrategy;
 
 enum LightType
 {
@@ -29,21 +30,17 @@ protected:
 
 	LightType light_type_;
 
-	bool is_shadow_casting_;
-	int shadow_map_size_;
-	GLuint depth_map_fbo_;
-	GLuint depth_map_;
 
 	glm::vec3 direction_;
-	float near_plane_;
-	float far_plane_;
+
+	IShadowStrategy *shadow_strategy_;
 public:
 	explicit LightNode(const std::string& name, LightType light_type);
 	~LightNode();
 
 	void set_color(const glm::vec3 diffuse, const glm::vec3 specular);
 	void set_attenuation(const float constant, const float linear, const float quadratic);
-	void set_shadow_casting(bool is_shadow_casting, int shadow_map_size, float near_plane = 1.0, float far_plane = 100.0);
+	void set_shadow_strategy(IShadowStrategy *shadow_strategy);
 	void set_cutoff(const float cutoff, const float outer_cutoff);
 
 	std::vector<LightNode*> get_light_nodes() override;
@@ -102,9 +99,22 @@ public:
 	{
 		return this->cutoff_;
 	}
+
 	float get_outer_cutoff() const
 	{
 		return this->outer_cutoff_;
 	}
+};
+
+class IShadowStrategy
+{
+public:
+	virtual ~IShadowStrategy() = default;
+	virtual void init(LightNode *light_node) = 0;
+
+	virtual void before_render(const LightNode *light_node) = 0;
+	virtual void after_render(const LightNode *light_node) = 0;
+	virtual ShaderResource *get_shader(const LightNode *light_node) = 0;
+	virtual int get_resource_id() const = 0;
 };
 

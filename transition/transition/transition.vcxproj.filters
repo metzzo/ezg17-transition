@@ -111,13 +111,16 @@
     <ClInclude Include="Transformation.h">
       <Filter>Headerdateien\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="CameraController.h">
-      <Filter>Quelldateien\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="DepthOnlyShader.h">
       <Filter>Headerdateien\Resource\Shader</Filter>
     </ClInclude>
     <ClInclude Include="TextureRenderable.h">
+      <Filter>Headerdateien\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>Headerdateien\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalShadowStrategy.h">
       <Filter>Headerdateien\Utility</Filter>
     </ClInclude>
   </ItemGroup>
@@ -180,6 +183,9 @@
       <Filter>Quelldateien\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
+      <Filter>Quelldateien\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalShadowStrategy.cpp">
       <Filter>Quelldateien\Utility</Filter>
     </ClCompile>
   </ItemGroup>

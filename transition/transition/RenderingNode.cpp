@@ -16,6 +16,11 @@ void RenderingNode::before_render(const std::vector<IDrawable*> &drawables, cons
 	glViewport(0, 0, this->viewport_.x, this->viewport_.y);
 }
 
+void RenderingNode::set_viewport(const glm::ivec2 viewport)
+{
+	this->viewport_ = viewport;
+}
+
 void RenderingNode::after_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const
 {
 }
@@ -51,4 +56,9 @@ glm::mat4 RenderingNode::get_view_matrix() const {
 
 void RenderingNode::set_view_matrix(const glm::mat4& mat) {
 	this->set_transformation(glm::inverse(mat), mat);
+}
+
+void RenderingNode::set_projection_matrix(const glm::mat4& mat)
+{
+	this->projection_ = mat;
 }
