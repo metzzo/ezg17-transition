@@ -104,6 +104,10 @@ public:
 	{
 		return this->outer_cutoff_;
 	}
+	IShadowStrategy *get_shadow_strategy() const
+	{
+		return this->shadow_strategy_;
+	}
 };
 
 class IShadowStrategy

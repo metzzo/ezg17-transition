@@ -1,7 +1,7 @@
 #include "LightNode.h"
 #include "ILightShader.h"
 #include "RenderingEngine.h"
-#include "DepthOnlyShader.h"
+#include "DirectionalDepthShader.h"
 
 LightNode::LightNode(const std::string& name, const LightType light_type): RenderingNode(name, glm::ivec2(),
                                                                                          glm::mat4())
