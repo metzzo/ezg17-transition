@@ -1,8 +1,8 @@
 #version 330 core
 #define MAX_NR_LIGHTS (10)
 #define MAX_NR_SHADOWS (5)
-#define SHADOW_BIAS_MAX (0.05)
-#define SHADOW_BIAS_MIN (0.005)
+#define SHADOW_BIAS_MAX (0.001)
+#define SHADOW_BIAS_MIN (0.0001)
 
 in VS_OUT {
     vec3 frag_pos;

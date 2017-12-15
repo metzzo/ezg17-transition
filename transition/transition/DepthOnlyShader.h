@@ -1,15 +1,14 @@
 #pragma once
 #include "ShaderResource.h"
-#include <vector>
+#include <glm/glm.hpp>
 
 class LightNode;
 
 class DepthOnlyShader :
 	public ShaderResource
 {
-	GLint model_uniform_;
-	GLint view_uniform_;
-	GLint projection_uniform_;
+	GLint mvp_uniform_;
+	glm::mat4 view_projection_;
 public:
 	DepthOnlyShader();
 	~DepthOnlyShader();

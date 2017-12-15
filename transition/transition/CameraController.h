@@ -2,12 +2,12 @@
 #include "AnimatorNode.h"
 #include <iostream>
 
-class RenderingNode;
+class TransformationNode;
 
 class CameraController : public AnimatorNode {
 
 private:
-	RenderingNode *camera_;
+	TransformationNode *target_;
 	const float speed_ = 10;
 	const float sensitivity_ = 0.5;
 	double cursorX_ = 0;
@@ -15,7 +15,7 @@ private:
 	float verAngle_ = 0;
 
 public:
-	CameraController(const std::string name, RenderingNode *camera);
+	CameraController(const std::string name, TransformationNode *camera);
 	void update(double delta) override;
 
 };
