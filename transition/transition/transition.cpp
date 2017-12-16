@@ -62,14 +62,14 @@ int main()
 	depth_sprite->set_transformation(tmpMat);
 	root->add_node(depth_sprite);
 	
-	auto anim = new CameraController("cam_anim1", spot_light);
-	root->add_node(anim);
+	//auto anim = new CameraController("cam_anim1", spot_light);
+	//root->add_node(anim);
 
-	//auto anim2 = new CameraController("cam_anim", cam);
-	//root->add_node(anim2);
+	auto anim2 = new CameraController("cam_anim", cam);
+	root->add_node(anim2);
 
-	auto anim3 = new CameraController("cam_anim2", depth_sprite);
-	root->add_node(anim3);
+	//auto anim3 = new CameraController("cam_anim2", depth_sprite);
+	//root->add_node(anim3);
 
 	engine->run();
 
