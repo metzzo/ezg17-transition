@@ -16,7 +16,8 @@ public:
 	void before_render(const LightNode *light_node) override;
 	void after_render(const LightNode *light_node) override;
 	ShaderResource *get_shader(const LightNode *light_node) override;
-	int get_resource_id() const override;
+
+	void set_uniforms(ILightShader* shader, LightNode* light_node) override;
 
 	float get_far_plane() const
 	{

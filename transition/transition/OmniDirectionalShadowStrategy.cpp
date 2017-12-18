@@ -2,6 +2,7 @@
 #include "RenderingEngine.h"
 #include "ShaderResource.h"
 #include "OmniDirectionalDepthShader.h"
+#include "ILightShader.h"
 
 OmniDirectionalShadowStrategy::OmniDirectionalShadowStrategy(const int shadow_map_size, const float near_plane, const float far_plane)
 {
@@ -20,6 +21,11 @@ OmniDirectionalShadowStrategy::~OmniDirectionalShadowStrategy()
 
 void OmniDirectionalShadowStrategy::init(LightNode* light_node)
 {
+	light_node->set_viewport(glm::ivec2(this->shadow_map_size_, this->shadow_map_size_));
+
+	light_node->set_projection_matrix(glm::perspective(glm::radians(90.0f), 1.0f, this->near_plane_, this->far_plane_));
+
+
 	glGenFramebuffers(1, &this->depth_cubemap_fbo_);
 	glGenTextures(1, &this->depth_cubemap_);
 
@@ -64,8 +70,7 @@ ShaderResource* OmniDirectionalShadowStrategy::get_shader(const LightNode *light
 	return light_node->get_rendering_engine()->get_omni_directional_depth_shader();
 }
 
-int OmniDirectionalShadowStrategy::get_resource_id() const
+void OmniDirectionalShadowStrategy::set_uniforms(ILightShader* shader, LightNode* light_node)
 {
-	return this->depth_cubemap_;
+	shader->set_omni_directional_shadow_map_uniforms(light_node, this->depth_cubemap_, this->far_plane_, this->near_plane_);
 }
-

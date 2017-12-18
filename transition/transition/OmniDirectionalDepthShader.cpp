@@ -5,7 +5,7 @@
 #include "OmniDirectionalShadowStrategy.h"
 
 
-OmniDirectionalDepthShader::OmniDirectionalDepthShader() : ShaderResource("assets/shaders/depth_shader_omni_directional.vs", "assets/shaders/depth_shader_omni_directional.fs")
+OmniDirectionalDepthShader::OmniDirectionalDepthShader() : ShaderResource("assets/shaders/depth_shader_omni_directional.vs", "assets/shaders/depth_shader_omni_directional.fs", "assets/shaders/depth_shader_omni_directional.gs")
 {
 	this->model_uniform_ = -1;
 	this->light_pos_uniform_ = -1;
@@ -54,7 +54,9 @@ void OmniDirectionalDepthShader::set_camera_uniforms(const RenderingNode* render
 
 	for (auto i = 0; i < 6; i++)
 	{
-		const auto &transform = shadow_transforms[i];
+		assert(this->shadow_transform_uniform_[i] >= 0);
+
+		const auto &transform = node->get_projection_matrix() * shadow_transforms[i];
 		glUniformMatrix4fv(this->shadow_transform_uniform_[i], 1, GL_FALSE, &transform[0][0]);
 	}
 
