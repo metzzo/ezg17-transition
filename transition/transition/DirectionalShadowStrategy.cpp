@@ -1,7 +1,8 @@
 #include "DirectionalShadowStrategy.h"
 #include "RenderingNode.h"
 #include "RenderingEngine.h"
-#include "DepthOnlyShader.h"
+#include "DirectionalDepthShader.h"
+#include "ILightShader.h"
 #include <glm/glm.hpp>
 
 DirectionalShadowStrategy::DirectionalShadowStrategy(const int shadow_map_size, const float near_plane, const float far_plane)
@@ -71,12 +72,10 @@ void DirectionalShadowStrategy::after_render(const LightNode *light_node)
 
 ShaderResource* DirectionalShadowStrategy::get_shader(const LightNode *light_node)
 {
-	return light_node->get_rendering_engine()->get_depth_only_shader();
+	return light_node->get_rendering_engine()->get_directional_depth_shader();
 }
 
-int DirectionalShadowStrategy::get_resource_id() const
+void DirectionalShadowStrategy::set_uniforms(ILightShader* shader, LightNode* light_node)
 {
-	return this->depth_map_;
+	shader->set_directional_shadow_map_uniforms(light_node, this->depth_map_);
 }
-
-

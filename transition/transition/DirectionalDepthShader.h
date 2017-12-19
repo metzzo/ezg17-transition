@@ -4,14 +4,14 @@
 
 class LightNode;
 
-class DepthOnlyShader :
+class DirectionalDepthShader :
 	public ShaderResource
 {
 	GLint mvp_uniform_;
 	glm::mat4 view_projection_;
 public:
-	DepthOnlyShader();
-	~DepthOnlyShader();
+	DirectionalDepthShader();
+	~DirectionalDepthShader();
 
 	void init() override;
 

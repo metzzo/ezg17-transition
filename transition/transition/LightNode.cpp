@@ -1,7 +1,7 @@
 #include "LightNode.h"
 #include "ILightShader.h"
 #include "RenderingEngine.h"
-#include "DepthOnlyShader.h"
+#include "DirectionalDepthShader.h"
 
 LightNode::LightNode(const std::string& name, const LightType light_type): RenderingNode(name, glm::ivec2(),
                                                                                          glm::mat4())
@@ -105,12 +105,10 @@ void LightNode::apply_transformation(const glm::mat4& trafo, const glm::mat4& it
 	this->direction_ = glm::transpose(this->get_inverse_transformation()) * glm::vec4(0, 0, -1, 0);
 }
 
-int LightNode::get_resource_id() const
+void LightNode::set_uniforms(ILightShader* shader)
 {
-	return this->shadow_strategy_ != nullptr ? this->shadow_strategy_->get_resource_id() : -1;
-}
-
-MaterialType LightNode::get_material_type()
-{
-	return DEBUG_DEPTH_MATERIAL;
+	if (this->shadow_strategy_)
+	{
+		this->shadow_strategy_->set_uniforms(shader, this);
+	}
 }

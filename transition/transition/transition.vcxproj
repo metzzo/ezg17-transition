@@ -157,7 +157,7 @@
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="ColladaImporter.h" />
-    <ClInclude Include="DepthOnlyShader.h" />
+    <ClInclude Include="DirectionalDepthShader.h" />
     <ClInclude Include="DirectionalShadowStrategy.h" />
     <ClInclude Include="GeometryNode.h" />
     <ClInclude Include="GLDebugContext.h" />
@@ -171,6 +171,8 @@
     <ClInclude Include="MeshResource.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="MainShader.h" />
+    <ClInclude Include="OmniDirectionalDepthShader.h" />
+    <ClInclude Include="OmniDirectionalShadowStrategy.h" />
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="RenderingNode.h" />
     <ClInclude Include="ShaderResource.h" />
@@ -185,7 +187,7 @@
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="ColladaImporter.cpp" />
-    <ClCompile Include="DepthOnlyShader.cpp" />
+    <ClCompile Include="DirectionalDepthShader.cpp" />
     <ClCompile Include="DirectionalShadowStrategy.cpp" />
     <ClCompile Include="GeometryNode.cpp" />
     <ClCompile Include="glad.c" />
@@ -195,6 +197,8 @@
     <ClCompile Include="MeshResource.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="MainShader.cpp" />
+    <ClCompile Include="OmniDirectionalDepthShader.cpp" />
+    <ClCompile Include="OmniDirectionalShadowStrategy.cpp" />
     <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="RenderingNode.cpp" />
     <ClCompile Include="ShaderResource.cpp" />

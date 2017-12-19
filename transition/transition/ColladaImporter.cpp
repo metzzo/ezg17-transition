@@ -6,6 +6,8 @@
 #include "MeshResource.h"
 #include <iostream>
 #include "LightNode.h"
+#include "OmniDirectionalShadowStrategy.h"
+#include "DirectionalShadowStrategy.h"
 
 ColladaImporter::ColladaImporter(RenderingEngine* engine) {
 	this->engine_ = engine;
@@ -35,11 +37,17 @@ void ColladaImporter::process_lights(const aiScene* scene, std::vector<Node*>& l
 	for (int i = 0; i < scene->mNumLights; i++) {
 		aiLight* light = scene->mLights[i];
 		LightType light_type;
+		IShadowStrategy *strategy = nullptr;
 		if (light->mType == aiLightSource_POINT) {
 			light_type = POINT_LIGHT;
+			strategy = new OmniDirectionalShadowStrategy(1024);
 		} else if (light->mType == aiLightSource_DIRECTIONAL)
 		{
 			light_type = DIRECTIONAL_LIGHT;
+		} else if (light->mType == aiLightSource_SPOT)
+		{
+			light_type = SPOT_LIGHT;
+			strategy = new DirectionalShadowStrategy(1024);
 		} else
 		{
 			// unsupported light type
@@ -53,6 +61,12 @@ void ColladaImporter::process_lights(const aiScene* scene, std::vector<Node*>& l
 		light_node->set_color(glm::vec3(light->mColorDiffuse.r, light->mColorDiffuse.g, light->mColorDiffuse.b), glm::vec3(light->mColorSpecular.r, light->mColorSpecular.g, light->mColorSpecular.b));
 		light_node->set_attenuation(light->mAttenuationConstant, light->mAttenuationLinear, light->mAttenuationQuadratic);
 		light_node->set_view_matrix(glm::lookAt(pos, pos + dir, glm::vec3(0, 1, 0)));
+		light_node->set_shadow_strategy(strategy);
+
+		if (light->mType == aiLightSource_SPOT)
+		{
+			light_node->set_cutoff(glm::degrees(light->mAngleInnerCone), glm::degrees(light->mAngleOuterCone));
+		}
 
 		lights.push_back(light_node);
 
