@@ -4,10 +4,10 @@
 class TextureFBO : public TextureRenderable {
 
 private:
-	GLuint fboHandle_;
-	GLuint depthBufferHandle_;
-	unsigned int textureCount_;
-	GLuint *textureHandles_;
+	GLuint fbo_handle_;
+	GLuint depth_buffer_handle_;
+	unsigned int texture_count_;
+	GLuint *texture_handles_;
 	GLuint *attachments_;
 
 	class SingleFBOTexture : public TextureRenderable {
@@ -27,7 +27,7 @@ public:
 	/*
 	Returns the ID of the first texture
 	*/
-	virtual int get_resource_id() const;
+	int get_resource_id() const override;
 
 	int get_fbo_id() const;
 

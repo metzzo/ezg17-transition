@@ -223,7 +223,14 @@
   <ItemGroup>
     <None Include="assets\shaders\bloom_add.fs" />
     <None Include="assets\shaders\bloom_gauss.fs" />
+    <None Include="assets\shaders\depth_shader_directional.fs" />
+    <None Include="assets\shaders\depth_shader_directional.vs" />
+    <None Include="assets\shaders\depth_shader_omni_directional.fs" />
+    <None Include="assets\shaders\depth_shader_omni_directional.gs" />
+    <None Include="assets\shaders\depth_shader_omni_directional.vs" />
     <None Include="assets\shaders\dummy.fs" />
+    <None Include="assets\shaders\main_shader.fs" />
+    <None Include="assets\shaders\main_shader.vs" />
     <None Include="assets\shaders\postprocess.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

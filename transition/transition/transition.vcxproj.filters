@@ -46,11 +46,14 @@
     <Filter Include="Headerdateien\Utility\Shadow">
       <UniqueIdentifier>{91495ba7-1f32-4828-9090-8f3a407dfa8d}</UniqueIdentifier>
     </Filter>
-	<Filter Include="Headerdateien\Effects">
+    <Filter Include="Headerdateien\Effects">
       <UniqueIdentifier>{fb248593-e905-4daf-bbee-ac1975e938b5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Quelldateien\Effects">
       <UniqueIdentifier>{c6994714-7eee-49f2-baff-7a2c76dd17e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderPrograms">
+      <UniqueIdentifier>{e75fc131-81b2-40d8-b34d-babe21b5507a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -140,9 +143,6 @@
     </ClInclude>
     <ClInclude Include="LightNode.h">
       <Filter>Headerdateien\Utility\Shadow</Filter>
-	</ClInclude>
-    <ClInclude Include="DepthOnlyShader.h">
-      <Filter>Headerdateien\Resource\Shader</Filter>
     </ClInclude>
     <ClInclude Include="TextureFBO.h">
       <Filter>Headerdateien\Resource</Filter>
@@ -259,9 +259,38 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shaders\postprocess.vs" />
-    <None Include="assets\shaders\bloom_gauss.fs" />
-    <None Include="assets\shaders\bloom_add.fs" />
-    <None Include="assets\shaders\dummy.fs" />
+    <None Include="assets\shaders\bloom_add.fs">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+    <None Include="assets\shaders\bloom_gauss.fs">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+    <None Include="assets\shaders\dummy.fs">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+    <None Include="assets\shaders\postprocess.vs">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+    <None Include="assets\shaders\depth_shader_omni_directional.fs">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+    <None Include="assets\shaders\depth_shader_omni_directional.gs">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+    <None Include="assets\shaders\depth_shader_omni_directional.vs">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+    <None Include="assets\shaders\main_shader.fs">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+    <None Include="assets\shaders\main_shader.vs">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+    <None Include="assets\shaders\depth_shader_directional.fs">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+    <None Include="assets\shaders\depth_shader_directional.vs">
+      <Filter>ShaderPrograms</Filter>
+    </None>
   </ItemGroup>
 </Project>
