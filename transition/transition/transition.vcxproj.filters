@@ -46,6 +46,12 @@
     <Filter Include="Headerdateien\Utility\Shadow">
       <UniqueIdentifier>{91495ba7-1f32-4828-9090-8f3a407dfa8d}</UniqueIdentifier>
     </Filter>
+	<Filter Include="Headerdateien\Effects">
+      <UniqueIdentifier>{fb248593-e905-4daf-bbee-ac1975e938b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Effects">
+      <UniqueIdentifier>{c6994714-7eee-49f2-baff-7a2c76dd17e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -134,6 +140,33 @@
     </ClInclude>
     <ClInclude Include="LightNode.h">
       <Filter>Headerdateien\Utility\Shadow</Filter>
+	</ClInclude>
+    <ClInclude Include="DepthOnlyShader.h">
+      <Filter>Headerdateien\Resource\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureFBO.h">
+      <Filter>Headerdateien\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="BloomGaussShader.h">
+      <Filter>Headerdateien\Resource\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="BloomAddShader.h">
+      <Filter>Headerdateien\Resource\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="DummyShader.h">
+      <Filter>Headerdateien\Resource\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>Headerdateien\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="BloomEffect.h">
+      <Filter>Headerdateien\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcessingEffect.h">
+      <Filter>Headerdateien\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="DummyEffect.h">
+      <Filter>Headerdateien\Effects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -206,5 +239,29 @@
     <ClCompile Include="OmniDirectionalDepthShader.cpp">
       <Filter>Quelldateien\Resource\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="TextureFBO.cpp">
+      <Filter>Quelldateien\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="BloomGaussShader.cpp">
+      <Filter>Quelldateien\Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="BloomAddShader.cpp">
+      <Filter>Quelldateien\Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="DummyShader.cpp">
+      <Filter>Quelldateien\Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="BloomEffect.cpp">
+      <Filter>Quelldateien\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="DummyEffect.cpp">
+      <Filter>Quelldateien\Effects</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\postprocess.vs" />
+    <None Include="assets\shaders\bloom_gauss.fs" />
+    <None Include="assets\shaders\bloom_add.fs" />
+    <None Include="assets\shaders\dummy.fs" />
   </ItemGroup>
 </Project>

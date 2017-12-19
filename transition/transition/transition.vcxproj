@@ -154,11 +154,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimatorNode.h" />
+    <ClInclude Include="BloomAddShader.h" />
+    <ClInclude Include="BloomEffect.h" />
+    <ClInclude Include="BloomGaussShader.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="ColladaImporter.h" />
     <ClInclude Include="DirectionalDepthShader.h" />
     <ClInclude Include="DirectionalShadowStrategy.h" />
+    <ClInclude Include="DummyEffect.h" />
+    <ClInclude Include="DummyShader.h" />
     <ClInclude Include="GeometryNode.h" />
     <ClInclude Include="GLDebugContext.h" />
     <ClInclude Include="glheaders.h" />
@@ -173,22 +178,29 @@
     <ClInclude Include="MainShader.h" />
     <ClInclude Include="OmniDirectionalDepthShader.h" />
     <ClInclude Include="OmniDirectionalShadowStrategy.h" />
+    <ClInclude Include="PostProcessingEffect.h" />
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="RenderingNode.h" />
     <ClInclude Include="ShaderResource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextureRenderable.h" />
+    <ClInclude Include="TextureFBO.h" />
     <ClInclude Include="TextureResource.h" />
     <ClInclude Include="Transformation.h" />
     <ClInclude Include="TransformationNode.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimatorNode.cpp" />
+    <ClCompile Include="BloomAddShader.cpp" />
+    <ClCompile Include="BloomEffect.cpp" />
+    <ClCompile Include="BloomGaussShader.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="ColladaImporter.cpp" />
     <ClCompile Include="DirectionalDepthShader.cpp" />
     <ClCompile Include="DirectionalShadowStrategy.cpp" />
+    <ClCompile Include="DummyEffect.cpp" />
+    <ClCompile Include="DummyShader.cpp" />
     <ClCompile Include="GeometryNode.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="GroupNode.cpp" />
@@ -203,9 +215,16 @@
     <ClCompile Include="RenderingNode.cpp" />
     <ClCompile Include="ShaderResource.cpp" />
     <ClCompile Include="TextureRenderable.cpp" />
+    <ClCompile Include="TextureFBO.cpp" />
     <ClCompile Include="TextureResource.cpp" />
     <ClCompile Include="Transformation.cpp" />
     <ClCompile Include="transition.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\bloom_add.fs" />
+    <None Include="assets\shaders\bloom_gauss.fs" />
+    <None Include="assets\shaders\dummy.fs" />
+    <None Include="assets\shaders\postprocess.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

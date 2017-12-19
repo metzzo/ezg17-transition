@@ -22,7 +22,7 @@ protected:
 	GLint get_uniform(const std::string name, const std::string attribute, const int index) const;
 public:
 	ShaderResource(const char *vertex_path, const char *fragment_path, const char *geometry_path = nullptr);
-	~ShaderResource();
+	virtual ~ShaderResource();
 
 	virtual void use() const;
 

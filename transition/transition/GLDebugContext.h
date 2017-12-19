@@ -4,11 +4,6 @@
 #include <iostream>
 
 static std::string FormatDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, const char* msg) {
-	if (id == 131185)
-	{
-		return "";
-	}
-
 	std::stringstream stringStream;
 	std::string sourceString;
 	std::string typeString;
@@ -103,8 +98,8 @@ static std::string FormatDebugOutput(GLenum source, GLenum type, GLuint id, GLen
 }
 
 static void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const GLvoid* userParam) {
-	std::string error = FormatDebugOutput(source, type, id, severity, message);
-	if (error.length() > 0) {
+	if (id != 131185) {
+		std::string error = FormatDebugOutput(source, type, id, severity, message);
 		std::cout << error << std::endl;
 	}
 }
