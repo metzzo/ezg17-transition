@@ -45,6 +45,7 @@ void OmniDirectionalShadowStrategy::init(LightNode* light_node)
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
 void OmniDirectionalShadowStrategy::before_render(const LightNode *light_node)
