@@ -11,9 +11,9 @@ class CameraNode :
 
 private:
 	std::vector<PostProcessingEffect*> effects_;
-	MeshResource* screenMesh_;
-	TextureFBO* renderTarget1_;
-	TextureFBO* renderTarget2_;
+	MeshResource* screen_mesh_;
+	TextureFBO* render_target1_;
+	TextureFBO* render_target2_;
 
 public:
 	CameraNode(const std::string& name, const glm::ivec2& viewport, const glm::mat4& projection);

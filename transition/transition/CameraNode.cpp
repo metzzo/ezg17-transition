@@ -5,9 +5,9 @@
 
 CameraNode::CameraNode(const std::string& name, const glm::ivec2& viewport, const glm::mat4& projection) : RenderingNode(name, viewport, projection)
 {
-	screenMesh_ = nullptr;
-	renderTarget1_ = nullptr;
-	renderTarget2_ = nullptr;
+	screen_mesh_ = nullptr;
+	render_target1_ = nullptr;
+	render_target2_ = nullptr;
 }
 
 CameraNode::~CameraNode()
@@ -23,9 +23,9 @@ void CameraNode::init(RenderingEngine *rendering_engine)
 	for (auto ef = effects_.begin(); ef != effects_.end(); ef++) {
 		(*ef)->init(rendering_engine);
 	}
-	screenMesh_ = MeshResource::create_sprite(nullptr);
-	renderTarget1_ = new TextureFBO(rendering_engine->get_viewport().x, rendering_engine->get_viewport().y, 2);
-	renderTarget2_ = new TextureFBO(rendering_engine->get_viewport().x, rendering_engine->get_viewport().y, 1);
+	screen_mesh_ = MeshResource::create_sprite(nullptr);
+	render_target1_ = new TextureFBO(rendering_engine->get_viewport().x, rendering_engine->get_viewport().y, 2);
+	render_target2_ = new TextureFBO(rendering_engine->get_viewport().x, rendering_engine->get_viewport().y, 1);
 }
 
 void CameraNode::add_post_processing_effect(PostProcessingEffect * effect)
@@ -53,7 +53,7 @@ void CameraNode::before_render(const std::vector<IDrawable*> &drawables, const s
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 	else {
-		renderTarget1_->bind_for_rendering();
+		render_target1_->bind_for_rendering();
 	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
@@ -65,10 +65,10 @@ void CameraNode::after_render(const std::vector<IDrawable*> &drawables, const st
 	for (int i = 0; i < effects_.size(); i++) {
 		auto ef = effects_.at(i);
 		if (i%2 == 0) {
-			ef->perform_effect(renderTarget1_, (i == effects_.size()-1) ? 0 : renderTarget2_->get_fbo_id());
+			ef->perform_effect(render_target1_, (i == effects_.size()-1) ? 0 : render_target2_->get_fbo_id());
 		}
 		else {
-			ef->perform_effect(renderTarget2_, (i == effects_.size() - 1) ? 0 : renderTarget1_->get_fbo_id());
+			ef->perform_effect(render_target2_, (i == effects_.size() - 1) ? 0 : render_target1_->get_fbo_id());
 		}
 	}
 }
