@@ -19,7 +19,9 @@ uniform int num_lights;
 struct MVP {
 	mat4 model;
 	mat4 view;
-	mat4 projection;
+	mat4 projection;	
+	mat3 inverse_model; // TODO
+	mat4 inverse_mvp;
 };
 
 uniform MVP mvp;
@@ -27,6 +29,7 @@ uniform MVP mvp;
 void main()
 {
 	vs_out.frag_pos = vec3(mvp.model * vec4(aPos, 1.0));
+	// TODO: do this inversion on CPU
 	vs_out.normal = mat3(transpose(inverse(mvp.model)))*aNormal;
 	vs_out.tex_coords = aTex;
 	

@@ -15,11 +15,21 @@ in VS_OUT {
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 BrightColor;
 
+struct MVP {
+	mat4 model;
+	mat4 view;
+	mat4 projection;	
+	mat3 inverse_model;
+	mat4 inverse_mvp;
+};
+uniform MVP mvp;
+
 struct Light {
 	// light_type=1: directional light
 	// light_type=2: point light
 	// light_type=3: spot light
 	int light_type;
+	bool volumetric;
 	
 	vec3 position;
     vec3 direction;
@@ -46,6 +56,7 @@ uniform Light lights[MAX_NR_LIGHTS];
 uniform sampler2D directional_shadow_maps[MAX_NR_DIRECTIONAL_SHADOWS];
 uniform samplerCube omni_directional_shadow_maps[MAX_NR_OMNI_DIRECTIONAL_SHADOWS];
 uniform int num_lights;
+uniform mat4 light_space_matrices[MAX_NR_DIRECTIONAL_SHADOWS];
 
 #define DIRECTIONAL_SHADOW_MAP(A,B,C,X) \
 	if (B == 0) { \
@@ -120,6 +131,8 @@ vec3 render_type_debug_depth(vec3 diffuse_tex);
 float shadow_calculation_directional(Light light, float bias);
 float shadow_calculation_omni_directional(Light light, float bias);
 
+vec3 volumetric_lighting(Light light);
+
 void main() {
 	vec3 diffuse_tex;
 	if (material.has_diffuse_tex) {
@@ -186,6 +199,11 @@ void main() {
 				shadow = shadow_calculation_omni_directional(lights[i], bias);
 				break;
 			}
+		}
+		if (lights[i].volumetric) {
+			// TODO: different implementations for point light
+			// TODO: do not add light, but do something more clever (especially on the surfaces)
+			add_color += volumetric_lighting(lights[i]);
 		}
 		
 		color += (1.0 - shadow)*add_color;
@@ -360,4 +378,56 @@ float shadow_calculation_omni_directional(Light light, float bias) {
     // FragColor = vec4(vec3(closest_depth.r / light.far_plane), 1.0);    
         
     return shadow;
+}
+
+
+
+#define NUM_STEPS (128)
+vec3 volumetric_lighting(Light light) {
+	float far_plane = 0.1f; // TODO: as uniform
+	float near_plane = 100.0f; // TODO: as uniform
+	mat4 inverse_mvp = inverse(mvp.projection * mvp.view * mvp.model); // TODO: as uniform
+    vec3 view_dir = normalize(view_pos - fs_in.frag_pos);
+
+	mat4 light_space_matrix = light_space_matrices[light.shadow_map_index];
+	
+	float width = 1600.0; // TODO: as uniform
+	float height = 900.0; // TODO: as uniform
+	
+    vec4 near = vec4(
+		2.0 * ( gl_FragCoord.x / width - 0.5),
+		2.0 * ( gl_FragCoord.y / height - 0.5),
+		0.0,
+		1.0
+    );
+	
+    near = inverse_mvp * near;
+	
+    vec4 far = near + inverse_mvp[2] ;
+    near.xyz /= near.w;
+    far.xyz /= far.w;
+	
+	vec3 end_pos = (far.xyz*(far_plane - near_plane));
+	vec3 start_pos = near.xyz;
+	
+	vec3 step_vec = (end_pos - start_pos)/NUM_STEPS;
+	vec3 current = start_pos;
+	vec3 light_sum = vec3(0);
+	for (int i = 0; i < NUM_STEPS; i++) {
+		vec4 current_light_space = light_space_matrix * vec4(current, 1.0);
+		
+		vec3 proj_coords = current_light_space.xyz / current_light_space.w;
+		proj_coords = proj_coords * 0.5 + 0.5;
+		
+		vec4 closest_depth;
+		DIRECTIONAL_SHADOW_MAP(texture, light.shadow_map_index, proj_coords.xy, closest_depth)
+		
+		
+		if (current_light_space.z < closest_depth.r) {
+			light_sum += vec3(0,0,0.5);
+		}
+		
+		current += step_vec;
+	}
+	return light_sum / NUM_STEPS;
 }

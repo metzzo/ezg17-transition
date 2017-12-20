@@ -45,6 +45,7 @@ MainShader::MainShader() : ShaderResource("assets/shaders/main_shader.vs", "asse
 		this->cutoff_uniform_[i] = -1;
 		this->far_plane_uniform_[i] = -1;
 		this->near_plane_uniform_[i] = -1;
+		this->volumetric_uniform_[i] = -1;
 	}
 
 	for (auto i = 0; i < max_nr_directional_shadow_maps; i++)
@@ -118,6 +119,7 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 		assert(this->specular_uniform_[this->light_index_] >= 0);
 		assert(this->shadow_casting_uniform_[this->light_index_] >= 0);
 		assert(this->shadow_map_index_uniform_[this->light_index_] >= 0);
+		assert(this->volumetric_uniform_[this->light_index_] >= 0);
 
 		if (light->is_rendering_enabled())
 		{
@@ -131,6 +133,7 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 		}
 
 		glUniform1i(this->light_type_uniform_[this->light_index_], light->get_light_type());
+		glUniform1i(this->volumetric_uniform_[this->light_index_], light->is_volumetric());
 		glUniform3fv(this->position_uniform_[this->light_index_], 1, &light->get_position()[0]);
 		glUniform3fv(this->direction_uniform_[this->light_index_], 1, &light->get_direction()[0]);
 		glUniform1f(this->constant_uniform_[this->light_index_], light->get_constant());
@@ -218,6 +221,7 @@ void MainShader::init()
 		this->outer_cutoff_uniform_[i] = get_uniform("lights", "outer_cutoff", i);
 		this->far_plane_uniform_[i] = get_uniform("lights", "far_plane", i);
 		this->near_plane_uniform_[i] = get_uniform("lights", "near_plane", i);
+		this->volumetric_uniform_[i] = get_uniform("lights", "volumetric", i);
 	}
 
 	for (auto i = 0; i < max_nr_directional_shadow_maps; i++)

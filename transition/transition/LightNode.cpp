@@ -112,3 +112,8 @@ void LightNode::set_uniforms(ILightShader* shader)
 		this->shadow_strategy_->set_uniforms(shader, this);
 	}
 }
+
+void LightNode::set_volumetric(const bool is_volumetric)
+{
+	this->volumetric_ = is_volumetric;
+}

@@ -32,7 +32,7 @@ int main()
 	//cam->set_view_matrix(glm::lookAt(glm::vec3(0, 5, 0), glm::vec3(-10, 3, 0), glm::vec3(0, 1, 0)));
 	cam->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -2), glm::vec3(3, 0, 3), glm::vec3(0, 1, 0)));
 	root->add_node(cam);
-
+	 
 	BloomEffect* effect = new BloomEffect(2);
 	cam->add_post_processing_effect(effect);
 
@@ -54,6 +54,7 @@ int main()
 	spot_light->set_color(glm::vec3(0.8, 0.0, 0.0), glm::vec3(1.0, 0.0, 0.0));
 	spot_light->set_cutoff(12.5f, 25.0f);
 	spot_light->set_shadow_strategy(new DirectionalShadowStrategy(1024));
+	spot_light->set_volumetric(true);
 	spot_light->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -2), glm::vec3(5, 0, 5), glm::vec3(0, 1, 0)));
 	root->add_node(spot_light);
 

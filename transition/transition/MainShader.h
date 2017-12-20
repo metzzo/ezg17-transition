@@ -33,6 +33,7 @@ class MainShader :
 	GLint outer_cutoff_uniform_[max_nr_lights];
 	GLint far_plane_uniform_[max_nr_lights];
 	GLint near_plane_uniform_[max_nr_lights];
+	GLint volumetric_uniform_[max_nr_lights];
 	GLint omni_directional_shadow_maps_uniform_[max_nr_omni_directional_shadow_maps];
 	GLint directional_shadow_maps_uniform_[max_nr_directional_shadow_maps];
 	GLint light_space_matrices_uniform_[max_nr_directional_shadow_maps];
