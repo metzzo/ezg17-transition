@@ -34,7 +34,7 @@ int main()
 	root->add_node(cam);
 	 
 	BloomEffect* effect = new BloomEffect(2);
-	cam->add_post_processing_effect(effect);
+	//cam->add_post_processing_effect(effect);
 
 	auto importer = new ColladaImporter(engine);
 	//const auto world = importer->load_node("assets/models/gitti_d.dae");

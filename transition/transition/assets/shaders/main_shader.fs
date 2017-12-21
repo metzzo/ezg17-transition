@@ -381,53 +381,58 @@ float shadow_calculation_omni_directional(Light light, float bias) {
 }
 
 
+#define TAU (0.0001)
+#define PHI (10000000.0)
+#define PI_RCP (0.31830988618379067153776752674503)
+#define NUM_STEPS (256)
 
-#define NUM_STEPS (128)
 vec3 volumetric_lighting(Light light) {
-	float far_plane = 0.1f; // TODO: as uniform
-	float near_plane = 100.0f; // TODO: as uniform
-	mat4 inverse_mvp = inverse(mvp.projection * mvp.view * mvp.model); // TODO: as uniform
-    vec3 view_dir = normalize(view_pos - fs_in.frag_pos);
-
-	mat4 light_space_matrix = light_space_matrices[light.shadow_map_index];
+	vec2 screen_size = vec2(1600, 900); // TODO: as uniform
+	mat4 mvp_inverse = inverse(mvp.projection * mvp.view); // TODO: as uniform
 	
-	float width = 1600.0; // TODO: as uniform
-	float height = 900.0; // TODO: as uniform
-	
-    vec4 near = vec4(
-		2.0 * ( gl_FragCoord.x / width - 0.5),
-		2.0 * ( gl_FragCoord.y / height - 0.5),
+	vec4 target_pos_lightspace = light_space_matrices[light.shadow_map_index] * mvp_inverse * vec4(
+		2.0 * gl_FragCoord.x / screen_size.x - 1, 
+		-2.0 * gl_FragCoord.y / screen_size.y + 1, 
 		0.0,
 		1.0
-    );
+	);
+
+	vec4 frag_pos_lightspace = fs_in.frag_pos_lightspace[light.shadow_map_index];
+	vec4 cam_pos_lightspace = light_space_matrices[light.shadow_map_index] * vec4(view_pos, 1.0);
+	vec4 from_light_to_cam = normalize(target_pos_lightspace - fs_in.frag_pos_lightspace[light.shadow_map_index]);
 	
-    near = inverse_mvp * near;
+	float raymarch_distance = length(cam_pos_lightspace - frag_pos_lightspace);
+	float step_size = raymarch_distance / NUM_STEPS;
+	vec4 ray_position_lightspace = frag_pos_lightspace;
 	
-    vec4 far = near + inverse_mvp[2] ;
-    near.xyz /= near.w;
-    far.xyz /= far.w;
-	
-	vec3 end_pos = (far.xyz*(far_plane - near_plane));
-	vec3 start_pos = near.xyz;
-	
-	vec3 step_vec = (end_pos - start_pos)/NUM_STEPS;
-	vec3 current = start_pos;
-	vec3 light_sum = vec3(0);
-	for (int i = 0; i < NUM_STEPS; i++) {
-		vec4 current_light_space = light_space_matrix * vec4(current, 1.0);
+	vec3 light_contribution = vec3(0.0);
+	for (float l = raymarch_distance; l > step_size; l -= step_size) {
+		ray_position_lightspace += step_size * from_light_to_cam;
 		
-		vec3 proj_coords = current_light_space.xyz / current_light_space.w;
+		// perform perspective divide    
+		vec3 proj_coords = ray_position_lightspace.xyz / ray_position_lightspace.w;
+		if(proj_coords.z > 1.0) {
+			break;
+		}
+		
+		// transform to [0,1] range
 		proj_coords = proj_coords * 0.5 + 0.5;
 		
+		// get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
 		vec4 closest_depth;
 		DIRECTIONAL_SHADOW_MAP(texture, light.shadow_map_index, proj_coords.xy, closest_depth)
 		
-		
-		if (current_light_space.z < closest_depth.r) {
-			light_sum += vec3(0,0,0.5);
+		vec3 shadow_term = vec3(1.0);
+		if (proj_coords.z > closest_depth.r) {
+			shadow_term = vec3(0.0);
 		}
+		float d = length(ray_position_lightspace.xyz);
+		float d_rcp = 1.0/d;
 		
-		current += step_vec;
+		light_contribution += vec3(
+			TAU * (shadow_term * (PHI * 0.25 * PI_RCP) * d_rcp * d_rcp ) * exp(-d*TAU)*exp(-l*TAU) * step_size
+		);
 	}
-	return light_sum / NUM_STEPS;
+	return light_contribution/NUM_STEPS;
+	
 }
