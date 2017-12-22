@@ -16,6 +16,7 @@ public:
 	std::vector<IDrawable*> get_drawables() override;
 	std::vector<LightNode*> get_light_nodes() override;
 	std::vector<AnimatorNode*> get_animator_nodes() override;
+	std::vector<ParticleEmitterNode*> get_particle_emitter_nodes() override;
 
 	const std::vector<Node*>& get_nodes() const;
 	void add_node(Node *node);

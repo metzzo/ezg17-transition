@@ -9,6 +9,7 @@
 #include "AnimatorNode.h"
 #include "DepthOnlyShader.h"
 #include "CameraNode.h"
+#include "ParticleEmitterNode.h"
 
 RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int refresh_rate)
 {
@@ -111,6 +112,7 @@ void RenderingEngine::run()
 	this->drawables_ = this->root_node_->get_drawables();
 	this->light_nodes_ = this->root_node_->get_light_nodes();
 	this->animator_nodes_ = this->root_node_->get_animator_nodes();
+	this->particle_emitter_nodes_ = this->root_node_->get_particle_emitter_nodes();
 
 	const auto main_camera = static_cast<CameraNode*>(this->root_node_->find_by_name("MainCamera"));
 
@@ -131,8 +133,11 @@ void RenderingEngine::run()
 		{
 			animator_node->update(delta);
 		}
+		for (auto& particle_node : this->particle_emitter_nodes_) {
+			//particle_node->update_particles(delta);
+		}
 
-		main_camera->render(this->drawables_, this->light_nodes_);
+		main_camera->render(this->drawables_, this->particle_emitter_nodes_, this->light_nodes_);
 
 		glfwSwapBuffers(window_);
 		glfwPollEvents();

@@ -123,6 +123,18 @@
     <ClInclude Include="DirectionalShadowStrategy.h">
       <Filter>Headerdateien\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleEmitterNode.h">
+      <Filter>Headerdateien\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoParticleEmitter.h">
+      <Filter>Headerdateien\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputeShader.h">
+      <Filter>Headerdateien\Resource\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoParticleShader.h">
+      <Filter>Headerdateien\Resource\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">
@@ -188,5 +200,25 @@
     <ClCompile Include="DirectionalShadowStrategy.cpp">
       <Filter>Quelldateien\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="DemoParticleEmitter.cpp">
+      <Filter>Quelldateien\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeShader.cpp">
+      <Filter>Quelldateien\Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoParticleShader.cpp">
+      <Filter>Quelldateien\Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitterNode.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\demo_part.comp" />
+    <None Include="assets\shaders\demo_part.vs" />
+    <None Include="assets\shaders\demo_part.gs" />
+    <None Include="assets\shaders\demo_part.fs" />
+    <None Include="assets\shaders\test_simple.fs" />
+    <None Include="assets\shaders\test_simple.vs" />
   </ItemGroup>
 </Project>

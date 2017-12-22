@@ -12,6 +12,7 @@
 #include "CameraController.h"
 #include "GeometryNode.h"
 #include "DirectionalShadowStrategy.h"
+#include "DemoParticleEmitter.h"
 
 
 int main()
@@ -70,6 +71,9 @@ int main()
 
 	//auto anim3 = new CameraController("cam_anim2", depth_sprite);
 	//root->add_node(anim3);
+
+	auto emitter = new DemoParticleEmitter("emitter");
+	root->add_node(emitter);
 
 	engine->run();
 

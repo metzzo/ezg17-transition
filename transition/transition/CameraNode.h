@@ -12,5 +12,7 @@ public:
 	void before_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const override;
 
 	MainShader* get_shader() const override;
+
+	bool renders_particles() const override { return true; }
 };
 

@@ -154,9 +154,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimatorNode.h" />
+    <ClInclude Include="DemoParticleShader.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="ColladaImporter.h" />
+    <ClInclude Include="ComputeShader.h" />
+    <ClInclude Include="DemoParticleEmitter.h" />
     <ClInclude Include="DepthOnlyShader.h" />
     <ClInclude Include="DirectionalShadowStrategy.h" />
     <ClInclude Include="GeometryNode.h" />
@@ -171,6 +174,7 @@
     <ClInclude Include="MeshResource.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="MainShader.h" />
+    <ClInclude Include="ParticleEmitterNode.h" />
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="RenderingNode.h" />
     <ClInclude Include="ShaderResource.h" />
@@ -182,9 +186,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimatorNode.cpp" />
+    <ClCompile Include="DemoParticleShader.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="ColladaImporter.cpp" />
+    <ClCompile Include="ComputeShader.cpp" />
+    <ClCompile Include="DemoParticleEmitter.cpp" />
     <ClCompile Include="DepthOnlyShader.cpp" />
     <ClCompile Include="DirectionalShadowStrategy.cpp" />
     <ClCompile Include="GeometryNode.cpp" />
@@ -195,6 +202,7 @@
     <ClCompile Include="MeshResource.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="MainShader.cpp" />
+    <ClCompile Include="ParticleEmitterNode.cpp" />
     <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="RenderingNode.cpp" />
     <ClCompile Include="ShaderResource.cpp" />
@@ -202,6 +210,14 @@
     <ClCompile Include="TextureResource.cpp" />
     <ClCompile Include="Transformation.cpp" />
     <ClCompile Include="transition.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\demo_part.comp" />
+    <None Include="assets\shaders\demo_part.fs" />
+    <None Include="assets\shaders\demo_part.gs" />
+    <None Include="assets\shaders\demo_part.vs" />
+    <None Include="assets\shaders\test_simple.fs" />
+    <None Include="assets\shaders\test_simple.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

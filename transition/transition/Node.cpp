@@ -31,3 +31,7 @@ std::vector<AnimatorNode*> Node::get_animator_nodes()
 {
 	return std::vector<AnimatorNode*>();
 }
+
+std::vector<ParticleEmitterNode*> Node::get_particle_emitter_nodes() {
+	return std::vector<ParticleEmitterNode*>();
+}
