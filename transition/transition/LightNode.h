@@ -14,8 +14,7 @@ enum LightType
 };
 
 class LightNode :
-	public RenderingNode,
-	public TextureRenderable
+	public RenderingNode
 {
 protected:
 	glm::vec3 diffuse_;
@@ -55,8 +54,7 @@ public:
 	void set_transformation(const glm::mat4& trafo) override;
 	void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) override;
 
-	int get_resource_id() const override;
-	MaterialType get_material_type() override;
+	void set_uniforms(ILightShader *shader);
 
 	ShaderResource* get_shader() const override;
 
@@ -104,6 +102,10 @@ public:
 	{
 		return this->outer_cutoff_;
 	}
+	IShadowStrategy *get_shadow_strategy() const
+	{
+		return this->shadow_strategy_;
+	}
 };
 
 class IShadowStrategy
@@ -115,6 +117,6 @@ public:
 	virtual void before_render(const LightNode *light_node) = 0;
 	virtual void after_render(const LightNode *light_node) = 0;
 	virtual ShaderResource *get_shader(const LightNode *light_node) = 0;
-	virtual int get_resource_id() const = 0;
+	virtual void set_uniforms(ILightShader* shader, LightNode* light_node) = 0;
 };
 

@@ -7,9 +7,10 @@
 #include "MainShader.h"
 #include "GLDebugContext.h"
 #include "AnimatorNode.h"
-#include "DepthOnlyShader.h"
+#include "DirectionalDepthShader.h"
 #include "CameraNode.h"
 #include "ParticleEmitterNode.h"
+#include "OmniDirectionalDepthShader.h"
 
 RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int refresh_rate)
 {
@@ -22,8 +23,11 @@ RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int
 	this->main_shader_ = new MainShader();
 	this->register_resource(this->main_shader_);
 
-	this->depth_only_shader_ = new DepthOnlyShader();
-	this->register_resource(this->depth_only_shader_);
+	this->directional_depth_shader_ = new DirectionalDepthShader();
+	this->register_resource(this->directional_depth_shader_);
+
+	this->omni_directional_depth_shader_ = new OmniDirectionalDepthShader();
+	this->register_resource(this->omni_directional_depth_shader_);
 }
 
 RenderingEngine::~RenderingEngine()

@@ -13,6 +13,7 @@
 #include "GeometryNode.h"
 #include "DirectionalShadowStrategy.h"
 #include "DemoParticleEmitter.h"
+#include "BloomEffect.h"
 
 
 int main()
@@ -32,6 +33,9 @@ int main()
 	//cam->set_view_matrix(glm::lookAt(glm::vec3(0, 5, 0), glm::vec3(-10, 3, 0), glm::vec3(0, 1, 0)));
 	cam->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -2), glm::vec3(3, 0, 3), glm::vec3(0, 1, 0)));
 	root->add_node(cam);
+
+	BloomEffect* effect = new BloomEffect(2);
+	cam->add_post_processing_effect(effect);
 
 	auto importer = new ColladaImporter(engine);
 	//const auto world = importer->load_node("assets/models/gitti_d.dae");
@@ -61,6 +65,7 @@ int main()
 	auto depth_sprite = new GeometryNode("test2", sprite);
 	auto tmpMat = glm::inverse(glm::lookAt(glm::vec3(-2, 5, -2), glm::vec3(5, 0, 5), glm::vec3(0, 1, 0)));
 	depth_sprite->set_transformation(tmpMat);
+	depth_sprite->apply_transformation(Transformation::translate(glm::vec3(0, 2, 0)));
 	root->add_node(depth_sprite);
 	
 	//auto anim = new CameraController("cam_anim1", spot_light);

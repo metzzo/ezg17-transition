@@ -1,6 +1,7 @@
 #version 330 core
 #define MAX_NR_LIGHTS (10)
-#define MAX_NR_SHADOWS (5)
+#define MAX_NR_DIRECTIONAL_SHADOWS (5)
+#define MAX_NR_OMNI_DIRECTIONAL_SHADOWS (5)
 #define SHADOW_BIAS_MAX (0.001)
 #define SHADOW_BIAS_MIN (0.0001)
 
@@ -8,10 +9,11 @@ in VS_OUT {
     vec3 frag_pos;
     vec3 normal;
     vec2 tex_coords;
-    vec4 frag_pos_lightspace[MAX_NR_SHADOWS];
+    vec4 frag_pos_lightspace[MAX_NR_DIRECTIONAL_SHADOWS];
 } fs_in;
 
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 BrightColor;
 
 struct Light {
 	// light_type=1: directional light
@@ -35,24 +37,41 @@ struct Light {
 	// Spotlight
 	float cutoff;
 	float outer_cutoff;
+	
+	// point light
+	float far_plane;
+	float near_plane;
 };
 uniform Light lights[MAX_NR_LIGHTS];
-uniform sampler2D shadow_maps[MAX_NR_SHADOWS];
+uniform sampler2D directional_shadow_maps[MAX_NR_DIRECTIONAL_SHADOWS];
+uniform samplerCube omni_directional_shadow_maps[MAX_NR_OMNI_DIRECTIONAL_SHADOWS];
 uniform int num_lights;
 
-#define SHADOW_MAP(A,B,C,X) \
+#define DIRECTIONAL_SHADOW_MAP(A,B,C,X) \
 	if (B == 0) { \
-		X = A(shadow_maps[0], C); \
+		X = A(directional_shadow_maps[0], C); \
 	} else if (B == 1) { \
-		X = A(shadow_maps[1], C); \
+		X = A(directional_shadow_maps[1], C); \
 	} else if (B == 2) { \
-		X = A(shadow_maps[2], C); \
+		X = A(directional_shadow_maps[2], C); \
 	} else if (B == 3) { \
-		X = A(shadow_maps[3], C); \
+		X = A(directional_shadow_maps[3], C); \
 	} else if (B == 4) { \
-		X = A(shadow_maps[4], C); \
+		X = A(directional_shadow_maps[4], C); \
 	} 
-	
+
+#define OMNI_DIRECTIONAL_SHADOW_MAP(A,B,C,X) \
+	if (B == 0) { \
+		X = A(omni_directional_shadow_maps[0], C); \
+	} else if (B == 1) { \
+		X = A(omni_directional_shadow_maps[1], C); \
+	} else if (B == 2) { \
+		X = A(omni_directional_shadow_maps[2], C); \
+	} else if (B == 3) { \
+		X = A(omni_directional_shadow_maps[3], C); \
+	} else if (B == 4) { \
+		X = A(omni_directional_shadow_maps[4], C); \
+	} 
 
 struct Material {
 	bool has_diffuse_tex;
@@ -98,7 +117,8 @@ vec3 calc_spot_light(
 
 vec3 render_type_debug_depth(vec3 diffuse_tex);
 
-float shadow_calculation(Light light, float bias);
+float shadow_calculation_directional(Light light, float bias);
+float shadow_calculation_omni_directional(Light light, float bias);
 
 void main() {
 	vec3 diffuse_tex;
@@ -157,13 +177,27 @@ void main() {
 			color = vec3(0.0,1.0,0.0);
 		}
 		if (lights[i].shadow_casting) {
-			shadow = shadow_calculation(lights[i], bias);
+			switch (lights[i].light_type) {
+			case 1:
+			case 3:
+				shadow = shadow_calculation_directional(lights[i], bias);
+				break;
+			case 2:
+				shadow = shadow_calculation_omni_directional(lights[i], bias);
+				break;
+			}
 		}
 		
 		color += (1.0 - shadow)*add_color;
 	}
 	
 	FragColor = vec4(color, 1.0f);
+	float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+	if (brightness > 0.8) {
+		BrightColor = FragColor;
+	} else {
+		BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
+	}
 }
 
 #define DEBUG_PERSPECTIVE_DEPTH
@@ -282,7 +316,7 @@ vec3 calc_spot_light(
     return (diffuse + specular)*diffuse_tex;
 }
 
-float shadow_calculation(Light light, float bias) {
+float shadow_calculation_directional(Light light, float bias) {
 	vec4 frag_pos_lightspace = fs_in.frag_pos_lightspace[light.shadow_map_index];
 	
     // perform perspective divide
@@ -296,11 +330,34 @@ float shadow_calculation(Light light, float bias) {
     
 	// get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
 	vec4 closest_depth;
-	SHADOW_MAP(texture, light.shadow_map_index, proj_coords.xy, closest_depth)
+	DIRECTIONAL_SHADOW_MAP(texture, light.shadow_map_index, proj_coords.xy, closest_depth)
     
 	// get depth of current fragment from light's perspective
     float current_depth = proj_coords.z;
     
 	// check whether current frag pos is in shadow
     return current_depth - bias > closest_depth.r ? 1.0 : 0.0;
+}
+
+float shadow_calculation_omni_directional(Light light, float bias) {
+	// get vector between fragment position and light position
+    vec3 frag_to_light = fs_in.frag_pos - light.position;
+	
+    // fragment to light vector to sample from the depth map    
+    vec4 closest_depth;
+	OMNI_DIRECTIONAL_SHADOW_MAP(texture, light.shadow_map_index, frag_to_light, closest_depth)
+
+    // it is currently in linear range between [0,1], let's re-transform it back to original depth value
+    closest_depth.r *= light.far_plane;
+	
+    // now get current linear depth as the length between the fragment and light position
+    float current_depth = length(frag_to_light);
+	
+    // test for shadows
+    float shadow = current_depth -  bias*(light.far_plane - light.near_plane) > closest_depth.r ? 1.0 : 0.0;     
+	
+    // display closest_depth as debug (to visualize depth cubemap)
+    // FragColor = vec4(vec3(closest_depth.r / light.far_plane), 1.0);    
+        
+    return shadow;
 }

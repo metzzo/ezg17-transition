@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/vec2.hpp>
 #include <vector>
+struct GLFWwindow;
 class GroupNode;
 class IResource;
 class IDrawable;
@@ -10,7 +11,8 @@ class LightNode;
 class AnimatorNode;
 class ParticleEmitterNode;
 struct GLFWwindow;
-class DepthOnlyShader;
+class DirectionalDepthShader;
+class OmniDirectionalDepthShader;
 
 class RenderingEngine
 {
@@ -28,7 +30,8 @@ class RenderingEngine
 	int refresh_rate_;
 
 	MainShader *main_shader_;
-	DepthOnlyShader *depth_only_shader_;
+	DirectionalDepthShader *directional_depth_shader_;
+	OmniDirectionalDepthShader *omni_directional_depth_shader_;
 public:
 	explicit RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int refresh_rate);
 	~RenderingEngine();
@@ -52,9 +55,14 @@ public:
 		return this->main_shader_;
 	}
 
-	DepthOnlyShader *get_depth_only_shader() const
+	DirectionalDepthShader *get_directional_depth_shader() const
 	{
-		return this->depth_only_shader_;
+		return this->directional_depth_shader_;
+	}
+	
+	OmniDirectionalDepthShader *get_omni_directional_depth_shader() const
+	{
+		return this->omni_directional_depth_shader_;
 	}
 
 	GLFWwindow* get_window() const {

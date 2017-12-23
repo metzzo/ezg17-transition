@@ -1,19 +1,19 @@
-#include "DepthOnlyShader.h"
+#include "DirectionalDepthShader.h"
 #include <cassert>
 #include "RenderingNode.h"
 #include "GeometryNode.h"
 
 
-DepthOnlyShader::DepthOnlyShader() : ShaderResource("assets/shaders/depth_shader.vs", "assets/shaders/depth_shader.fs")
+DirectionalDepthShader::DirectionalDepthShader() : ShaderResource("assets/shaders/depth_shader_directional.vs", "assets/shaders/depth_shader_directional.fs")
 {
 	this->mvp_uniform_ = -1;
 }
 
-DepthOnlyShader::~DepthOnlyShader()
+DirectionalDepthShader::~DirectionalDepthShader()
 {
 }
 
-void DepthOnlyShader::init()
+void DirectionalDepthShader::init()
 {
 	ShaderResource::init();
 
@@ -21,7 +21,7 @@ void DepthOnlyShader::init()
 
 }
 
-void DepthOnlyShader::set_camera_uniforms(const RenderingNode* node)
+void DirectionalDepthShader::set_camera_uniforms(const RenderingNode* node)
 {
 	assert(this->mvp_uniform_ >= 0);
 
@@ -29,7 +29,7 @@ void DepthOnlyShader::set_camera_uniforms(const RenderingNode* node)
 
 }
 
-void DepthOnlyShader::set_model_uniforms(const GeometryNode* node)
+void DirectionalDepthShader::set_model_uniforms(const GeometryNode* node)
 {
 	assert(this->mvp_uniform_ >= 0);
 	auto mvp = this->view_projection_*node->get_transformation();
