@@ -10,10 +10,12 @@ out VS_OUT {
     vec3 normal;
     vec2 tex_coords;
     vec4 frag_pos_lightspace[MAX_NR_DIRECTIONAL_SHADOWS];
+    vec4 frag_pos_lightview[MAX_NR_DIRECTIONAL_SHADOWS];
 } vs_out;
 
 
 uniform mat4 light_space_matrices[MAX_NR_DIRECTIONAL_SHADOWS];
+uniform mat4 light_view_matrices[MAX_NR_DIRECTIONAL_SHADOWS];
 uniform int num_lights;
 
 struct MVP {
@@ -35,6 +37,7 @@ void main()
 	
 	for (int i = 0; i < MAX_NR_DIRECTIONAL_SHADOWS; i++) {
 		vs_out.frag_pos_lightspace[i] = light_space_matrices[i] * vec4(vs_out.frag_pos, 1.0);
+		vs_out.frag_pos_lightview[i] = light_view_matrices[i] * vec4(vs_out.frag_pos, 1.0);
 	}
 	
 	gl_Position = mvp.projection * mvp.view * vec4(vs_out.frag_pos, 1.0);

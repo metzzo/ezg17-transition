@@ -52,6 +52,8 @@ MainShader::MainShader() : ShaderResource("assets/shaders/main_shader.vs", "asse
 	{
 		this->directional_shadow_maps_uniform_[i] = -1;
 		this->light_space_matrices_uniform_[i] = -1;
+		this->light_view_matrices_uniform_[i] = -1;
+		this->light_projection_matrices_uniform_[i] = -1;
 	}
 
 	for (auto i = 0; i < max_nr_omni_directional_shadow_maps; i++)
@@ -154,6 +156,8 @@ void MainShader::set_directional_shadow_map_uniforms(const LightNode *light, con
 {
 	assert(this->directional_shadow_maps_uniform_[this->directional_shadow_map_index_] >= 0);
 	assert(this->light_space_matrices_uniform_[this->directional_shadow_map_index_] >= 0);
+	assert(this->light_view_matrices_uniform_[this->directional_shadow_map_index_] >= 0);
+	assert(this->light_projection_matrices_uniform_[this->directional_shadow_map_index_] >= 0);
 
 	const auto light_space_matrix = light->get_projection_matrix() * light->get_view_matrix();
 	const auto tex_id = get_texture_slot();
@@ -163,7 +167,9 @@ void MainShader::set_directional_shadow_map_uniforms(const LightNode *light, con
 	glUniform1i(this->directional_shadow_maps_uniform_[this->directional_shadow_map_index_], tex_id); // binds shadow map sampler
 	glUniformMatrix4fv(this->light_space_matrices_uniform_[this->directional_shadow_map_index_], 1, GL_FALSE, &light_space_matrix[0][0]); // trafo to transform into light space
 	glUniform1i(this->shadow_map_index_uniform_[this->light_index_], this->directional_shadow_map_index_); // tells the exact index of the shadow map
-	
+	glUniformMatrix4fv(this->light_view_matrices_uniform_[this->directional_shadow_map_index_], 1, GL_FALSE, &light->get_view_matrix()[0][0]); // just the view transform of light
+	glUniformMatrix4fv(this->light_projection_matrices_uniform_[this->directional_shadow_map_index_], 1, GL_FALSE, &light->get_projection_matrix()[0][0]); // just the view transform of light
+
 	this->directional_shadow_map_index_++;
 }
 
@@ -228,6 +234,8 @@ void MainShader::init()
 	{
 		this->directional_shadow_maps_uniform_[i] = get_uniform("directional_shadow_maps", i);
 		this->light_space_matrices_uniform_[i] = get_uniform("light_space_matrices", i);
+		this->light_view_matrices_uniform_[i] = get_uniform("light_view_matrices", i);
+		this->light_projection_matrices_uniform_[i] = get_uniform("light_projection_matrices", i);
 	}
 
 	for (auto i = 0; i < max_nr_omni_directional_shadow_maps; i++)

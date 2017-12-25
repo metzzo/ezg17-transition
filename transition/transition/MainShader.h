@@ -37,6 +37,8 @@ class MainShader :
 	GLint omni_directional_shadow_maps_uniform_[max_nr_omni_directional_shadow_maps];
 	GLint directional_shadow_maps_uniform_[max_nr_directional_shadow_maps];
 	GLint light_space_matrices_uniform_[max_nr_directional_shadow_maps];
+	GLint light_view_matrices_uniform_[max_nr_directional_shadow_maps];
+	GLint light_projection_matrices_uniform_[max_nr_directional_shadow_maps];
 	GLint view_pos_uniform_;
 	GLint material_shininess_;
 	GLint material_ambient_color_;
