@@ -55,7 +55,7 @@ int main()
 	spot_light->set_cutoff(12.5f, 25.0f);
 	spot_light->set_shadow_strategy(new DirectionalShadowStrategy(1024));
 	spot_light->set_volumetric(true);
-	spot_light->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -2), glm::vec3(5, 0, 5), glm::vec3(0, 1, 0)));
+	spot_light->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -7), glm::vec3(0, 0, -16), glm::vec3(0, 1, 0)));
 	root->add_node(spot_light);
 
 	auto tmp = new TextureResource("assets/gfx/bg-tucard.jpg");
@@ -63,7 +63,7 @@ int main()
 	auto sprite = MeshResource::create_sprite(tmp);
 	engine->register_resource(sprite);
 	auto depth_sprite = new GeometryNode("test2", sprite);
-	auto tmpMat = glm::inverse(glm::lookAt(glm::vec3(-2, 5, -2), glm::vec3(5, 0, 5), glm::vec3(0, 1, 0)));
+	auto tmpMat = glm::inverse(glm::lookAt(glm::vec3(-2, 5, -7), glm::vec3(0, 0, -16), glm::vec3(0, 1, 0)));
 	depth_sprite->set_transformation(tmpMat);
 	depth_sprite->apply_transformation(Transformation::translate(glm::vec3(0, 2, 0)));
 	root->add_node(depth_sprite);

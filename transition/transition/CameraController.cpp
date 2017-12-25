@@ -10,6 +10,7 @@ CameraController::CameraController(const std::string name, TransformationNode *t
 
 void CameraController::update(double delta)
 {
+	std::cout << "Position " << this->target_->get_position().x << " " << this->target_->get_position().y << " " << this->target_->get_position().z << std::endl;
 	glm::vec3 viewdirection = glm::transpose(target_->get_inverse_transformation()) * glm::vec4(0, 0, -1, 0);
 	glm::vec3 sidedirection = glm::cross(viewdirection, glm::vec3(0, 1, 0));
 	viewdirection.y = 0;

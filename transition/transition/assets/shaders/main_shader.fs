@@ -131,7 +131,7 @@ vec3 render_type_debug_depth(vec3 diffuse_tex);
 float shadow_calculation_directional(Light light, float bias);
 float shadow_calculation_omni_directional(Light light, float bias);
 
-vec3 volumetric_lighting(Light light);
+float volumetric_lighting(Light light, float intensity);
 
 void main() {
 	vec3 diffuse_tex;
@@ -189,7 +189,7 @@ void main() {
 		default:
 			color = vec3(0.0,1.0,0.0);
 		}
-		if (lights[i].shadow_casting) {
+		if (lights[i].shadow_casting && !lights[i].volumetric) {
 			switch (lights[i].light_type) {
 			case 1:
 			case 3:
@@ -200,13 +200,14 @@ void main() {
 				break;
 			}
 		}
+		color += (1.0 - shadow)*add_color;
+		
 		if (lights[i].volumetric) {
 			// TODO: different implementations for point light
 			// TODO: do not add light, but do something more clever (especially on the surfaces)
-			add_color += volumetric_lighting(lights[i]);
+			color += volumetric_lighting(lights[i], 1.0)*lights[i].diffuse;
 		}
 		
-		color += (1.0 - shadow)*add_color;
 	}
 	
 	FragColor = vec4(color, 1.0f);
@@ -321,16 +322,14 @@ vec3 calc_spot_light(
     float theta = dot(light_dir, normalize(-light.direction)); 
     float epsilon = (light.cutoff - light.outer_cutoff);
     float intensity = clamp((theta - light.outer_cutoff) / epsilon, 0.0, 1.0);
-    diffuse  *= intensity;
-    specular *= intensity;
 	
     // attenuation
     float distance    = length(light_delta);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
 
-    diffuse  *= attenuation;
-    specular *= attenuation;   
-    
+    diffuse  *= attenuation*intensity;
+    specular *= attenuation*intensity;
+	
     return (diffuse + specular)*diffuse_tex;
 }
 
@@ -381,40 +380,44 @@ float shadow_calculation_omni_directional(Light light, float bias) {
 }
 
 
-#define TAU (0.0001)
-#define PHI (10000000.0)
+#define TAU (0.000004)
+#define PHI (75000000.0)
 #define PI_RCP (0.31830988618379067153776752674503)
-#define NUM_STEPS (256)
+#define NUM_STEPS (512)
 
-vec3 volumetric_lighting(Light light) {
+float volumetric_lighting(Light light, float intensity) {
 	vec2 screen_size = vec2(1600, 900); // TODO: as uniform
 	mat4 mvp_inverse = inverse(mvp.projection * mvp.view); // TODO: as uniform
+    vec3 view_dir = normalize(view_pos - fs_in.frag_pos);
 	
-	vec4 target_pos_lightspace = light_space_matrices[light.shadow_map_index] * mvp_inverse * vec4(
+	vec4 target_pos_worldspace = mvp_inverse * vec4(
 		2.0 * gl_FragCoord.x / screen_size.x - 1, 
 		-2.0 * gl_FragCoord.y / screen_size.y + 1, 
 		0.0,
 		1.0
-	);
-
+	);	
+	vec4 cam_pos_worldspace = vec4(fs_in.frag_pos, 1.0);
+	vec4 from_light_to_cam_worldspace = normalize(target_pos_worldspace - cam_pos_worldspace);
+	
+	vec4 target_pos_lightspace = light_space_matrices[light.shadow_map_index] * target_pos_worldspace;
 	vec4 frag_pos_lightspace = fs_in.frag_pos_lightspace[light.shadow_map_index];
 	vec4 cam_pos_lightspace = light_space_matrices[light.shadow_map_index] * vec4(view_pos, 1.0);
-	vec4 from_light_to_cam = normalize(target_pos_lightspace - fs_in.frag_pos_lightspace[light.shadow_map_index]);
+	vec4 from_light_to_cam_lightspace = normalize(target_pos_lightspace - frag_pos_lightspace);
 	
 	float raymarch_distance = length(cam_pos_lightspace - frag_pos_lightspace);
 	float step_size = raymarch_distance / NUM_STEPS;
 	vec4 ray_position_lightspace = frag_pos_lightspace;
+	vec4 ray_position_worldspace = vec4(fs_in.frag_pos, 1.0);
 	
-	vec3 light_contribution = vec3(0.0);
+	float light_contribution = 0.0;
 	for (float l = raymarch_distance; l > step_size; l -= step_size) {
-		ray_position_lightspace += step_size * from_light_to_cam;
+		ray_position_lightspace += step_size * from_light_to_cam_lightspace;
+		ray_position_worldspace += step_size * from_light_to_cam_worldspace;
 		
-		// perform perspective divide    
+		// perform perspective divide            
 		vec3 proj_coords = ray_position_lightspace.xyz / ray_position_lightspace.w;
-		if(proj_coords.z > 1.0) {
-			break;
-		}
-		
+
+
 		// transform to [0,1] range
 		proj_coords = proj_coords * 0.5 + 0.5;
 		
@@ -422,17 +425,19 @@ vec3 volumetric_lighting(Light light) {
 		vec4 closest_depth;
 		DIRECTIONAL_SHADOW_MAP(texture, light.shadow_map_index, proj_coords.xy, closest_depth)
 		
-		vec3 shadow_term = vec3(1.0);
+		float shadow_term = 1.0;
 		if (proj_coords.z > closest_depth.r) {
-			shadow_term = vec3(0.0);
+			shadow_term = 0.0;
 		}
 		float d = length(ray_position_lightspace.xyz);
 		float d_rcp = 1.0/d;
 		
-		light_contribution += vec3(
-			TAU * (shadow_term * (PHI * 0.25 * PI_RCP) * d_rcp * d_rcp ) * exp(-d*TAU)*exp(-l*TAU) * step_size
-		);
+		vec3 light_delta = light.position - ray_position_worldspace.xyz;
+		float distance    = length(light_delta);
+		float intensity = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
+		
+		light_contribution += intensity * TAU * (shadow_term * (PHI * 0.25 * PI_RCP) * d_rcp * d_rcp ) * exp(-d*TAU)*exp(-l*TAU) * step_size;
 	}
-	return light_contribution/NUM_STEPS;
+	return light_contribution;
 	
 }
