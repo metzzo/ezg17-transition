@@ -87,16 +87,16 @@ int main()
 	depth_sprite->apply_transformation(Transformation::translate(glm::vec3(0, 2, 0)));
 	root->add_node(depth_sprite);
 	
-	auto anim = new CameraController("cam_anim1", spot_light);
-	root->add_node(anim);
+	//auto anim = new CameraController("cam_anim1", spot_light);
+	//root->add_node(anim);
 
-	//auto anim2 = new CameraController("cam_anim", cam);
-	//root->add_node(anim2);
+	auto anim2 = new CameraController("cam_anim", cam);
+	root->add_node(anim2);
 
 	//auto anim3 = new CameraController("cam_anim2", depth_sprite);
 	//root->add_node(anim3);
 
-	root->add_node(new LookAtController("lookat", cam, depth_sprite));
+	root->add_node(new LookAtController("lookat", cam, spot_light));
 
 	engine->run();
 

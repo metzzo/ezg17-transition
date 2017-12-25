@@ -428,15 +428,23 @@ float volumetric_lighting(Light light, float intensity) {
 		DIRECTIONAL_SHADOW_MAP(texture, light.shadow_map_index, proj_coords.xy, closest_depth)
 		
 		float shadow_term = 1.0;
+		
 		if (proj_coords.z > closest_depth.r) {
 			shadow_term = 0.0;
 		}
+		
 		float d = length(ray_position_lightview.xyz);
 		float d_rcp = 1.0/d;
 		
 		vec3 light_delta = light.position - ray_position_worldspace.xyz;
 		float distance    = length(light_delta);
 		float intensity = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
+		
+		vec3 light_dir = normalize(light_delta);
+		// spotlight (soft edges)
+		float theta = dot(light_dir, normalize(-light.direction)); 
+		float epsilon = (light.cutoff - light.outer_cutoff);
+		intensity *= clamp((theta - light.outer_cutoff) / epsilon, 0.0, 1.0);
 		
 		light_contribution += intensity * TAU * (shadow_term * (PHI * 0.25 * PI_RCP) * d_rcp * d_rcp ) * exp(-d*TAU)*exp(-l*TAU) * step_size;
 	}
