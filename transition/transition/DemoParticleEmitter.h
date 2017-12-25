@@ -10,26 +10,14 @@ class DemoParticleEmitter : public ParticleEmitterNode {
 private:
 	ComputeShader *compute_shader_;
 	DemoParticleShader *draw_shader_;
-	GLuint ssbo_pos_id_[2];
-	GLuint vao_ssbo_id_[2];
+	GLuint ssbo_pos_id_[2];//contains pos and ttl
+	GLuint ssbo_vel_id_[2];
+	GLuint vao_ssbo_pos_id_[2];
 	GLuint atomic_counter_id_;
 	GLuint temp_buffer_id_;
 	int pingpongindex_;
 	GLuint particle_count_;
-
-	struct DemoParticle {
-		glm::vec3 position;
-		float timetolive;
-		glm::vec3 velocity;
-		float padding;
-
-		DemoParticle(glm::vec3 position, float ttl, glm::vec3 velocity) {
-			this->position = position;
-			this->timetolive = ttl;
-			this->velocity = velocity;
-		}
-	};
-
+	
 
 public:
 	explicit DemoParticleEmitter(const std::string& name);

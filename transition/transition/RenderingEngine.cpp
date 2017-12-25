@@ -11,6 +11,7 @@
 #include "CameraNode.h"
 #include "ParticleEmitterNode.h"
 #include "OmniDirectionalDepthShader.h"
+#include "ComputeShader.h"
 
 RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int refresh_rate)
 {
@@ -102,6 +103,9 @@ void RenderingEngine::run()
 	}
 #endif
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquation(GL_FUNC_ADD);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
@@ -138,7 +142,7 @@ void RenderingEngine::run()
 			animator_node->update(delta);
 		}
 		for (auto& particle_node : this->particle_emitter_nodes_) {
-			//particle_node->update_particles(delta);
+			particle_node->update_particles(delta);
 		}
 
 		main_camera->render(this->drawables_, this->particle_emitter_nodes_, this->light_nodes_);

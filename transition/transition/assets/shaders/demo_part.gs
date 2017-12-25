@@ -17,7 +17,7 @@ struct MVP {
 uniform MVP mvp;
 
 void main () {
-	const vec2 size = vec2(0.5, 0.5);
+	const vec2 size = vec2(0.05, 0.05);
 	vec4 P = gl_in[0].gl_Position;
 	//First Vertex
 	vec2 va = P.xy + vec2(-0.5, -0.5) * size;
