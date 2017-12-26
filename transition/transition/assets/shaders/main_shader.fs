@@ -10,7 +10,6 @@ in VS_OUT {
     vec3 normal;
     vec2 tex_coords;
     vec4 frag_pos_lightspace[MAX_NR_DIRECTIONAL_SHADOWS];
-    vec4 frag_pos_lightview[MAX_NR_DIRECTIONAL_SHADOWS];
 } fs_in;
 
 layout (location = 0) out vec4 FragColor;
@@ -192,7 +191,8 @@ void main() {
 		default:
 			color = vec3(0.0,1.0,0.0);
 		}
-		if (lights[i].shadow_casting && !lights[i].volumetric) {
+		
+		if (lights[i].shadow_casting) {
 			switch (lights[i].light_type) {
 			case 1:
 			case 3:
@@ -203,11 +203,11 @@ void main() {
 				break;
 			}
 		}
+		
 		color += (1.0 - shadow)*add_color;
 		
 		if (lights[i].volumetric) {
 			// TODO: different implementations for point light
-			// TODO: do not add light, but do something more clever (especially on the surfaces)
 			color += volumetric_lighting(lights[i], bias)*lights[i].diffuse;
 		}
 		
@@ -383,28 +383,17 @@ float shadow_calculation_omni_directional(Light light, float bias) {
 }
 
 
-#define TAU (0.000004)
-#define PHI (75000000.0)
+#define TAU (0.000001)
+#define PHI (50000000.0)
 #define PI_RCP (0.31830988618379067153776752674503)
 #define NUM_STEPS (256)
 
 float volumetric_lighting(Light light, float bias) {
-	/*vec2 screen_size = vec2(1600, 900); // TODO: as uniform
-	mat4 mvp_inverse = inverse(mvp.projection * mvp.view); // TODO: as uniform
-    vec3 view_dir = normalize(view_pos - fs_in.frag_pos);
-	
-	vec4 end_pos_worldspace = mvp_inverse * vec4(
-		2.0 * gl_FragCoord.x / screen_size.x - 1, 
-		2.0 * gl_FragCoord.y / screen_size.y - 1, 
-		0.0,
-		1.0
-	)*/
 	vec4 end_pos_worldspace  = vec4(view_pos, 1.0);
 	vec4 start_pos_worldspace = vec4(fs_in.frag_pos, 1.0);
 	vec4 delta_worldspace = normalize(end_pos_worldspace - start_pos_worldspace);
 	
 	vec4 end_pos_lightview = light_view_matrices[light.shadow_map_index] * end_pos_worldspace;
-	//vec4 frag_pos_lightview = fs_in.frag_pos_lightview[light.shadow_map_index];
 	vec4 start_pos_lightview = light_view_matrices[light.shadow_map_index] * start_pos_worldspace;
 	vec4 delta_lightview = normalize(end_pos_lightview - start_pos_lightview);
 	
@@ -454,6 +443,6 @@ float volumetric_lighting(Light light, float bias) {
 		
 		light_contribution += intensity * TAU * (shadow_term * (PHI * 0.25 * PI_RCP) * d_rcp * d_rcp ) * exp(-d*TAU)*exp(-l*TAU) * step_size_lightview;
 	}
-	return light_contribution;
 	
+	return light_contribution;
 }
