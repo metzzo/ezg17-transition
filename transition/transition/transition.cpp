@@ -13,6 +13,7 @@
 #include "GeometryNode.h"
 #include "DirectionalShadowStrategy.h"
 #include "BloomEffect.h"
+#include "RenderingEngine.h"
 
 class LookAtController : public AnimatorNode
 {
@@ -27,7 +28,13 @@ public:
 	}
 	void update(double delta) override
 	{
+		if (!glfwGetKey(get_rendering_engine()->get_window(), GLFW_KEY_SPACE))
+		{
+			return;
+		}
+
 		auto target_pos = target_node_->get_position();
+		target_pos.y = 0;
 		auto origin_pos = source_node_->get_position();
 		auto mat = glm::inverse(glm::lookAt(origin_pos, target_pos, glm::vec3(1, 1, 0)));
 		source_node_->set_transformation(mat);
@@ -97,6 +104,7 @@ int main()
 	//root->add_node(anim3);
 
 	root->add_node(new LookAtController("lookat", cam, spot_light));
+	root->add_node(new LookAtController("lookat", cam, depth_sprite));
 
 	engine->run();
 
