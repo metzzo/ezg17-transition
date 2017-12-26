@@ -40,7 +40,7 @@ void ColladaImporter::process_lights(const aiScene* scene, std::vector<Node*>& l
 		IShadowStrategy *strategy = nullptr;
 		if (light->mType == aiLightSource_POINT) {
 			light_type = POINT_LIGHT;
-			//strategy = new OmniDirectionalShadowStrategy(1024);
+			strategy = new OmniDirectionalShadowStrategy(1024);
 		} else if (light->mType == aiLightSource_DIRECTIONAL)
 		{
 			light_type = DIRECTIONAL_LIGHT;

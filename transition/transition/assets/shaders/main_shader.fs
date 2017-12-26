@@ -4,6 +4,8 @@
 #define MAX_NR_OMNI_DIRECTIONAL_SHADOWS (5)
 #define SHADOW_BIAS_MAX (0.001)
 #define SHADOW_BIAS_MIN (0.0001)
+#define PCF_TOTAL_SAMPLES (25)
+#define PCF_COUNT (2)
 
 in VS_OUT {
     vec3 frag_pos;
@@ -348,15 +350,24 @@ float shadow_calculation_directional(Light light, float bias) {
 	// transform to [0,1] range
     proj_coords = proj_coords * 0.5 + 0.5;
     
-	// get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-	vec4 closest_depth;
-	DIRECTIONAL_SHADOW_MAP(texture, light.shadow_map_index, proj_coords.xy, closest_depth)
-    
-	// get depth of current fragment from light's perspective
-    float current_depth = proj_coords.z;
-    
-	// check whether current frag pos is in shadow
-    return current_depth - bias > closest_depth.r ? 1.0 : 0.0;
+	float current_depth = proj_coords.z - bias;
+	
+	float shadow = 0.0;
+	vec2 texel_size;
+	DIRECTIONAL_SHADOW_MAP(textureSize, light.shadow_map_index, 0, texel_size)
+	texel_size = 1.0 / texel_size;
+	
+	for(int x = -PCF_COUNT; x <= PCF_COUNT; ++x) {
+		for(int y = -PCF_COUNT; y <= PCF_COUNT; ++y) {
+			// get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+			vec4 closest_depth;
+			DIRECTIONAL_SHADOW_MAP(texture, light.shadow_map_index, (proj_coords.xy + vec2(x, y) * texel_size), closest_depth)
+			
+			shadow += current_depth > closest_depth.r ? 1.0 : 0.0;        
+		}    
+	}
+	return shadow / PCF_TOTAL_SAMPLES;
+	
 }
 
 float shadow_calculation_omni_directional(Light light, float bias) {
