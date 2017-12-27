@@ -120,11 +120,15 @@ void RenderingEngine::run()
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	double last_time = glfwGetTime();
+	double last_fps_time = 0;
 	while (!glfwWindowShouldClose(window_))
 	{
 		double current_time = glfwGetTime();
 		double delta = current_time - last_time;
-		//std::cout << 1/delta << std::endl;
+		if (current_time - last_fps_time > 1) {
+			std::cout << 1 / delta << std::endl;
+			last_fps_time = current_time;
+		}
 		last_time = current_time;
 
 		if (glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS) {

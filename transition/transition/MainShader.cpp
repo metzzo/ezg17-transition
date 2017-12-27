@@ -3,11 +3,13 @@
 #include "TextureResource.h"
 #include "GeometryNode.h"
 
+static const int diffuse_texture_slot = 0;
+static const int blue_noise_texture_slot = 1;
+static const int shadow_map_texture_slot = 2;
+
 int MainShader::get_texture_slot() const
 {
-	// attention: if there is more than 1 diffuse texture (or specular tex)
-	// then this must be increased accordingly:
-	return this->directional_shadow_map_index_ + this->omni_directional_shadow_map_index_ + 1;
+	return this->directional_shadow_map_index_ + this->omni_directional_shadow_map_index_ + shadow_map_texture_slot;
 }
 
 MainShader::MainShader() : ShaderResource("assets/shaders/main_shader.vs", "assets/shaders/main_shader.fs")
@@ -60,6 +62,9 @@ MainShader::MainShader() : ShaderResource("assets/shaders/main_shader.vs", "asse
 	{
 		this->omni_directional_shadow_maps_uniform_[i] = -1;
 	}
+
+	this->blue_noise_texture_uniform_ = -1;
+	this->blue_noise_texture_ = new TextureResource("assets/gfx/blue_noise.png");
 }
 
 
@@ -84,9 +89,9 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 	auto material = node->get_mesh_resource()->get_material();
 	const auto texture = material.get_texture();
 	if (texture != nullptr) {
-		texture->bind(0);
+		texture->bind(diffuse_texture_slot);
 		glUniform1i(this->material_has_diffuse_tex_uniform_, 1);
-		glUniform1i(this->material_diffuse_tex_uniform_, 0);
+		glUniform1i(this->material_diffuse_tex_uniform_, diffuse_texture_slot);
 		glUniform1f(this->material_shininess_, material.get_shininess());
 		glUniform1i(this->material_material_type_, material.get_material_type());
 	}
@@ -105,9 +110,15 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 
 void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 {
+	// bind blue noise
+	assert(this->blue_noise_texture_uniform_ >= 0);
+	this->blue_noise_texture_->bind(blue_noise_texture_slot);
+	glUniform1i(this->blue_noise_texture_uniform_, blue_noise_texture_slot);
+
 	this->light_index_ = 0;
 	this->directional_shadow_map_index_ = 0;
 	this->omni_directional_shadow_map_index_ = 0;
+
 
 	for (auto& light : light_nodes)
 	{
@@ -131,7 +142,6 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 		} else
 		{
 			glUniform1i(this->shadow_casting_uniform_[this->light_index_], 0);
-			
 		}
 
 		glUniform1i(this->light_type_uniform_[this->light_index_], light->get_light_type());
@@ -242,4 +252,8 @@ void MainShader::init()
 	{
 		this->omni_directional_shadow_maps_uniform_[i] = get_uniform("omni_directional_shadow_maps", i);
 	}
+
+	// init blue noise texture
+	this->blue_noise_texture_uniform_ = get_uniform("blue_noise_texture");
+	this->blue_noise_texture_->init();
 }

@@ -3,6 +3,7 @@
 #include "ILightShader.h"
 
 class LightNode;
+class TextureResource;
 
 const unsigned int max_nr_lights = 10;
 const unsigned int max_nr_directional_shadow_maps = 5;
@@ -45,9 +46,11 @@ class MainShader :
 	GLint material_diffuse_color_;
 	GLint material_specular_color_;
 	GLint material_material_type_;
+	GLint blue_noise_texture_uniform_;
 	int directional_shadow_map_index_;
 	int omni_directional_shadow_map_index_;
 	int light_index_;
+	TextureResource* blue_noise_texture_;
 
 	int get_texture_slot() const;
 public:
@@ -55,7 +58,6 @@ public:
 	~MainShader();
 
 	void init() override;
-	
 	
 	void set_camera_uniforms(const RenderingNode* node) override;
 	void set_model_uniforms(const GeometryNode* node) override;

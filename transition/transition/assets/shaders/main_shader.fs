@@ -62,6 +62,7 @@ uniform int num_lights;
 uniform mat4 light_space_matrices[MAX_NR_DIRECTIONAL_SHADOWS];
 uniform mat4 light_view_matrices[MAX_NR_DIRECTIONAL_SHADOWS];
 uniform mat4 light_projection_matrices[MAX_NR_DIRECTIONAL_SHADOWS];
+uniform sampler2D blue_noise_texture;
 
 #define DIRECTIONAL_SHADOW_MAP(A,B,C,X) \
 	if (B == 0) { \
@@ -407,13 +408,19 @@ float shadow_calculation_omni_directional(Light light, float bias, vec3 view_del
 	return shadow / float(PCF_OMNI_DIRECTIONAL_SAMPLES);
 }
 
-
 #define TAU (0.000001)
 #define PHI (50000000.0)
 #define PI_RCP (0.31830988618379067153776752674503)
-#define NUM_STEPS (256)
+#define NUM_STEPS (16)
+
+float rand(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
 
 float volumetric_lighting(Light light, float bias) {
+	vec2 screen_pos = vec2(gl_FragCoord.x / 1600, gl_FragCoord.y / 900);
+	float dither_value = texture(blue_noise_texture, screen_pos).r;
+
 	vec4 end_pos_worldspace  = vec4(view_pos, 1.0);
 	vec4 start_pos_worldspace = vec4(fs_in.frag_pos, 1.0);
 	vec4 delta_worldspace = normalize(end_pos_worldspace - start_pos_worldspace);
@@ -428,8 +435,8 @@ float volumetric_lighting(Light light, float bias) {
 	float raymarch_distance_worldspace = length(end_pos_worldspace - start_pos_worldspace);
 	float step_size_worldspace = raymarch_distance_worldspace / NUM_STEPS;
 	
-	vec4 ray_position_lightview = start_pos_lightview;
-	vec4 ray_position_worldspace = start_pos_worldspace;
+	vec4 ray_position_lightview = start_pos_lightview + dither_value*step_size_lightview * delta_lightview;
+	vec4 ray_position_worldspace = start_pos_worldspace + dither_value*step_size_worldspace * delta_worldspace;
 	
 	float light_contribution = 0.0;
 	for (float l = raymarch_distance_lightview; l > step_size_lightview; l -= step_size_lightview) {
@@ -467,6 +474,7 @@ float volumetric_lighting(Light light, float bias) {
 		intensity *= clamp((theta - light.outer_cutoff) / epsilon, 0.0, 1.0);
 		
 		light_contribution += intensity * TAU * (shadow_term * (PHI * 0.25 * PI_RCP) * d_rcp * d_rcp ) * exp(-d*TAU)*exp(-l*TAU) * step_size_lightview;
+	
 	}
 	
 	return light_contribution;
