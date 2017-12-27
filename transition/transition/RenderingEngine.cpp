@@ -136,6 +136,11 @@ void RenderingEngine::run()
 		if (glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 			glfwSetWindowShouldClose(window_, true);
 		}
+		if (glfwGetKey(window_, GLFW_KEY_Q) == GLFW_PRESS) {
+			for (auto& particle_node : this->particle_emitter_nodes_) {
+				particle_node->start_emitting();
+			}
+		}
 
 		for (auto& animator_node : this->animator_nodes_)
 		{

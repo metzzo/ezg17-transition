@@ -5,6 +5,11 @@
 
 MeshResource *MeshResource::create_sprite(TextureRenderable* resource)
 {
+	return create_sprite(resource, nullptr);
+}
+
+MeshResource *MeshResource::create_sprite(TextureRenderable* resource, TextureRenderable* alpha)
+{
 	float vertices[] = {
 		-1.0f,  1.0f, 0.0f,
 		-1.0f, -1.0f, 0.0f,
@@ -49,6 +54,9 @@ MeshResource *MeshResource::create_sprite(TextureRenderable* resource)
 	mat.set_specular_color(glm::vec3(0, 0, 0));
 
 	mat.set_texture(resource);
+	if (alpha != nullptr) {
+		mat.set_alpha_texture(alpha);
+	}
 
 	return new MeshResource(
 		quad_vertices,

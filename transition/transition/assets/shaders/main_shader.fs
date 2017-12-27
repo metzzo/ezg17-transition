@@ -77,6 +77,8 @@ struct Material {
 	bool has_diffuse_tex;
 	sampler2D diffuse_tex;
 	sampler2D specular_tex;
+	bool has_alpha_tex;
+	sampler2D alpha_tex;
 	float shininess;
 	
 	vec3 ambient_color;
@@ -190,9 +192,12 @@ void main() {
 		
 		color += (1.0 - shadow)*add_color;
 	}
-	
-	FragColor = vec4(color, 1.0f);
-	float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+	float alpha = 1.0f;
+	if (material.has_alpha_tex) {
+		alpha = texture(material.alpha_tex, fs_in.tex_coords).r;
+	}
+	FragColor = vec4(color, alpha);
+	float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722))*alpha;
 	if (brightness > 0.8) {
 		BrightColor = FragColor;
 	} else {

@@ -17,7 +17,7 @@ public:
 
 	std::vector<IDrawable*> get_drawables() override;
 
-	void draw(ShaderResource *rendering_node) const override;
+	void draw(ShaderResource *shader) const override;
 	void init(RenderingEngine* rendering_engine) override;
 
 	const MeshResource* get_mesh_resource() const;

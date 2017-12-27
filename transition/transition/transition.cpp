@@ -77,8 +77,10 @@ int main()
 	//auto anim3 = new CameraController("cam_anim2", depth_sprite);
 	//root->add_node(anim3);
 
-	auto emitter = new DemoParticleEmitter("emitter");
+	ShaderResource* main_shader = engine->get_main_shader();
+	auto emitter = new DemoParticleEmitter("emitter", main_shader);
 	root->add_node(emitter);
+	emitter->apply_transformation(Transformation::rotate_around_world_origin(180, glm::vec3(0, 1, 0)));
 
 	engine->run();
 

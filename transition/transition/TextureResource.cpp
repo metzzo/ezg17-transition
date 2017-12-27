@@ -52,3 +52,35 @@ void TextureResource::init() {
 const std::string TextureResource::get_texture_path() const {
 	return this->texture_path_;
 }
+
+AlphaTextureResource::AlphaTextureResource(const std::string & texture_path) : TextureResource(texture_path)
+{	
+}
+
+AlphaTextureResource::~AlphaTextureResource()
+{
+}
+
+void AlphaTextureResource::init()
+{
+	glGenTextures(1, &handle_);
+	glBindTexture(GL_TEXTURE_2D, handle_);
+
+	const auto formato = FreeImage_GetFileType(texture_path_.c_str(), 0);
+	FIBITMAP* imagen = FreeImage_Load(formato, texture_path_.c_str());
+	const unsigned int width = FreeImage_GetWidth(imagen);
+	const unsigned int height = FreeImage_GetHeight(imagen);
+	char* data = reinterpret_cast<char*>(FreeImage_GetBits(imagen));
+	if (!imagen) {
+		std::cerr << "Texture could not be loaded: " << texture_path_.c_str() << std::endl;
+	}
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, data);
+
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+}

@@ -16,7 +16,6 @@ std::vector<IDrawable*> GeometryNode::get_drawables()
 
 void GeometryNode::draw(ShaderResource *shader) const
 {
-	const auto trafo = this->get_transformation();
 	shader->set_model_uniforms(this);
 
 	glBindVertexArray(this->resource_->get_resource_id());

@@ -27,13 +27,13 @@ public:
 		this->itrafo_ = glm::inverse(trafo);
 	}
 
-	void apply_transformation(const glm::mat4& mat, const glm::mat4& imat) override {
+	virtual void apply_transformation(const glm::mat4& mat, const glm::mat4& imat) override {
 		this->trafo_ = mat * this->trafo_;
 		this->itrafo_ = this->itrafo_ * imat;
 	}
 
 	//This has to be redefined, or else the other method is hiding it...
-	void apply_transformation(const Transformation& transformation) override {
+	virtual void apply_transformation(const Transformation& transformation) override {
 		Node::apply_transformation(transformation);
 	}
 
