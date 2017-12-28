@@ -2,15 +2,15 @@
 #include "ShaderResource.h"
 #include <glm/glm.hpp>
 
-class DemoParticleShader : public ShaderResource {
+class FootParticleShader : public ShaderResource {
 private:
 	GLint model_uniform_;
 	GLint view_uniform_;
 	GLint projection_uniform_;
 	
 public:
-	DemoParticleShader();
-	~DemoParticleShader();
+	FootParticleShader();
+	~FootParticleShader();
 
 	void init() override;
 

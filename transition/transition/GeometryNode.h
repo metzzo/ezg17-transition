@@ -10,9 +10,9 @@ class GeometryNode :
 	public TransformationNode, 
 	public IDrawable
 {
-	const MeshResource* resource_;
+	MeshResource* resource_;
 public:
-	explicit GeometryNode(const std::string& name, const MeshResource *resource);
+	explicit GeometryNode(const std::string& name, MeshResource *resource);
 	~GeometryNode();
 
 	std::vector<IDrawable*> get_drawables() override;
@@ -21,5 +21,6 @@ public:
 	void init(RenderingEngine* rendering_engine) override;
 
 	const MeshResource* get_mesh_resource() const;
+	MeshResource* get_editable_mesh_resource();
 };
 

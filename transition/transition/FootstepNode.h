@@ -2,17 +2,17 @@
 #include "ParticleEmitterNode.h"
 #include "ComputeShader.h"
 #include "ShaderResource.h"
-#include "DemoParticleShader.h"
+#include "FootParticleShader.h"
 #include "MeshResource.h"
 #include "GeometryNode.h"
 #include <random>
 
 #define DEMO_MAX_PARTICLES 500
-class DemoParticleEmitter : public ParticleEmitterNode {
+class FootstepNode : public ParticleEmitterNode {
 
 private:
 	ComputeShader *compute_shader_;
-	DemoParticleShader *draw_shader_;
+	FootParticleShader *draw_shader_;
 	ShaderResource *main_shader_;
 	GeometryNode *foot_node_;
 	GLuint ssbo_pos_id_[2];//contains pos and ttl
@@ -24,6 +24,8 @@ private:
 	int pingpongindex_;
 	GLuint particle_count_;
 	bool is_emitting_ = false;
+	float since_emitting = 10;
+	bool left_ = false;
 
 	std::default_random_engine rand_engine_ = std::default_random_engine(10);
 	std::normal_distribution<float> color_distribution_[2] = { std::normal_distribution<float>(0.7, 0.3), std::normal_distribution<float>(0.3, 0.2) };
@@ -31,8 +33,8 @@ private:
 	
 
 public:
-	explicit DemoParticleEmitter(const std::string& name, ShaderResource *main_shader);
-	virtual ~DemoParticleEmitter();
+	explicit FootstepNode(const std::string& name, ShaderResource *main_shader, bool left);
+	virtual ~FootstepNode();
 
 	void init(RenderingEngine *engine) override;
 	void start_emitting() override;

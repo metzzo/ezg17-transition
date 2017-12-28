@@ -1,6 +1,6 @@
 #include "GeometryNode.h"
 
-GeometryNode::GeometryNode(const std::string& name, const MeshResource *resource) : TransformationNode(name)
+GeometryNode::GeometryNode(const std::string& name, MeshResource *resource) : TransformationNode(name)
 {
 	this->resource_ = resource;
 }
@@ -29,5 +29,10 @@ void GeometryNode::init(RenderingEngine* rendering_engine)
 }
 
 const MeshResource* GeometryNode::get_mesh_resource() const {
+	return resource_;
+}
+
+MeshResource * GeometryNode::get_editable_mesh_resource()
+{
 	return resource_;
 }

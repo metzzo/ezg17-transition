@@ -44,6 +44,7 @@ class MainShader :
 	GLint material_diffuse_color_;
 	GLint material_specular_color_;
 	GLint material_material_type_;
+	GLint material_opacity_;
 	int directional_shadow_map_index_;
 	int omni_directional_shadow_map_index_;
 	int light_index_;

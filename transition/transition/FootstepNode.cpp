@@ -1,27 +1,34 @@
-#include "DemoParticleEmitter.h"
-#include "DemoParticleShader.h"
+#include "FootstepNode.h"
+#include "FootParticleShader.h"
 #include <iostream>
 #include "TextureResource.h"
 #include "RenderingEngine.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-DemoParticleEmitter::DemoParticleEmitter(const std::string& name, ShaderResource *main_shader) : ParticleEmitterNode(name)
+FootstepNode::FootstepNode(const std::string& name, ShaderResource *main_shader, bool left) : ParticleEmitterNode(name)
 {
-	this->draw_shader_ = new DemoParticleShader();
-	this->compute_shader_ = new ComputeShader("assets/shaders/demo_part.comp");
+	this->draw_shader_ = new FootParticleShader();
+	this->compute_shader_ = new ComputeShader("assets/shaders/foot_part.comp");
 	this->main_shader_ = main_shader;
 	this->pingpongindex_ = 0;
 	this->particle_count_ = 0;
 	this->foot_node_ = nullptr;
+	this->left_ = left;
 }
 
-DemoParticleEmitter::~DemoParticleEmitter()
+FootstepNode::~FootstepNode()
 {
 	delete this->compute_shader_;
+	glDeleteBuffers(2, ssbo_pos_id_);
+	glDeleteBuffers(2, ssbo_vel_id_);
+	glDeleteBuffers(2, ssbo_col_id_);
+	glDeleteBuffers(1, &atomic_counter_id_);
+	glDeleteBuffers(1, &temp_buffer_id_);
+	glDeleteVertexArrays(2, vao_ssbo_pos_id_);
 }
 
-void DemoParticleEmitter::init(RenderingEngine * engine)
+void FootstepNode::init(RenderingEngine * engine)
 {
 	compute_shader_->init();
 	compute_shader_->use();
@@ -71,23 +78,25 @@ void DemoParticleEmitter::init(RenderingEngine * engine)
 	}
 	glBindVertexArray(0);
 
-	TextureResource *texture = new TextureResource("assets/gfx/footstep1.png");
+	TextureResource *texture = new TextureResource("assets/gfx/footstep2.png");
 	texture->init();
 	engine->register_resource(texture);
-	TextureResource *alpha = new AlphaTextureResource("assets/gfx/footstep1alpha2.png");
+	TextureResource *alpha = new AlphaTextureResource("assets/gfx/footstep1alpha3.png");
 	alpha->init();
 	engine->register_resource(alpha);
-	MeshResource *step_mesh = MeshResource::create_sprite(texture, alpha);
+	MeshResource *step_mesh = MeshResource::create_sprite(texture, alpha, left_);
+	step_mesh->get_editable_material().set_opacity(0);
 	step_mesh->init();
 	engine->register_resource(step_mesh);
 	this->foot_node_ = new GeometryNode(this->get_name().append("-foot1"), step_mesh);
 	this->foot_node_->init(engine);
 	this->foot_node_->apply_transformation(Transformation::rotate_around_world_origin(90, glm::vec3(-1, 0, 0)));
 	this->foot_node_->apply_transformation(Transformation::translate(glm::vec3(0, 0.01, 0)));
+	this->foot_node_->apply_transformation(Transformation::scale(glm::vec3(1.3)));
 	this->foot_node_->apply_transformation(this->get_transformation(), this->get_inverse_transformation());
 }
 
-void DemoParticleEmitter::start_emitting()
+void FootstepNode::start_emitting()
 {
 	const int TTL = 10;
 	std::vector<glm::vec4> data_pos;
@@ -118,15 +127,27 @@ void DemoParticleEmitter::start_emitting()
 		particle_count_ += data_pos.size();
 		is_emitting_ = true;
 	}
+	since_emitting = 0;
 }
 
-void DemoParticleEmitter::stop_emitting()
+void FootstepNode::stop_emitting()
 {
 	is_emitting_ = false;
 }
 
-void DemoParticleEmitter::update_particles(float deltaT)
+void FootstepNode::update_particles(float deltaT)
 {
+	float alpha = (4 - since_emitting)/4;
+	if (alpha > 0) {
+		//alpha = alpha*alpha;
+		//alpha = sqrt(alpha);
+		//alpha = (pow((alpha - 0.5) / 4, 1.0 / 3.0) + 0.5)*(1-sqrt(1-alpha));
+		//alpha = pow(1 - sqrt(1 - alpha), 2);
+		//alpha = 1-sqrt(1-pow(alpha,2));
+		alpha = 0.5*(pow((alpha - 0.5) / 4, 1.0 / 3.0) + 0.5)*(1 - sqrt(1 - alpha)) + 0.5*(1 - sqrt(1 - pow(alpha, 2)));
+	}
+	foot_node_->get_editable_mesh_resource()->get_editable_material().set_opacity(alpha);
+	since_emitting += deltaT;
 	if (!is_emitting_) return;
 	compute_shader_->use();
 	//set uniforms
@@ -163,7 +184,7 @@ void DemoParticleEmitter::update_particles(float deltaT)
 	}
 }
 
-void DemoParticleEmitter::draw_particles(const RenderingNode *cam) const
+void FootstepNode::draw_particles(const RenderingNode *cam) const
 {
 	main_shader_->use();
 	main_shader_->set_camera_uniforms(cam);

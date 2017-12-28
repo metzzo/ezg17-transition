@@ -5,10 +5,10 @@
 
 MeshResource *MeshResource::create_sprite(TextureRenderable* resource)
 {
-	return create_sprite(resource, nullptr);
+	return create_sprite(resource, nullptr, false);
 }
 
-MeshResource *MeshResource::create_sprite(TextureRenderable* resource, TextureRenderable* alpha)
+MeshResource *MeshResource::create_sprite(TextureRenderable* resource, TextureRenderable* alpha, bool switch_uv)
 {
 	float vertices[] = {
 		-1.0f,  1.0f, 0.0f,
@@ -30,6 +30,13 @@ MeshResource *MeshResource::create_sprite(TextureRenderable* resource, TextureRe
 		1.0f, 1.0f,
 		1.0f, 0.0f
 	};
+
+	if (switch_uv) {
+		uvs[0] = 1.0f;
+		uvs[2] = 1.0f;
+		uvs[4] = 0.0f;
+		uvs[6] = 0.0f;
+	}
 
 	unsigned int indices[] = {
 		0, 1, 2, // first triangle

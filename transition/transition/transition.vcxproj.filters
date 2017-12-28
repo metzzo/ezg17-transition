@@ -123,13 +123,7 @@
     <ClInclude Include="ParticleEmitterNode.h">
       <Filter>Headerdateien\SceneGraph</Filter>
     </ClInclude>
-    <ClInclude Include="DemoParticleEmitter.h">
-      <Filter>Headerdateien\SceneGraph</Filter>
-    </ClInclude>
     <ClInclude Include="ComputeShader.h">
-      <Filter>Headerdateien\Resource\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="DemoParticleShader.h">
       <Filter>Headerdateien\Resource\Shader</Filter>
     </ClInclude>
     <ClInclude Include="OmniDirectionalShadowStrategy.h">
@@ -161,6 +155,15 @@
     </ClInclude>
     <ClInclude Include="TextureFBO.h">
       <Filter>Headerdateien\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="FootstepNode.h">
+      <Filter>Headerdateien\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="FootstepAnimator.h">
+      <Filter>Headerdateien\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="FootParticleShader.h">
+      <Filter>Headerdateien\Resource\Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -224,13 +227,7 @@
     <ClCompile Include="DirectionalShadowStrategy.cpp">
       <Filter>Quelldateien\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="DemoParticleEmitter.cpp">
-      <Filter>Quelldateien\SceneGraph</Filter>
-    </ClCompile>
     <ClCompile Include="ComputeShader.cpp">
-      <Filter>Quelldateien\Resource\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="DemoParticleShader.cpp">
       <Filter>Quelldateien\Resource\Shader</Filter>
     </ClCompile>
     <ClCompile Include="BloomAddShader.cpp">
@@ -263,12 +260,17 @@
     <ClCompile Include="TextureFBO.cpp">
       <Filter>Quelldateien\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="FootstepNode.cpp">
+      <Filter>Quelldateien\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="FootstepAnimator.cpp">
+      <Filter>Quelldateien\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="FootParticleShader.cpp">
+      <Filter>Quelldateien\Resource\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shaders\demo_part.comp" />
-    <None Include="assets\shaders\demo_part.vs" />
-    <None Include="assets\shaders\demo_part.gs" />
-    <None Include="assets\shaders\demo_part.fs" />
     <None Include="assets\shaders\test_simple.fs" />
     <None Include="assets\shaders\test_simple.vs" />
     <None Include="assets\shaders\bloom_add.fs" />
@@ -282,5 +284,9 @@
     <None Include="assets\shaders\main_shader.fs" />
     <None Include="assets\shaders\main_shader.vs" />
     <None Include="assets\shaders\postprocess.vs" />
+    <None Include="assets\shaders\foot_part.fs" />
+    <None Include="assets\shaders\foot_part.gs" />
+    <None Include="assets\shaders\foot_part.vs" />
+    <None Include="assets\shaders\foot_part.comp" />
   </ItemGroup>
 </Project>
