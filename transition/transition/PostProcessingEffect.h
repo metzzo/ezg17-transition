@@ -11,11 +11,12 @@ Interface for PostProcessingEffects
 class PostProcessingEffect {
 
 public:
+	virtual ~PostProcessingEffect() = default;
 	/*
 	Initializes the effect.
 	If you create shaders in this function, make sure to initialize them here right away, because the rendering engine will not do that anymore
 	*/
-	virtual void init(RenderingEngine *engine) = 0;
+	virtual void init(RenderingEngine *engine, CameraNode *camera) = 0;
 
 	/*
 	Performs the effect.

@@ -5,7 +5,7 @@ BloomEffect::BloomEffect(unsigned int intensity)
 	this->intensity_ = intensity;
 }
 
-void BloomEffect::init(RenderingEngine *engine)
+void BloomEffect::init(RenderingEngine *engine, CameraNode *camera)
 {
 	screenMesh_ = MeshResource::create_sprite(nullptr);
 	screenMesh_->init();

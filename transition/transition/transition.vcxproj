@@ -188,6 +188,9 @@
     <ClInclude Include="TextureResource.h" />
     <ClInclude Include="Transformation.h" />
     <ClInclude Include="TransformationNode.h" />
+    <ClInclude Include="VolumetricLightingBlurShader.h" />
+    <ClInclude Include="VolumetricLightingEffect.h" />
+    <ClInclude Include="VolumetricLightingShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimatorNode.cpp" />
@@ -219,6 +222,9 @@
     <ClCompile Include="TextureResource.cpp" />
     <ClCompile Include="Transformation.cpp" />
     <ClCompile Include="transition.cpp" />
+    <ClCompile Include="VolumetricLightingBlurShader.cpp" />
+    <ClCompile Include="VolumetricLightingEffect.cpp" />
+    <ClCompile Include="VolumetricLightingShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\bloom_add.fs" />

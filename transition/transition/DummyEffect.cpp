@@ -4,7 +4,7 @@ DummyEffect::DummyEffect()
 {
 }
 
-void DummyEffect::init(RenderingEngine * engine)
+void DummyEffect::init(RenderingEngine * engine, CameraNode *camera)
 {
 	screenMesh_ = MeshResource::create_sprite(nullptr);
 	screenMesh_->init();

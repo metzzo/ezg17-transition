@@ -14,6 +14,7 @@
 #include "DirectionalShadowStrategy.h"
 #include "BloomEffect.h"
 #include "RenderingEngine.h"
+#include "VolumetricLightingEffect.h"
 
 class LookAtController : public AnimatorNode
 {
@@ -53,14 +54,20 @@ int main()
 
 	const auto cam = new CameraNode("MainCamera",
 		engine->get_viewport(),
-		glm::perspective(glm::radians(60.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f)		
+		glm::perspective(glm::radians(60.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f)
 	);
 	//cam->set_view_matrix(glm::lookAt(glm::vec3(0, 5, 0), glm::vec3(-10, 3, 0), glm::vec3(0, 1, 0)));
 	cam->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -7), glm::vec3(0, 0, -16), glm::vec3(0, 1, 0)));
 	root->add_node(cam);
-	 
+
+	// order is important!!
+	// forward renderer emits FragColor and VolumetricLighting
+	// which is processed by VolumetricLightingEffect returning FragColor and BrightColor
+	// which is processed by BloomEffect and being rendered to screen
+	cam->add_post_processing_effect(new VolumetricLightingEffect());
+
 	BloomEffect* effect = new BloomEffect(2);
-	//cam->add_post_processing_effect(effect);
+	cam->add_post_processing_effect(effect);
 
 	auto importer = new ColladaImporter(engine);
 	//const auto world = importer->load_node("assets/models/gitti_d.dae");

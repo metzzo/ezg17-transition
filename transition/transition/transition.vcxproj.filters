@@ -168,6 +168,15 @@
     <ClInclude Include="DummyEffect.h">
       <Filter>Headerdateien\Effects</Filter>
     </ClInclude>
+    <ClInclude Include="VolumetricLightingEffect.h">
+      <Filter>Headerdateien\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="VolumetricLightingShader.h">
+      <Filter>Headerdateien\Resource\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="VolumetricLightingBlurShader.h">
+      <Filter>Headerdateien\Resource\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">
@@ -256,6 +265,15 @@
     </ClCompile>
     <ClCompile Include="DummyEffect.cpp">
       <Filter>Quelldateien\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="VolumetricLightingEffect.cpp">
+      <Filter>Quelldateien\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="VolumetricLightingShader.cpp">
+      <Filter>Quelldateien\Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="VolumetricLightingBlurShader.cpp">
+      <Filter>Quelldateien\Resource\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

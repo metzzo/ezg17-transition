@@ -2,12 +2,15 @@
 #include "RenderingEngine.h"
 #include "MainShader.h"
 #include "LightNode.h"
+#include "VolumetricLightingShader.h"
 
 CameraNode::CameraNode(const std::string& name, const glm::ivec2& viewport, const glm::mat4& projection) : RenderingNode(name, viewport, projection)
 {
 	screen_mesh_ = nullptr;
 	render_target1_ = nullptr;
 	render_target2_ = nullptr;
+	volumetric_lighting_shader_ = nullptr;
+	volumetric_buffer_ = nullptr;
 }
 
 CameraNode::~CameraNode()
@@ -20,12 +23,19 @@ CameraNode::~CameraNode()
 void CameraNode::init(RenderingEngine *rendering_engine)
 {
 	RenderingNode::init(rendering_engine);
-	for (auto ef = effects_.begin(); ef != effects_.end(); ef++) {
-		(*ef)->init(rendering_engine);
-	}
+
 	screen_mesh_ = MeshResource::create_sprite(nullptr);
 	render_target1_ = new TextureFBO(rendering_engine->get_viewport().x, rendering_engine->get_viewport().y, 2);
-	render_target2_ = new TextureFBO(rendering_engine->get_viewport().x, rendering_engine->get_viewport().y, 1);
+	render_target2_ = new TextureFBO(rendering_engine->get_viewport().x, rendering_engine->get_viewport().y, 2);
+	volumetric_buffer_ = new TextureFBO(rendering_engine->get_viewport().x / 2, rendering_engine->get_viewport().y / 2, 1);
+	volumetric_lighting_shader_ = new VolumetricLightingShader();
+	volumetric_lighting_shader_->init();
+	rendering_engine->register_resource(volumetric_lighting_shader_);
+
+	for (auto &eff : effects_)
+	{
+		eff->init(rendering_engine, this);
+	}
 }
 
 void CameraNode::add_post_processing_effect(PostProcessingEffect * effect)
@@ -39,6 +49,21 @@ void CameraNode::before_render(const std::vector<IDrawable*> &drawables, const s
 	{
 		light->render(drawables, std::vector<LightNode*>());
 	}
+
+	// render volumetric lighting volume
+	volumetric_buffer_->bind_for_rendering();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glViewport(0, 0, this->viewport_.x/2, this->viewport_.y/2);
+	volumetric_lighting_shader_->use();
+	volumetric_lighting_shader_->set_light_uniforms(light_nodes);
+	volumetric_lighting_shader_->set_camera_uniforms(this);
+
+	for (auto &drawable : drawables)
+	{
+		drawable->draw(volumetric_lighting_shader_);
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 
 	RenderingNode::before_render(drawables, light_nodes);
 
