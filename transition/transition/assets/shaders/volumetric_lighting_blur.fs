@@ -1,64 +1,96 @@
 #version 330 core
 
-// bilateral shader from https://github.com/SableRaf/Filters4Processing/blob/master/sketches/Bilateral/data/bilateral.glsl
-
-#define SIGMA 10.0
-#define BSIGMA 0.1
-#define MSIZE 15
-#define kSize ((MSIZE-1)/2)
-
-const float kernel[MSIZE] = float[MSIZE](
-0.031225216, 0.033322271, 0.035206333, 0.036826804, 0.038138565, 0.039104044, 0.039695028, 0.039894000, 0.039695028, 0.039104044, 0.038138565, 0.036826804, 0.035206333, 0.033322271, 0.031225216);
-
-
-float normpdf(in float x, in float sigma) {
-	return 0.39894*exp(-0.5*x*x/(sigma*sigma))/sigma;
-}
-
-float normpdf3(in vec3 v, in float sigma) {
-	return 0.39894*exp(-0.5*dot(v,v)/(sigma*sigma))/sigma;
-}
-
+#define GAUSS_BLUR_DEVIATION (1.5) 
+#define PI (3.1415927)
+#define HALF_RES_BLUR_KERNEL_SIZE (5)
+#define BLUR_DEPTH_FACTOR 0.5
+ 
 layout (location = 0) out vec4 FragColor;
-layout (location = 1) out vec4 BrightColor;
 
 in vec2 TexCoords;
 
-uniform sampler2D scene_tex;
 uniform sampler2D volumetric_tex;
+uniform bool is_vert;
+
+vec4 bilateral_blur(vec2 direction, vec2 texel_size, int kernel_radius);
 
 void main() {
-	vec3 c = texture(scene_tex, TexCoords).xyz + texture(volumetric_tex, TexCoords).xyz;
-	FragColor = vec4(c, 1.0);
+	vec4 color;
+	vec2 texel_size = 1.0 / textureSize(volumetric_tex, 0); // gets size of single texel
 	
-	//declare stuff
-	/*vec2 screen_size = vec2(1600, 900); // TODO: put in uniform
-	
-	float Z = 0.0;
-	vec3 final_color = vec3(0.0);
-	vec3 cc;
-	float factor;
-	float bZ = 1.0/normpdf(0.0, BSIGMA);
-	//read out the texels
-	for (int i=-kSize; i <= kSize; ++i)
-	{
-		for (int j=-kSize; j <= kSize; ++j)
-		{
-			cc = texture2D(volumetric_tex, vec2(0.0, 0.0) + ( gl_FragCoord.xy + vec2(float(i),float(j)) ) / screen_size.xy ).rgb;
-			factor = normpdf3(cc-c, BSIGMA)*bZ*kernel[kSize+j]*kernel[kSize+i];
-			Z += factor;
-			final_color += factor*cc;
-
-		}
-	}
-	
-	FragColor = vec4(final_color/Z, 1.0) + texture(scene_tex, TexCoords);*/
-	
-	
-	float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
-	if (brightness > 0.8) {
-		BrightColor = FragColor;
+	if (is_vert) {
+		color = bilateral_blur(vec2(1, 0), texel_size, HALF_RES_BLUR_KERNEL_SIZE);
 	} else {
-		BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
+		color = bilateral_blur(vec2(0, 1), texel_size, HALF_RES_BLUR_KERNEL_SIZE);
 	}
+	
+	FragColor = color;	
 }
+
+float linear_eye_depth(float depth_value) {
+	float near_plane = 0.1; // TODO as uniform
+	float far_plane = 100.0; // TODO as uniform
+
+	float z = depth_value * 2.0 - 1.0; // Back to NDC 
+    return (2.0 * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane));	
+}
+
+// TODO precompute
+float gaussian_weight(float offset, float deviation) {
+	float weight = 1.0f / sqrt(2.0f * PI * deviation * deviation);
+	weight *= exp(-(offset * offset) / (2.0f * deviation * deviation));
+	return weight;
+}
+
+
+vec4 bilateral_blur(vec2 direction, vec2 texel_size, int kernel_radius) {
+	float deviation = kernel_radius / GAUSS_BLUR_DEVIATION;
+
+	vec4 center_color = texture(volumetric_tex, TexCoords);
+	vec3 color = center_color.xyz;
+	
+	float center_depth = linear_eye_depth(center_color.w);
+
+	float weight_sum = 0;
+
+	float weight = gaussian_weight(0, deviation);
+	
+	color *= weight;
+	weight_sum += weight;
+				
+	for (int i = -kernel_radius; i < 0; i += 1) {
+		vec2 position = TexCoords + (direction * i) * texel_size;
+		vec4 sample_color = texture(volumetric_tex, position);
+		float sample_depth = linear_eye_depth(sample_color.w);
+
+		float depth_diff = abs(center_depth - sample_depth);
+		float dfactor = depth_diff * BLUR_DEPTH_FACTOR;
+		float w = exp(-(dfactor * dfactor));
+
+		weight = gaussian_weight(i, deviation) * w;
+
+		color += weight * sample_color.xyz;
+		weight_sum += weight;
+	}
+
+	for (int i = 1; i <= kernel_radius; i += 1) {
+		vec2 position = TexCoords + (direction * i) * texel_size;
+		vec4 sample_color = texture(volumetric_tex, position);
+		float sample_depth = linear_eye_depth(sample_color.w);
+
+		float depth_diff = abs(center_depth - sample_depth);
+		float dfactor = depth_diff * BLUR_DEPTH_FACTOR;
+		float w = exp(-(dfactor * dfactor));
+		
+		weight = gaussian_weight(i, deviation) * w;
+
+		color += weight * sample_color.xyz;
+		weight_sum += weight;
+	}
+
+	color /= weight_sum;
+	return vec4(color, 0.0);
+}
+
+		
+		

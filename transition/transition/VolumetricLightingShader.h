@@ -40,6 +40,7 @@ class VolumetricLightingShader :
 	int directional_shadow_map_index_;
 	int omni_directional_shadow_map_index_;
 	int light_index_;
+	GLint seed_uniform_;
 
 	int get_texture_slot() const;
 public:
@@ -54,5 +55,6 @@ public:
 	void set_light_uniforms(const std::vector<LightNode*>& light_nodes) override;
 	void set_directional_shadow_map_uniforms(const LightNode* light, const GLint shadow_map) override;
 	void set_omni_directional_shadow_map_uniforms(const LightNode* light, const GLint shadow_map, float far_plane, float near_plane) override;
+	void set_seed(int seed) const;
 };
 

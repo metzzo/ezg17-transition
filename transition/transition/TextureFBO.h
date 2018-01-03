@@ -9,6 +9,7 @@ private:
 	unsigned int texture_count_;
 	GLuint *texture_handles_;
 	GLuint *attachments_;
+	glm::ivec2 size_;
 
 	class SingleFBOTexture : public TextureRenderable {
 	private:
@@ -32,6 +33,8 @@ public:
 	int get_fbo_id() const;
 
 	int get_texture_id(int index) const;
+
+	glm::ivec2 get_size() const;
 
 	TextureRenderable* get_texture(int index) const;
 

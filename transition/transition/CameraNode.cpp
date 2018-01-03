@@ -55,6 +55,7 @@ void CameraNode::before_render(const std::vector<IDrawable*> &drawables, const s
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, this->viewport_.x/2, this->viewport_.y/2);
 	volumetric_lighting_shader_->use();
+	volumetric_lighting_shader_->set_seed(glfwGetTime() * 10000);
 	volumetric_lighting_shader_->set_light_uniforms(light_nodes);
 	volumetric_lighting_shader_->set_camera_uniforms(this);
 

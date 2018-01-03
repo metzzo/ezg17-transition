@@ -217,7 +217,7 @@ void main() {
 		color += (1.0 - shadow)*add_color;
 	}
 	
-	FragColor = vec4(color, 1.0f);
+	FragColor = vec4(color, gl_FragDepth);
 }
 
 #define DEBUG_PERSPECTIVE_DEPTH

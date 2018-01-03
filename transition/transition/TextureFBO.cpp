@@ -2,6 +2,7 @@
 
 TextureFBO::TextureFBO(int width, int height, unsigned int textureCount)
 {
+	this->size_ = glm::ivec2(width, height);
 	this->texture_count_ = textureCount;
 	glGenFramebuffers(1, &fbo_handle_);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo_handle_);
@@ -60,6 +61,11 @@ int TextureFBO::get_fbo_id() const
 int TextureFBO::get_texture_id(int index) const
 {
 	return texture_handles_[index];
+}
+
+glm::ivec2 TextureFBO::get_size() const
+{
+	return this->size_;
 }
 
 TextureRenderable * TextureFBO::get_texture(int index) const

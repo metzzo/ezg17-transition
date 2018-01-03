@@ -177,6 +177,9 @@
     <ClInclude Include="VolumetricLightingBlurShader.h">
       <Filter>Headerdateien\Resource\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="VolumetricLightingUpSampleShader.h">
+      <Filter>Headerdateien\Resource\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">
@@ -273,6 +276,9 @@
       <Filter>Quelldateien\Resource\Shader</Filter>
     </ClCompile>
     <ClCompile Include="VolumetricLightingBlurShader.cpp">
+      <Filter>Quelldateien\Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="VolumetricLightingUpSampleShader.cpp">
       <Filter>Quelldateien\Resource\Shader</Filter>
     </ClCompile>
   </ItemGroup>
