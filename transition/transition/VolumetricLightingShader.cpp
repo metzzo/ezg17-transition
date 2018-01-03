@@ -109,12 +109,6 @@ void VolumetricLightingShader::init()
 	{
 	//	this->omni_directional_shadow_maps_uniform_[i] = get_uniform("omni_directional_shadow_maps", i);
 	}
-
-	// init blue noise texture
-	this->blue_noise_texture_uniform_ = get_uniform("blue_noise_texture");
-	this->blue_noise_texture_->init();
-
-	this->seed_uniform_ = get_uniform("seed");
 }
 
 void VolumetricLightingShader::set_camera_uniforms(const RenderingNode* node)
@@ -181,11 +175,6 @@ void VolumetricLightingShader::set_light_uniforms(const std::vector<LightNode*>&
 	}
 	assert(this->num_lights_uniform_ >= 0);
 	glUniform1i(this->num_lights_uniform_, this->light_index_);
-
-	// bind blue noise
-	//assert(this->blue_noise_texture_uniform_ >= 0);
-	//this->blue_noise_texture_->bind(blue_noise_texture_slot);
-	//glUniform1i(this->blue_noise_texture_uniform_, blue_noise_texture_slot);
 }
 
 void VolumetricLightingShader::set_directional_shadow_map_uniforms(const LightNode* light, const GLint shadow_map)
@@ -230,9 +219,4 @@ void VolumetricLightingShader::set_omni_directional_shadow_map_uniforms(const Li
 	glUniformMatrix4fv(this->light_view_matrices_uniform_[this->directional_shadow_map_index_], 1, GL_FALSE, &light->get_view_matrix()[0][0]); // just the view transform of light
 	glUniformMatrix4fv(this->light_projection_matrices_uniform_[this->directional_shadow_map_index_], 1, GL_FALSE, &light->get_projection_matrix()[0][0]); // just the view transform of light
 	*/
-}
-
-void VolumetricLightingShader::set_seed(const int seed) const {
-	//assert(seed_uniform_ >= 0);
-	glUniform1i(seed_uniform_, seed);
 }

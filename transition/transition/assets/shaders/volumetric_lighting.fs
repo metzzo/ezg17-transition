@@ -78,8 +78,6 @@ uniform mat4 light_projection_matrices[MAX_NR_DIRECTIONAL_SHADOWS];
 	} 
 
 uniform vec3 view_pos;
-uniform sampler2D blue_noise_texture;
-uniform int seed;
 
 float volumetric_lighting(Light light, float bias);
 
@@ -112,9 +110,6 @@ float dither_pattern[16] = float[16] (
 #define NUM_STEPS (12)
 
 float volumetric_lighting(Light light, float bias) {
-	//vec2 screen_pos = vec2(mod(gl_FragCoord.x, 512), mod(gl_FragCoord.y, 512)) / 512.0;
-	//float dither_value = 0.000001*texture(blue_noise_texture, screen_pos).r;
-	
 	float dither_value = dither_pattern[ (int(gl_FragCoord.x) % 4)* 4 + (int(gl_FragCoord.y) % 4) ];
 	
 	vec4 end_pos_worldspace  = vec4(view_pos, 1.0);
