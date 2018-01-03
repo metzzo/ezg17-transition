@@ -4,7 +4,7 @@
 #include "LightNode.h"
 #include "GeometryNode.h"
 
-static const int blue_noise_texture_slot = 0;
+static const int depth_texture_slot = 0;
 static const int shadow_map_texture_slot = 1;
 
 int VolumetricLightingShader::get_texture_slot() const
@@ -15,16 +15,12 @@ int VolumetricLightingShader::get_texture_slot() const
 
 VolumetricLightingShader::VolumetricLightingShader() : ShaderResource("assets/shaders/volumetric_lighting.vs", "assets/shaders/volumetric_lighting.fs")
 {
-	this->blue_noise_texture_uniform_ = -1;
-	this->blue_noise_texture_ = new TextureResource("assets/gfx/blue_noise.png");
-
 	this->directional_shadow_map_index_ = 0;
 	this->omni_directional_shadow_map_index_ = 0;
 	this->light_index_ = 0;
 
-	this->model_uniform_ = -1;
-	this->view_uniform_ = -1;
-	this->projection_uniform_ = -1;
+	this->view_inv_uniform_ = -1;
+	this->projection_inv_uniform_ = -1;
 	this->view_pos_uniform_ = -1;
 
 	this->num_lights_uniform_ = -1;
@@ -59,7 +55,7 @@ VolumetricLightingShader::VolumetricLightingShader() : ShaderResource("assets/sh
 		this->omni_directional_shadow_maps_uniform_[i] = -1;
 	}
 
-	this->seed_uniform_ = -1;
+	this->depth_texture_uniform_ = -1;
 }
 
 
@@ -72,9 +68,8 @@ void VolumetricLightingShader::init()
 	ShaderResource::init();
 
 	// extract uniforms
-	this->model_uniform_ = get_uniform("mvp.model");
-	this->view_uniform_ = get_uniform("mvp.view");
-	this->projection_uniform_ = get_uniform("mvp.projection");
+	this->view_inv_uniform_ = get_uniform("vp.view_inv");
+	this->projection_inv_uniform_ = get_uniform("vp.projection_inv");
 	this->view_pos_uniform_ = get_uniform("view_pos");
 
 	this->num_lights_uniform_ = get_uniform("num_lights");
@@ -109,22 +104,23 @@ void VolumetricLightingShader::init()
 	{
 	//	this->omni_directional_shadow_maps_uniform_[i] = get_uniform("omni_directional_shadow_maps", i);
 	}
+
+	this->depth_texture_uniform_ = get_uniform("depth_tex");
 }
 
 void VolumetricLightingShader::set_camera_uniforms(const RenderingNode* node)
 {
-	assert(this->view_uniform_ >= 0);
-	assert(this->projection_uniform_ >= 0);
+	assert(this->view_inv_uniform_ >= 0);
+	assert(this->projection_inv_uniform_ >= 0);
 	assert(this->view_pos_uniform_ >= 0);
 
-	glUniformMatrix4fv(this->view_uniform_, 1, GL_FALSE, &node->get_view_matrix()[0][0]);
-	glUniformMatrix4fv(this->projection_uniform_, 1, GL_FALSE, &node->get_projection_matrix()[0][0]);
+	glUniformMatrix4fv(this->view_inv_uniform_, 1, GL_FALSE, &node->get_transformation()[0][0]);
+	glUniformMatrix4fv(this->projection_inv_uniform_, 1, GL_FALSE, &node->get_projection_inverse_matrix()[0][0]);
 	glUniform3fv(this->view_pos_uniform_, 1, &node->get_position()[0]);
 }
 
 void VolumetricLightingShader::set_model_uniforms(const GeometryNode* node)
 {
-	glUniformMatrix4fv(this->model_uniform_, 1, GL_FALSE, &node->get_transformation()[0][0]);
 }
 
 void VolumetricLightingShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
@@ -219,4 +215,10 @@ void VolumetricLightingShader::set_omni_directional_shadow_map_uniforms(const Li
 	glUniformMatrix4fv(this->light_view_matrices_uniform_[this->directional_shadow_map_index_], 1, GL_FALSE, &light->get_view_matrix()[0][0]); // just the view transform of light
 	glUniformMatrix4fv(this->light_projection_matrices_uniform_[this->directional_shadow_map_index_], 1, GL_FALSE, &light->get_projection_matrix()[0][0]); // just the view transform of light
 	*/
+}
+
+void VolumetricLightingShader::set_depth_texture(TextureRenderable* scene_tex) const
+{
+	glUniform1i(this->depth_texture_uniform_, depth_texture_slot);
+	scene_tex->bind(depth_texture_slot);
 }

@@ -17,10 +17,13 @@ void BloomEffect::init(RenderingEngine *engine, CameraNode *camera)
 	gauss_shader_->init();
 	add_shader_->init();
 	help_buffer_[0] = new TextureFBO(engine->get_viewport().x, engine->get_viewport().y, 1);
+	help_buffer_[0]->init_color();
+
 	help_buffer_[1] = new TextureFBO(engine->get_viewport().x, engine->get_viewport().y, 1);
+	help_buffer_[1]->init_color();
 }
 
-void BloomEffect::perform_effect(const TextureFBO * from, GLuint fbo_to)
+void BloomEffect::perform_effect(const TextureFBO * from, GLuint fbo_to, const std::vector<LightNode *> light_nodes)
 {
 	TextureRenderable * brighttex = from->get_texture(1);
 	gauss_shader_->use();

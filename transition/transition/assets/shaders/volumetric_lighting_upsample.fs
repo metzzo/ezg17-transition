@@ -16,8 +16,6 @@ float linear_eye_depth(float depth_value);
 uniform sampler2D scene_tex;
 uniform sampler2D volumetric_tex;
 
-vec4 bilateral_blur(vec2 direction, vec2 texel_size, int kernel_radius);
-
 void main() {
 	vec4 scene_color = texture(scene_tex, TexCoordsCenter);
 	

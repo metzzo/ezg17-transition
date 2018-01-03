@@ -21,8 +21,8 @@ struct MVP {
 	mat4 model;
 	mat4 view;
 	mat4 projection;	
-	mat3 inverse_model;
-	mat4 inverse_mvp;
+	
+	mat3 model_normal; // TODO
 };
 uniform MVP mvp;
 
@@ -217,7 +217,7 @@ void main() {
 		color += (1.0 - shadow)*add_color;
 	}
 	
-	FragColor = vec4(color, gl_FragDepth);
+	FragColor = vec4(color, 1.0);
 }
 
 #define DEBUG_PERSPECTIVE_DEPTH

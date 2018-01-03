@@ -15,11 +15,11 @@ void DummyEffect::init(RenderingEngine * engine, CameraNode *camera)
 }
 
 
-void DummyEffect::perform_effect(const TextureFBO * from, GLuint fbo_to)
+void DummyEffect::perform_effect(const TextureFBO * from, GLuint fbo_to, const std::vector<LightNode *> light_nodes)
 {
-	TextureRenderable * brighttex = from->get_texture(0);
+	TextureRenderable * tex = from->get_texture(0);
 	shader_->use();
-	shader_->set_texture(brighttex);
+	shader_->set_texture(tex);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo_to);
 	glViewport(0, 0, viewport_.x, viewport_.y);

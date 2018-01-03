@@ -5,6 +5,8 @@
 #include "MeshResource.h"
 #include "TextureFBO.h"
 
+class LightNode;
+
 /*
 Interface for PostProcessingEffects
 */
@@ -22,6 +24,6 @@ public:
 	Performs the effect.
 	from is the TextureFBO which contains the original image. fbo_to is the id of the framebuffer to render the result into
 	*/
-	virtual void perform_effect(const TextureFBO* from, GLuint fbo_to) = 0;
+	virtual void perform_effect(const TextureFBO* from, GLuint fbo_to, const std::vector<LightNode *> light_nodes) = 0;
 
 };

@@ -10,7 +10,7 @@
 #define PCF_OMNI_DIRECTIONAL_SAMPLES (20)
 
 in VS_OUT {
-    vec3 frag_pos;
+	vec2 tex_coords;
 } fs_in;
 
 layout (location = 0) out vec4 VolumetricColor;
@@ -77,24 +77,48 @@ uniform mat4 light_projection_matrices[MAX_NR_DIRECTIONAL_SHADOWS];
 		X = A(omni_directional_shadow_maps[4], C); \
 	} 
 
-uniform vec3 view_pos;
+struct VP {
+	mat4 view_inv;
+	mat4 projection_inv;
+};
 
-float volumetric_lighting(Light light, float bias);
+uniform VP vp;
+uniform vec3 view_pos;
+uniform sampler2D depth_tex;
+
+float volumetric_lighting(vec3 frag_pos, Light light, float bias);
+vec3 world_pos_from_depth(float depth);
 
 
 void main() {
 	vec3 vol_color = vec3(0);
+	
+	float depth = texture(depth_tex, fs_in.tex_coords).r;
+	vec3 frag_pos = world_pos_from_depth(depth);
 	
 	for (int i = 0; i < num_lights; i++) {
 		if (lights[i].volumetric) {
 			float bias = 0.0; // TODO
 			
 			// TODO: different implementations for point light
-			vol_color += volumetric_lighting(lights[i], bias)*lights[i].diffuse;
+			vol_color += volumetric_lighting(frag_pos, lights[i], bias)*lights[i].diffuse;
 		}
 	}
 	
-	VolumetricColor = vec4(vol_color, gl_FragDepth);
+	VolumetricColor = vec4(vol_color, depth);
+}
+
+vec3 world_pos_from_depth(float depth) {
+    float z = depth * 2.0 - 1.0;
+
+    vec4 clip_space_position = vec4(fs_in.tex_coords * 2.0 - 1.0, z, 1.0);
+    vec4 view_space_position = vp.projection_inv * clip_space_position;
+
+    // Perspective divide
+    view_space_position /= view_space_position.w;
+
+    vec4 world_space_position = vp.view_inv * view_space_position;
+    return world_space_position.xyz;
 }
 
 float dither_pattern[16] = float[16] (
@@ -104,16 +128,16 @@ float dither_pattern[16] = float[16] (
 	0.9375f, 0.4375f, 0.8125f, 0.3125
 );
 
-#define TAU (0.000001)
-#define PHI (50000000.0)
+#define TAU (0.0000015)
+#define PHI (75000000.0)
 #define PI_RCP (0.31830988618379067153776752674503)
 #define NUM_STEPS (12)
 
-float volumetric_lighting(Light light, float bias) {
+float volumetric_lighting(vec3 frag_pos, Light light, float bias) {
 	float dither_value = dither_pattern[ (int(gl_FragCoord.x) % 4)* 4 + (int(gl_FragCoord.y) % 4) ];
 	
 	vec4 end_pos_worldspace  = vec4(view_pos, 1.0);
-	vec4 start_pos_worldspace = vec4(fs_in.frag_pos, 1.0);
+	vec4 start_pos_worldspace = vec4(frag_pos, 1.0);
 	vec4 delta_worldspace = normalize(end_pos_worldspace - start_pos_worldspace);
 	
 	vec4 end_pos_lightview = light_view_matrices[light.shadow_map_index] * end_pos_worldspace;

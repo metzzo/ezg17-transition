@@ -1,8 +1,8 @@
 #version 330 core
 
-#define GAUSS_BLUR_DEVIATION (1.5) 
+#define GAUSS_BLUR_DEVIATION (1.5/2.0) 
 #define PI (3.1415927)
-#define HALF_RES_BLUR_KERNEL_SIZE (5)
+#define HALF_RES_BLUR_KERNEL_SIZE (3)
 #define BLUR_DEPTH_FACTOR 0.5
  
 layout (location = 0) out vec4 FragColor;

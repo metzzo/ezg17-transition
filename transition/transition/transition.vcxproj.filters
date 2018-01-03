@@ -180,6 +180,9 @@
     <ClInclude Include="VolumetricLightingUpSampleShader.h">
       <Filter>Headerdateien\Resource\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="VolumetricLightingDownSampleShader.h">
+      <Filter>Headerdateien\Resource\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">
@@ -225,9 +228,6 @@
       <Filter>Quelldateien\Utility</Filter>
     </ClCompile>
     <ClCompile Include="AnimatorNode.cpp">
-      <Filter>Quelldateien\SceneGraph</Filter>
-    </ClCompile>
-    <ClCompile Include="Transformation.cpp">
       <Filter>Quelldateien\SceneGraph</Filter>
     </ClCompile>
     <ClCompile Include="CameraController.cpp">
@@ -280,6 +280,12 @@
     </ClCompile>
     <ClCompile Include="VolumetricLightingUpSampleShader.cpp">
       <Filter>Quelldateien\Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="VolumetricLightingDownSampleShader.cpp">
+      <Filter>Quelldateien\Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Transformation.cpp">
+      <Filter>Quelldateien\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

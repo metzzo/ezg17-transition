@@ -1,5 +1,6 @@
 #pragma once
 #include "MainShader.h"
+#include "TextureFBO.h"
 
 class TextureResource;
 
@@ -10,9 +11,8 @@ class VolumetricLightingShader :
 	GLint light_view_matrices_uniform_[max_nr_directional_shadow_maps];
 	GLint light_projection_matrices_uniform_[max_nr_directional_shadow_maps];
 
-	GLint model_uniform_;
-	GLint view_uniform_;
-	GLint projection_uniform_;
+	GLint view_inv_uniform_;
+	GLint projection_inv_uniform_;
 
 	GLint num_lights_uniform_;
 	GLint light_type_uniform_[max_nr_lights];
@@ -33,7 +33,8 @@ class VolumetricLightingShader :
 	GLint omni_directional_shadow_maps_uniform_[max_nr_omni_directional_shadow_maps];
 	GLint directional_shadow_maps_uniform_[max_nr_directional_shadow_maps];
 	GLint view_pos_uniform_;
-	
+	GLint depth_texture_uniform_;
+
 	int directional_shadow_map_index_;
 	int omni_directional_shadow_map_index_;
 	int light_index_;
@@ -51,5 +52,6 @@ public:
 	void set_light_uniforms(const std::vector<LightNode*>& light_nodes) override;
 	void set_directional_shadow_map_uniforms(const LightNode* light, const GLint shadow_map) override;
 	void set_omni_directional_shadow_map_uniforms(const LightNode* light, const GLint shadow_map, float far_plane, float near_plane) override;
+	void set_depth_texture(TextureRenderable *scene_tex) const;
 };
 

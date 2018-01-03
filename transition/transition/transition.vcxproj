@@ -189,6 +189,7 @@
     <ClInclude Include="Transformation.h" />
     <ClInclude Include="TransformationNode.h" />
     <ClInclude Include="VolumetricLightingBlurShader.h" />
+    <ClInclude Include="VolumetricLightingDownSampleShader.h" />
     <ClInclude Include="VolumetricLightingEffect.h" />
     <ClInclude Include="VolumetricLightingShader.h" />
     <ClInclude Include="VolumetricLightingUpSampleShader.h" />
@@ -224,6 +225,7 @@
     <ClCompile Include="Transformation.cpp" />
     <ClCompile Include="transition.cpp" />
     <ClCompile Include="VolumetricLightingBlurShader.cpp" />
+    <ClCompile Include="VolumetricLightingDownSampleShader.cpp" />
     <ClCompile Include="VolumetricLightingEffect.cpp" />
     <ClCompile Include="VolumetricLightingShader.cpp" />
     <ClCompile Include="VolumetricLightingUpSampleShader.cpp" />

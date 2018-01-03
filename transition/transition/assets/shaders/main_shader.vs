@@ -20,9 +20,9 @@ uniform int num_lights;
 struct MVP {
 	mat4 model;
 	mat4 view;
-	mat4 projection;	
-	mat3 inverse_model; // TODO
-	mat4 inverse_mvp;
+	mat4 projection;
+	
+	mat3 model_normal; // TODO
 };
 
 uniform MVP mvp;
