@@ -39,6 +39,7 @@ protected:
 	bool volumetric_; 
 	float phi_; // power of light source
 	float tau_; // probability of collision
+	bool has_fog_;
 public:
 	explicit LightNode(const std::string& name, LightType light_type);
 	~LightNode();
@@ -61,7 +62,7 @@ public:
 	void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) override;
 
 	void set_uniforms(ILightShader *shader);
-	void set_volumetric(const bool is_volumetric, float phi, float tau);
+	void set_volumetric(const bool is_volumetric, float phi, float tau, bool has_fog = true);
 
 	ShaderResource* get_shader() const override;
 
@@ -137,6 +138,11 @@ public:
 	float get_max_bias() const
 	{
 		return this->max_bias_;
+	}
+
+	bool has_fog() const
+	{
+		return this->has_fog_;
 	}
 };
 
