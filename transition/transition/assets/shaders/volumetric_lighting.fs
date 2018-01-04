@@ -94,6 +94,11 @@ void main() {
 	vec3 vol_color = vec3(0);
 	
 	float depth = texture(depth_tex, fs_in.tex_coords).r;
+	
+	if (depth == 1.0) {
+		discard; // here it would sample into infinity
+	}
+	
 	vec3 frag_pos = world_pos_from_depth(depth);
 	
 	for (int i = 0; i < num_lights; i++) {

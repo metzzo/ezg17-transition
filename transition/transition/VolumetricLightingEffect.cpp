@@ -80,7 +80,7 @@ void VolumetricLightingEffect::perform_effect(const TextureFBO* from, GLuint fbo
 	// calculate volumetric lighting
 	volumetric_lighting_shader_->use();
 	volumetric_lighting_shader_->set_light_uniforms(light_nodes);
-	volumetric_lighting_shader_->set_camera_uniforms(this->camera_);
+	volumetric_lighting_shader_->set_camera_uniforms(camera_);
 	volumetric_lighting_shader_->set_depth_texture(depth_half_res_fbo_);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, pong_half_res_fbo_->get_fbo_id());
