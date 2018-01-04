@@ -5,6 +5,11 @@
 
 MeshResource *MeshResource::create_sprite(TextureRenderable* resource)
 {
+	return create_sprite(resource, nullptr, false);
+}
+
+MeshResource *MeshResource::create_sprite(TextureRenderable* resource, TextureRenderable* alpha, bool switch_uv)
+{
 	float vertices[] = {
 		-1.0f,  1.0f, 0.0f,
 		-1.0f, -1.0f, 0.0f,
@@ -25,6 +30,13 @@ MeshResource *MeshResource::create_sprite(TextureRenderable* resource)
 		1.0f, 1.0f,
 		1.0f, 0.0f
 	};
+
+	if (switch_uv) {
+		uvs[0] = 1.0f;
+		uvs[2] = 1.0f;
+		uvs[4] = 0.0f;
+		uvs[6] = 0.0f;
+	}
 
 	unsigned int indices[] = {
 		0, 1, 2, // first triangle
@@ -49,6 +61,9 @@ MeshResource *MeshResource::create_sprite(TextureRenderable* resource)
 	mat.set_specular_color(glm::vec3(0, 0, 0));
 
 	mat.set_texture(resource);
+	if (alpha != nullptr) {
+		mat.set_alpha_texture(alpha);
+	}
 
 	return new MeshResource(
 		quad_vertices,

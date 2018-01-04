@@ -11,12 +11,13 @@ enum MaterialType
 
 class Material {
 private:
-	glm::vec3 ambient_color_		= glm::vec3(0.0, 0.0, 0.0);
-	glm::vec3 diffuse_color_		= glm::vec3(0.0, 0.0, 0.0);
-	glm::vec3 specular_color_		= glm::vec3(0.0, 0.0, 0.0);
-	float shininess_				= 1;
-	float opacity_					= 1;
-	TextureRenderable* texture_		= nullptr;
+	glm::vec3 ambient_color_			= glm::vec3(0.0, 0.0, 0.0);
+	glm::vec3 diffuse_color_			= glm::vec3(0.0, 0.0, 0.0);
+	glm::vec3 specular_color_			= glm::vec3(0.0, 0.0, 0.0);
+	float shininess_					= 1;
+	float opacity_						= 1;
+	TextureRenderable* texture_			= nullptr;
+	TextureRenderable* alpha_texture_	= nullptr;
 public:
 	Material() {};
 
@@ -38,6 +39,10 @@ public:
 	bool has_texture() const;
 	TextureRenderable* get_texture() const;
 	void set_texture(TextureRenderable* texture);
+
+	bool has_alpha_texture() const;
+	TextureRenderable* get_alpha_texture() const;
+	void set_alpha_texture(TextureRenderable* texture);
 
 	MaterialType get_material_type() const;
 };

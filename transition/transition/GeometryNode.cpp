@@ -1,6 +1,6 @@
 #include "GeometryNode.h"
 
-GeometryNode::GeometryNode(const std::string& name, const MeshResource *resource) : TransformationNode(name)
+GeometryNode::GeometryNode(const std::string& name, MeshResource *resource) : TransformationNode(name)
 {
 	this->resource_ = resource;
 }
@@ -16,7 +16,6 @@ std::vector<IDrawable*> GeometryNode::get_drawables()
 
 void GeometryNode::draw(ShaderResource *shader) const
 {
-	const auto trafo = this->get_transformation();
 	shader->set_model_uniforms(this);
 
 	glBindVertexArray(this->resource_->get_resource_id());
@@ -30,5 +29,10 @@ void GeometryNode::init(RenderingEngine* rendering_engine)
 }
 
 const MeshResource* GeometryNode::get_mesh_resource() const {
+	return resource_;
+}
+
+MeshResource * GeometryNode::get_editable_mesh_resource()
+{
 	return resource_;
 }

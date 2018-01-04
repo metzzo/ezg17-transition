@@ -19,6 +19,8 @@ class MainShader :
 	GLint projection_uniform_;
 	GLint material_diffuse_tex_uniform_;
 	GLint material_has_diffuse_tex_uniform_;
+	GLint material_alpha_tex_uniform_;
+	GLint material_has_alpha_tex_uniform;
 
 	GLint num_lights_uniform_;
 	GLint light_type_uniform_[max_nr_lights];
@@ -45,6 +47,7 @@ class MainShader :
 	GLint material_diffuse_color_;
 	GLint material_specular_color_;
 	GLint material_material_type_;
+	GLint material_opacity_;
 	int directional_shadow_map_index_;
 	int omni_directional_shadow_map_index_;
 	int light_index_;

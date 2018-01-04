@@ -128,6 +128,8 @@ void ShaderResource::check_compile_errors(const GLuint shader, const std::string
 		{
 			glGetShaderInfoLog(shader, 1024, nullptr, info_log);
 			std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << info_log << "\n -- --------------------------------------------------- -- " << std::endl;
+			system("PAUSE");
+			exit(1);
 		}
 	}
 	else
@@ -137,6 +139,8 @@ void ShaderResource::check_compile_errors(const GLuint shader, const std::string
 		{
 			glGetProgramInfoLog(shader, 1024, nullptr, info_log);
 			std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << info_log << "\n -- --------------------------------------------------- -- " << std::endl;
+			system("PAUSE");
+			exit(1);
 		}
 	}
 }

@@ -16,6 +16,10 @@
 #include "OmniDirectionalShadowStrategy.h"
 #include "LookAtController.h"
 #include "CarController.h"
+#include "FootstepNode.h"
+#include "FootstepAnimator.h"
+#include "BloomEffect.h"
+
 
 int main()
 {
@@ -63,6 +67,16 @@ int main()
 	
 	auto anim = new CameraController("cam_anim", cam);
 	root->add_node(anim);
+
+	ShaderResource* main_shader = engine->get_main_shader();
+	auto right = new FootstepNode("emitter", main_shader, false);
+	root->add_node(right);
+	right->apply_transformation(Transformation::translate(glm::vec3(0, 0, 7)));
+	auto left = new FootstepNode("emitter", main_shader, true);
+	root->add_node(left);
+	left->apply_transformation(Transformation::translate(glm::vec3(-2, 0, 8)));
+	FootstepAnimator* footanim = new FootstepAnimator("footanim", left, right, false, glm::vec3(0, 0, -2));
+	root->add_node(footanim);
 
 	engine->run();
 

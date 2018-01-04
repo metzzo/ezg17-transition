@@ -42,7 +42,7 @@ void CameraNode::before_render(const std::vector<IDrawable*> &drawables, const s
 {
 	for (auto &light : light_nodes)
 	{
-		light->render(drawables, std::vector<LightNode*>());
+		light->render(drawables, {}, std::vector<LightNode*>());
 	}
 
 	RenderingNode::before_render(drawables, light_nodes);

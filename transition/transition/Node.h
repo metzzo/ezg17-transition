@@ -9,6 +9,7 @@ class RenderingEngine;
 class CameraNode;
 class LightNode;
 class AnimatorNode;
+class ParticleEmitterNode;
 
 class Node
 {
@@ -25,6 +26,7 @@ public:
 	virtual std::vector<IDrawable*> get_drawables();
 	virtual std::vector<LightNode*> get_light_nodes();
 	virtual std::vector<AnimatorNode*> get_animator_nodes();
+	virtual std::vector<ParticleEmitterNode*> get_particle_emitter_nodes();
 
 	/*
 	Applies a transformation to the Node. The inverse transformation is given as well, as this might be used for the normal-transformation-matrix 

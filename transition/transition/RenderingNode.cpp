@@ -1,6 +1,7 @@
 #include "RenderingNode.h"
 #include "glheaders.h"
 #include "IDrawable.h"
+#include "ParticleEmitterNode.h"
 
 RenderingNode::RenderingNode(const std::string& name, const glm::ivec2 viewport, const glm::mat4 projection) : TransformationNode(name)
 {
@@ -26,7 +27,7 @@ void RenderingNode::after_render(const std::vector<IDrawable*> &drawables, const
 {
 }
 
-void RenderingNode::render(const std::vector<IDrawable*>& drawables, const std::vector<LightNode*>& light_nodes) const
+void RenderingNode::render(const std::vector<IDrawable*>& drawables, const std::vector<ParticleEmitterNode*> &emitters, const std::vector<LightNode*>& light_nodes) const
 {
 	if (!this->is_rendering_enabled())
 	{
@@ -38,6 +39,12 @@ void RenderingNode::render(const std::vector<IDrawable*>& drawables, const std::
 	for (auto &drawable : drawables)
 	{
 		drawable->draw(this->get_shader());
+	}
+
+	if (this->renders_particles()) {
+		for (auto& emitter : emitters) {
+			emitter->draw_particles(this);
+		}
 	}
 
 	after_render(drawables, light_nodes);

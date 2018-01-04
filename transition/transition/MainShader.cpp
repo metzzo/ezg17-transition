@@ -4,7 +4,7 @@
 #include "GeometryNode.h"
 
 static const int diffuse_texture_slot = 0;
-static const int shadow_map_texture_slot = 1;
+static const int shadow_map_texture_slot = 2;
 
 int MainShader::get_texture_slot() const
 {
@@ -23,11 +23,14 @@ MainShader::MainShader(const char* vertex_path, const char* fragment_path, const
 	this->projection_uniform_ = -1;
 	this->material_diffuse_tex_uniform_ = -1;
 	this->material_has_diffuse_tex_uniform_ = -1;
+	this->material_alpha_tex_uniform_ = -1;
+	this->material_has_alpha_tex_uniform = -1;
 	this->material_shininess_ = -1;
 	this->material_ambient_color_ = -1;
 	this->material_diffuse_color_ = -1;
 	this->material_specular_color_ = -1;
 	this->material_material_type_ = -1;
+	this->material_opacity_ = -1;
 	this->view_pos_uniform_ = -1;
 	
 	this->num_lights_uniform_ = -1;
@@ -103,9 +106,23 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 		glUniform1i(this->material_has_diffuse_tex_uniform_, 0);
 		glUniform1i(this->material_material_type_, REGULAR_MATERIAL);
 	}
+	if (material.has_alpha_texture()) {
+		auto alpha = material.get_alpha_texture();
+		alpha->bind(1);
+		glUniform1i(this->material_has_alpha_tex_uniform, 1);
+		glUniform1i(this->material_alpha_tex_uniform_, 1);
+	}
+	else {
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glUniform1i(this->material_has_alpha_tex_uniform, 0);
+		glUniform1i(this->material_alpha_tex_uniform_, 1);
+	}
 	glUniform3fv(this->material_ambient_color_, 1, &material.get_ambient_color()[0]);
 	glUniform3fv(this->material_diffuse_color_, 1, &material.get_diffuse_color()[0]);
 	glUniform3fv(this->material_specular_color_, 1, &material.get_specular_color()[0]);
+	glUniform1f(this->material_opacity_, material.get_opacity());
 
 }
 
@@ -206,11 +223,14 @@ void MainShader::init()
 	this->view_pos_uniform_ = get_uniform("view_pos");
 	this->material_diffuse_tex_uniform_ = get_uniform("material.diffuse_tex");
 	this->material_has_diffuse_tex_uniform_ = get_uniform("material.has_diffuse_tex");
+	this->material_alpha_tex_uniform_ = get_uniform("material.alpha_tex");
+	this->material_has_alpha_tex_uniform = get_uniform("material.has_alpha_tex");
 	this->material_shininess_ = get_uniform("material.shininess");
 	this->material_ambient_color_ = get_uniform("material.ambient_color");
 	this->material_diffuse_color_ = get_uniform("material.diffuse_color");
 	this->material_specular_color_ = get_uniform("material.specular_color");
 	this->material_material_type_ = get_uniform("material.material_type");
+	this->material_opacity_ = get_uniform("material.opacity");
 
 	this->num_lights_uniform_ = get_uniform("num_lights");
 

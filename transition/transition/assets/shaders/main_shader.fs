@@ -92,7 +92,10 @@ struct Material {
 	bool has_diffuse_tex;
 	sampler2D diffuse_tex;
 	sampler2D specular_tex;
+	bool has_alpha_tex;
+	sampler2D alpha_tex;
 	float shininess;
+	float opacity;
 	
 	vec3 ambient_color;
 	vec3 diffuse_color;
@@ -216,8 +219,11 @@ void main() {
 		
 		color += (1.0 - shadow)*add_color;
 	}
-	
-	FragColor = vec4(color, 1.0);
+	float alpha = material.opacity;
+	if (material.has_alpha_tex) {
+		alpha = alpha * texture(material.alpha_tex, fs_in.tex_coords).r;
+	}
+	FragColor = vec4(color, alpha);
 }
 
 #define DEBUG_PERSPECTIVE_DEPTH

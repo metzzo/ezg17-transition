@@ -161,6 +161,10 @@
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="CarController.h" />
     <ClInclude Include="ColladaImporter.h" />
+    <ClInclude Include="ComputeShader.h" />
+    <ClInclude Include="FootstepAnimator.h" />
+    <ClInclude Include="FootstepNode.h" />
+    <ClInclude Include="FootParticleShader.h" />
     <ClInclude Include="DirectionalDepthShader.h" />
     <ClInclude Include="DirectionalShadowStrategy.h" />
     <ClInclude Include="DummyEffect.h" />
@@ -180,6 +184,7 @@
     <ClInclude Include="MainShader.h" />
     <ClInclude Include="OmniDirectionalDepthShader.h" />
     <ClInclude Include="OmniDirectionalShadowStrategy.h" />
+    <ClInclude Include="ParticleEmitterNode.h" />
     <ClInclude Include="PostProcessingEffect.h" />
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="RenderingNode.h" />
@@ -201,10 +206,14 @@
     <ClCompile Include="BloomAddShader.cpp" />
     <ClCompile Include="BloomEffect.cpp" />
     <ClCompile Include="BloomGaussShader.cpp" />
+    <ClCompile Include="FootParticleShader.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="CarController.cpp" />
     <ClCompile Include="ColladaImporter.cpp" />
+    <ClCompile Include="ComputeShader.cpp" />
+    <ClCompile Include="FootstepAnimator.cpp" />
+    <ClCompile Include="FootstepNode.cpp" />
     <ClCompile Include="DirectionalDepthShader.cpp" />
     <ClCompile Include="DirectionalShadowStrategy.cpp" />
     <ClCompile Include="DummyEffect.cpp" />
@@ -220,6 +229,7 @@
     <ClCompile Include="MainShader.cpp" />
     <ClCompile Include="OmniDirectionalDepthShader.cpp" />
     <ClCompile Include="OmniDirectionalShadowStrategy.cpp" />
+    <ClCompile Include="ParticleEmitterNode.cpp" />
     <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="RenderingNode.cpp" />
     <ClCompile Include="ShaderResource.cpp" />
@@ -235,6 +245,12 @@
     <ClCompile Include="VolumetricLightingUpSampleShader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\shaders\foot_part.comp" />
+    <None Include="assets\shaders\foot_part.fs" />
+    <None Include="assets\shaders\foot_part.gs" />
+    <None Include="assets\shaders\foot_part.vs" />
+    <None Include="assets\shaders\test_simple.fs" />
+    <None Include="assets\shaders\test_simple.vs" />
     <None Include="assets\shaders\bloom_add.fs" />
     <None Include="assets\shaders\bloom_gauss.fs" />
     <None Include="assets\shaders\depth_shader_directional.fs" />

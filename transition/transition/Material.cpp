@@ -66,6 +66,21 @@ void Material::set_texture(TextureRenderable* texture)
 	this->texture_ = texture;
 }
 
+bool Material::has_alpha_texture() const
+{
+	return (alpha_texture_ != nullptr);
+}
+
+TextureRenderable * Material::get_alpha_texture() const
+{
+	return alpha_texture_;
+}
+
+void Material::set_alpha_texture(TextureRenderable * texture)
+{
+	alpha_texture_ = texture;
+}
+
 MaterialType Material::get_material_type() const
 {
 	if (this->texture_ != nullptr) {

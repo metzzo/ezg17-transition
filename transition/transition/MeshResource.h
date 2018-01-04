@@ -22,6 +22,7 @@ class MeshResource : public IResource
 
 public:
 	static MeshResource *create_sprite(TextureRenderable *resource);
+	static MeshResource *create_sprite(TextureRenderable *resource, TextureRenderable *alpha, bool switch_uv);
 
 	MeshResource(float *vertices, float *normals, float *uvs, int num_vertices, unsigned int *indices, int num_indices, const Material& material);
 	~MeshResource();
@@ -40,6 +41,10 @@ public:
 	}
 
 	const Material& get_material() const {
+		return material_;
+	}
+
+	Material& get_editable_material() {
 		return material_;
 	}
 };

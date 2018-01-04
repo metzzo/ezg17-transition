@@ -62,6 +62,17 @@ std::vector<AnimatorNode*> GroupNode::get_animator_nodes()
 	return vec;
 }
 
+std::vector<ParticleEmitterNode*> GroupNode::get_particle_emitter_nodes()
+{
+	auto vec = std::vector<ParticleEmitterNode*>();
+
+	for (auto& node : get_nodes()) {
+		auto particle_nodes = node->get_particle_emitter_nodes();
+		vec.insert(vec.end(), particle_nodes.begin(), particle_nodes.end());
+	}
+	return vec;
+}
+
 const std::vector<Node*>& GroupNode::get_nodes() const
 {
 	return nodes_;

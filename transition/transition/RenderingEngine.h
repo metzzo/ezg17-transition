@@ -9,6 +9,8 @@ class CameraNode;
 class MainShader;
 class LightNode;
 class AnimatorNode;
+class ParticleEmitterNode;
+struct GLFWwindow;
 class DirectionalDepthShader;
 class OmniDirectionalDepthShader;
 
@@ -21,6 +23,7 @@ class RenderingEngine
 	std::vector<IResource*>  resources_;
 	std::vector<LightNode*> light_nodes_;
 	std::vector<AnimatorNode*> animator_nodes_;
+	std::vector<ParticleEmitterNode*> particle_emitter_nodes_;
 
 	glm::ivec2 viewport_;
 	bool fullscreen_;
