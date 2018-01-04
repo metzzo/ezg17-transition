@@ -159,6 +159,7 @@
     <ClInclude Include="BloomGaussShader.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="CameraNode.h" />
+    <ClInclude Include="CarController.h" />
     <ClInclude Include="ColladaImporter.h" />
     <ClInclude Include="DirectionalDepthShader.h" />
     <ClInclude Include="DirectionalShadowStrategy.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="ILightShader.h" />
     <ClInclude Include="IResource.h" />
     <ClInclude Include="LightNode.h" />
+    <ClInclude Include="LookAtController.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MeshResource.h" />
     <ClInclude Include="Node.h" />
@@ -201,6 +203,7 @@
     <ClCompile Include="BloomGaussShader.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="CameraNode.cpp" />
+    <ClCompile Include="CarController.cpp" />
     <ClCompile Include="ColladaImporter.cpp" />
     <ClCompile Include="DirectionalDepthShader.cpp" />
     <ClCompile Include="DirectionalShadowStrategy.cpp" />
@@ -210,6 +213,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="GroupNode.cpp" />
     <ClCompile Include="LightNode.cpp" />
+    <ClCompile Include="LookAtController.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MeshResource.cpp" />
     <ClCompile Include="Node.cpp" />
@@ -242,6 +246,13 @@
     <None Include="assets\shaders\main_shader.fs" />
     <None Include="assets\shaders\main_shader.vs" />
     <None Include="assets\shaders\postprocess.vs" />
+    <None Include="assets\shaders\volumetric_lighting.fs" />
+    <None Include="assets\shaders\volumetric_lighting.vs" />
+    <None Include="assets\shaders\volumetric_lighting_blur.fs" />
+    <None Include="assets\shaders\volumetric_lighting_downsample.fs" />
+    <None Include="assets\shaders\volumetric_lighting_downsample.vs" />
+    <None Include="assets\shaders\volumetric_lighting_upsample.fs" />
+    <None Include="assets\shaders\volumetric_lighting_upsample.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

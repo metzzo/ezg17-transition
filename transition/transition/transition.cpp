@@ -14,6 +14,7 @@
 #include "DirectionalShadowStrategy.h"
 #include "RenderingEngine.h"
 #include "OmniDirectionalShadowStrategy.h"
+#include "LookAtController.h"
 
 int main()
 {
@@ -59,7 +60,7 @@ int main()
 	root->add_node(anim2);
 
 	root->add_node(new LookAtController("lookat", cam, spot_light));
-	y
+	
 	engine->run();
 
 	delete world;

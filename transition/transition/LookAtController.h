@@ -12,5 +12,4 @@ public:
 	LookAtController(const std::string name, TransformationNode *target_node, TransformationNode *source_node);
 
 	void update(double delta) override;
-	}
 };
