@@ -63,7 +63,7 @@ int main()
 	root->add_node(car_anim);
 
 	auto lamp = static_cast<LightNode*>(root->find_by_name("Lamp"));
-	lamp->set_volumetric(true, 10000.0, 0.01);
+	lamp->set_volumetric(true, 1000.0, 0.01);
 
 	root->add_node(new LookAtController("lookat", cam, car_light));
 	

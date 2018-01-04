@@ -13,6 +13,7 @@ class VolumetricLightingShader :
 
 	GLint view_inv_uniform_;
 	GLint projection_inv_uniform_;
+	GLint time_uniform_;
 
 	GLint num_lights_uniform_;
 	GLint light_type_uniform_[max_nr_lights];

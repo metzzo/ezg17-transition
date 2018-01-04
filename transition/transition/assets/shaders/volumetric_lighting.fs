@@ -80,11 +80,14 @@ struct VP {
 
 uniform VP vp;
 uniform vec3 view_pos;
+uniform float time;
 uniform sampler2D depth_tex;
 
 float volumetric_lighting_spotlight(vec3 frag_pos, Light light);
 float volumetric_lighting_pointlight(vec3 frag_pos, Light light);
 float volumetric_lighting_directional(vec3 frag_pos, Light light);
+
+float sample_fog(vec3 pos);
 
 vec3 world_pos_from_depth(float depth);
 
@@ -182,7 +185,9 @@ float volumetric_lighting_directional(vec3 frag_pos, Light light) {
 		float d = length(ray_position_worldspace.xyz - light.position);
 		float d_rcp = 1.0/d;
 		
-		light_contribution += light.tau * (shadow_term * (light.phi * 0.25 * PI_RCP) * d_rcp * d_rcp ) * exp(-d*light.tau)*exp(-l*light.tau) * step_size_worldspace;
+		float fog = sample_fog(ray_position_worldspace.xyz);
+		
+		light_contribution += fog * light.tau * (shadow_term * (light.phi * 0.25 * PI_RCP) * d_rcp * d_rcp ) * exp(-d*light.tau)*exp(-l*light.tau) * step_size_worldspace;
 	
 		ray_position_lightview += step_size_lightview * delta_lightview;
 		ray_position_worldspace += step_size_worldspace * delta_worldspace;
@@ -243,7 +248,9 @@ float volumetric_lighting_spotlight(vec3 frag_pos, Light light) {
 		float theta = dot(light_dir, normalize(-light.direction)); 
 		intensity *= clamp((theta - light.outer_cutoff) / epsilon, 0.0, 1.0);
 		
-		light_contribution += intensity * light.tau * (shadow_term * (light.phi * 0.25 * PI_RCP) * d_rcp * d_rcp ) * exp(-d*light.tau)*exp(-l*light.tau) * step_size_worldspace;
+		float fog = sample_fog(ray_position_worldspace.xyz);
+		
+		light_contribution += fog * intensity * light.tau * (shadow_term * (light.phi * 0.25 * PI_RCP) * d_rcp * d_rcp ) * exp(-d*light.tau)*exp(-l*light.tau) * step_size_worldspace;
 	
 		ray_position_lightview += step_size_lightview * delta_lightview;
 		ray_position_worldspace += step_size_worldspace * delta_worldspace;
@@ -282,7 +289,9 @@ float volumetric_lighting_pointlight(vec3 frag_pos, Light light) {
 		
 		float intensity = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
 		
-		light_contribution += intensity * light.tau * (
+		float fog = sample_fog(ray_position_worldspace.xyz);
+		
+		light_contribution += fog * intensity * light.tau * (
 			shadow_term * (light.phi * 0.25 * PI_RCP) * d_rcp * d_rcp 
 		) * exp(-distance*light.tau)*exp(-l*light.tau) * step_size_worldspace;
 
@@ -291,3 +300,46 @@ float volumetric_lighting_pointlight(vec3 frag_pos, Light light) {
 	
 	return min(light_contribution, 1.0);
 }
+
+float tri( float x ){ 
+  return abs( fract(x) - .5 );
+}
+
+vec3 tri3( vec3 p ){
+ 
+  return vec3( 
+      tri( p.z + tri( p.y * 1. ) ), 
+      tri( p.z + tri( p.x * 1. ) ), 
+      tri( p.y + tri( p.x * 1. ) )
+  );
+
+}
+
+// Taken from https://www.shadertoy.com/view/4ts3z2
+// By NIMITZ  (twitter: @stormoid)
+float triNoise3d(in vec3 p, in float spd, in float time)
+{
+    float z=1.4;
+	float rz = 0.;
+    vec3 bp = p;
+	for (float i=0.; i<=3.; i++ )
+	{
+        vec3 dg = tri3(bp*2.);
+        p += (dg+time*spd);
+
+        bp *= 1.8;
+		z *= 1.5;
+		p *= 1.2;
+        //p.xz*= m2;
+        
+        rz+= (tri(p.z+tri(p.x+tri(p.y))))/z;
+        bp += 0.14;
+	}
+	return rz;
+}
+
+float sample_fog(vec3 pos) {
+	return triNoise3d(pos * 2.2 / 8, 0.025, time);
+}
+
+
