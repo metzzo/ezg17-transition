@@ -13,6 +13,7 @@
 #include "GeometryNode.h"
 #include "DirectionalShadowStrategy.h"
 #include "RenderingEngine.h"
+#include "OmniDirectionalShadowStrategy.h"
 
 class LookAtController : public AnimatorNode
 {
@@ -76,9 +77,10 @@ int main()
 	spot_light->set_color(glm::vec3(0.8, 0.0, 0.0), glm::vec3(1.0, 0.0, 0.0));
 	spot_light->set_cutoff(12.5f, 25.0f);
 	spot_light->set_shadow_strategy(new DirectionalShadowStrategy(1024));
-	spot_light->set_volumetric(true);
+	spot_light->set_volumetric(true, 10000.0, 0.05);
+	//spot_light->set_volumetric(true, 500.0, 0.1);
 	spot_light->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -7), glm::vec3(0, 0, -16), glm::vec3(0, 1, 0)));
-	root->add_node(spot_light);
+	//root->add_node(spot_light);
 
 	auto tmp = new TextureResource("assets/gfx/bg-tucard.jpg");
 	engine->register_resource(tmp);
@@ -88,7 +90,7 @@ int main()
 	auto tmpMat = glm::inverse(glm::lookAt(glm::vec3(-2, 5, -7), glm::vec3(0, 0, -16), glm::vec3(0, 1, 0)));
 	depth_sprite->set_transformation(tmpMat);
 	depth_sprite->apply_transformation(Transformation::translate(glm::vec3(0, 2, 0)));
-	root->add_node(depth_sprite);
+	//root->add_node(depth_sprite);
 	
 	//auto anim = new CameraController("cam_anim1", spot_light);
 	//root->add_node(anim);

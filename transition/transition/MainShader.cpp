@@ -114,7 +114,7 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 		assert(this->light_type_uniform_[this->light_index_] >= 0);
 		assert(this->position_uniform_[this->light_index_] >= 0);
 		assert(this->direction_uniform_[this->light_index_] >= 0);
-		assert(this->linear_uniform_[this->light_index_] >= 0);
+		assert(this->constant_uniform_[this->light_index_] >= 0);
 		assert(this->linear_uniform_[this->light_index_] >= 0);
 		assert(this->quadratic_uniform_[this->light_index_] >= 0);
 		assert(this->diffuse_uniform_[this->light_index_] >= 0);

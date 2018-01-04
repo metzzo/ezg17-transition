@@ -13,6 +13,9 @@ LightNode::LightNode(const std::string& name, const LightType light_type): Rende
 	this->light_type_ = light_type;
 	this->cutoff_ = 0.0f;
 	this->outer_cutoff_ = 0.0f;
+	this->volumetric_ = false;
+	this->phi_ = 0.0;
+	this->tau_ = 0.0;
 }
 
 LightNode::~LightNode()
@@ -113,7 +116,15 @@ void LightNode::set_uniforms(ILightShader* shader)
 	}
 }
 
-void LightNode::set_volumetric(const bool is_volumetric)
+/**
+ * \brief 
+ * \param is_volumetric is this light node actually volumetric
+ * \param phi power of light source
+ * \param tau probability of collision
+ */
+void LightNode::set_volumetric(const bool is_volumetric, float phi, float tau)
 {
 	this->volumetric_ = is_volumetric;
+	this->phi_ = phi;
+	this->tau_ = tau;
 }

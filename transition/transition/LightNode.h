@@ -33,7 +33,10 @@ protected:
 
 	IShadowStrategy *shadow_strategy_;
 
-	bool volumetric_;
+	// volumetric parameters
+	bool volumetric_; 
+	float phi_; // power of light source
+	float tau_; // probability of collision
 public:
 	explicit LightNode(const std::string& name, LightType light_type);
 	~LightNode();
@@ -56,7 +59,7 @@ public:
 	void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) override;
 
 	void set_uniforms(ILightShader *shader);
-	void set_volumetric(const bool is_volumetric);
+	void set_volumetric(const bool is_volumetric, float phi, float tau);
 
 	ShaderResource* get_shader() const override;
 
@@ -112,6 +115,16 @@ public:
 	bool is_volumetric() const
 	{
 		return this->volumetric_;
+	}
+
+	float get_phi() const
+	{
+		return this->phi_;
+	}
+	
+	float get_tau()  const
+	{
+		return this->tau_;
 	}
 };
 

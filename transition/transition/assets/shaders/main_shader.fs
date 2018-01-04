@@ -359,7 +359,7 @@ float shadow_calculation_directional(Light light, float bias) {
 			vec4 closest_depth;
 			DIRECTIONAL_SHADOW_MAP(texture, light.shadow_map_index, (proj_coords.xy + vec2(x, y) * texel_size), closest_depth)
 			
-			shadow += current_depth > closest_depth.r ? 1.0 : 0.0;        
+			shadow += current_depth - bias > closest_depth.r ? 1.0 : 0.0;        
 		}    
 	}
 	return shadow / PCF_TOTAL_SAMPLES;
