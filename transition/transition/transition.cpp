@@ -55,7 +55,7 @@ int main()
 	car_light->set_attenuation(1.0, 0.027, 0.0028);
 	car_light->set_color(glm::vec3(0.8, 0.8, 0.8), glm::vec3(1.0, 0.0, 0.0));
 	car_light->set_cutoff(12.5f, 50.0f);
-	car_light->set_shadow_strategy(new DirectionalShadowStrategy(1024));
+	car_light->set_shadow_strategy(new DirectionalShadowStrategy(1024), 0, 0);
 	car_light->set_volumetric(true, 10000.0, 0.05);
 	root->add_node(car_light);
 

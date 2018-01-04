@@ -31,6 +31,7 @@ class VolumetricLightingShader :
 	GLint directional_shadow_maps_uniform_[max_nr_directional_shadow_maps];
 	GLint phi_uniform_[max_nr_lights];
 	GLint tau_uniform_[max_nr_lights];
+	GLint bias_uniform_[max_nr_lights];
 	GLint view_pos_uniform_;
 	GLint depth_texture_uniform_;
 

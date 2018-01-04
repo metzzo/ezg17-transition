@@ -32,6 +32,8 @@ protected:
 	glm::vec3 direction_;
 
 	IShadowStrategy *shadow_strategy_;
+	float min_bias_;
+	float max_bias_;
 
 	// volumetric parameters
 	bool volumetric_; 
@@ -43,7 +45,7 @@ public:
 
 	void set_color(const glm::vec3 diffuse, const glm::vec3 specular);
 	void set_attenuation(const float constant, const float linear, const float quadratic);
-	void set_shadow_strategy(IShadowStrategy *shadow_strategy);
+	void set_shadow_strategy(IShadowStrategy *shadow_strategy, float min_bias = 0.0001, float max_bias = 0.001);
 	void set_cutoff(const float cutoff, const float outer_cutoff);
 
 	std::vector<LightNode*> get_light_nodes() override;
@@ -125,6 +127,16 @@ public:
 	float get_tau()  const
 	{
 		return this->tau_;
+	}
+
+	float get_min_bias() const
+	{
+		return this->min_bias_;
+	}
+
+	float get_max_bias() const
+	{
+		return this->max_bias_;
 	}
 };
 

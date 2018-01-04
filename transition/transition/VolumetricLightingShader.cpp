@@ -40,6 +40,7 @@ VolumetricLightingShader::VolumetricLightingShader() : ShaderResource("assets/sh
 		this->near_plane_uniform_[i] = -1;
 		this->phi_uniform_[i] = -1;
 		this->tau_uniform_[i] = -1;
+		this->bias_uniform_[i] = -1;
 	}
 
 	for (auto i = 0; i < max_nr_directional_shadow_maps; i++)
@@ -89,6 +90,7 @@ void VolumetricLightingShader::init()
 		this->near_plane_uniform_[i] = get_uniform("lights", "near_plane", i);
 		this->phi_uniform_[i] = get_uniform("lights", "phi", i);
 		this->tau_uniform_[i] = get_uniform("lights", "tau", i);
+		this->bias_uniform_[i] = get_uniform("lights", "bias", i);
 	}
 
 	for (auto i = 0; i < max_nr_directional_shadow_maps; i++)
@@ -145,6 +147,7 @@ void VolumetricLightingShader::set_light_uniforms(const std::vector<LightNode*>&
 		assert(this->shadow_map_index_uniform_[this->light_index_] >= 0);
 		assert(this->phi_uniform_[this->light_index_] >= 0);
 		assert(this->tau_uniform_[this->light_index_] >= 0);
+		assert(this->bias_uniform_[this->light_index_] >= 0);
 
 		light->set_uniforms(this);
 
@@ -159,6 +162,7 @@ void VolumetricLightingShader::set_light_uniforms(const std::vector<LightNode*>&
 		glUniform1f(this->outer_cutoff_uniform_[this->light_index_], glm::cos(glm::radians(light->get_outer_cutoff())));
 		glUniform1f(this->phi_uniform_[this->light_index_], light->get_phi());
 		glUniform1f(this->tau_uniform_[this->light_index_], light->get_tau());
+		glUniform1f(this->bias_uniform_[this->light_index_], light->get_min_bias());
 
 		this->light_index_++;
 	}

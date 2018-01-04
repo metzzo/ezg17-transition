@@ -3,12 +3,6 @@
 #define MAX_NR_LIGHTS (10)
 #define MAX_NR_DIRECTIONAL_SHADOWS (5)
 #define MAX_NR_OMNI_DIRECTIONAL_SHADOWS (5)
-#define SHADOW_BIAS_MAX (0.001)
-#define SHADOW_BIAS_MIN (0.0001)
-#define PCF_TOTAL_SAMPLES (25)
-#define PCF_COUNT (2)
-#define PCF_OMNI_DIRECTIONAL_SAMPLES (20)
-#define BIAS (0.0)
 
 in VS_OUT {
 	vec2 tex_coords;
@@ -32,6 +26,7 @@ struct Light {
     vec3 diffuse;
 	
 	int shadow_map_index;
+	float bias;
 	
 	// Spotlight
 	float cutoff;
@@ -180,7 +175,7 @@ float volumetric_lighting_directional(vec3 frag_pos, Light light) {
 		
 		float shadow_term = 1.0;
 		
-		if (proj_coords.z - BIAS > closest_depth.r) {
+		if (proj_coords.z - light.bias > closest_depth.r) {
 			shadow_term = 0.0;
 		}
 		
@@ -232,7 +227,7 @@ float volumetric_lighting_spotlight(vec3 frag_pos, Light light) {
 		
 		float shadow_term = 1.0;
 		
-		if (proj_coords.z - BIAS > closest_depth.r) {
+		if (proj_coords.z - light.bias > closest_depth.r) {
 			shadow_term = 0.0;
 		}
 		
@@ -279,7 +274,7 @@ float volumetric_lighting_pointlight(vec3 frag_pos, Light light) {
 		closest_depth.r *= light.far_plane;
 		
 		float shadow_term = 1.0;
-		if (distance  - BIAS > closest_depth.r) {
+		if (distance  - light.bias > closest_depth.r) {
 			shadow_term = 0.0;
 		}
 		

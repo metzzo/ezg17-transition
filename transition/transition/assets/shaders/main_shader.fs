@@ -2,8 +2,6 @@
 #define MAX_NR_LIGHTS (10)
 #define MAX_NR_DIRECTIONAL_SHADOWS (5)
 #define MAX_NR_OMNI_DIRECTIONAL_SHADOWS (5)
-#define SHADOW_BIAS_MAX (0.001)
-#define SHADOW_BIAS_MIN (0.0001)
 #define PCF_TOTAL_SAMPLES (25)
 #define PCF_COUNT (2)
 #define PCF_OMNI_DIRECTIONAL_SAMPLES (20)
@@ -22,7 +20,7 @@ struct MVP {
 	mat4 view;
 	mat4 projection;	
 	
-	mat3 model_normal; // TODO
+	mat3 model_normal;
 };
 uniform MVP mvp;
 
@@ -31,7 +29,6 @@ struct Light {
 	// light_type=2: point light
 	// light_type=3: spot light
 	int light_type;
-	bool volumetric;
 	
 	vec3 position;
     vec3 direction;
@@ -45,6 +42,8 @@ struct Light {
 	
 	bool shadow_casting;
 	int shadow_map_index;
+	float min_bias;
+	float max_bias;
 	
 	// Spotlight
 	float cutoff;
@@ -250,7 +249,7 @@ vec3 calc_dir_light(
 	out float bias) {
 	
 	vec3 light_dir = normalize(-light.direction);
-	bias = max(SHADOW_BIAS_MAX * (1.0 - dot(normal, light_dir)), SHADOW_BIAS_MIN);  
+	bias = max(light.max_bias * (1.0 - dot(normal, light_dir)), light.min_bias);  
 	
 	// diffuse
     float diff = max(dot(normal, light_dir), 0.0);
@@ -278,7 +277,7 @@ vec3 calc_point_light(
 	
 	// diffuse 
     vec3 light_dir = normalize(light_delta);
-	bias = max(SHADOW_BIAS_MAX * (1.0 - dot(normal, light_dir)), SHADOW_BIAS_MIN);  
+	bias = max(light.max_bias * (1.0 - dot(normal, light_dir)), light.min_bias);  
 	
     float diff = max(dot(normal, light_dir), 0.0);
     vec3 diffuse = diff * (light.diffuse * material.diffuse_color);
@@ -312,7 +311,7 @@ vec3 calc_spot_light(
 	
 	// diffuse 
     vec3 light_dir = normalize(light_delta);
-	bias = max(SHADOW_BIAS_MAX * (1.0 - dot(normal, light_dir)), SHADOW_BIAS_MIN);  
+	bias = max(light.max_bias * (1.0 - dot(normal, light_dir)), light.min_bias);  
 	
     float diff = max(dot(normal, light_dir), 0.0);
     vec3 diffuse = diff * (light.diffuse * material.diffuse_color);
