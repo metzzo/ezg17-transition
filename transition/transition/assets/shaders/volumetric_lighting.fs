@@ -86,10 +86,11 @@ uniform VP vp;
 uniform vec3 view_pos;
 uniform sampler2D depth_tex;
 
-float volumetric_lighting_omni_directional(vec3 frag_pos, Light light);
+float volumetric_lighting_spotlight(vec3 frag_pos, Light light);
+float volumetric_lighting_pointlight(vec3 frag_pos, Light light);
 float volumetric_lighting_directional(vec3 frag_pos, Light light);
-vec3 world_pos_from_depth(float depth);
 
+vec3 world_pos_from_depth(float depth);
 
 void main() {
 	vec3 vol_color = vec3(0);
@@ -104,12 +105,14 @@ void main() {
 	
 	for (int i = 0; i < num_lights; i++) {
 		switch (lights[i].light_type) {
-			case 2: // point light
-				vol_color += volumetric_lighting_omni_directional(frag_pos, lights[i])*lights[i].diffuse;
-				break;
-			case 1: // directional light (not yet tested)
-			case 3: // spot light
+			case 1: // directional light
 				vol_color += volumetric_lighting_directional(frag_pos, lights[i])*lights[i].diffuse;
+				break;
+			case 2: // point light
+				vol_color += volumetric_lighting_pointlight(frag_pos, lights[i])*lights[i].diffuse;
+				break;
+			case 3: // spot light
+				vol_color += volumetric_lighting_spotlight(frag_pos, lights[i])*lights[i].diffuse;
 				break;
 		}
 	}
@@ -183,6 +186,58 @@ float volumetric_lighting_directional(vec3 frag_pos, Light light) {
 		float d = length(ray_position_worldspace.xyz - light.position);
 		float d_rcp = 1.0/d;
 		
+		light_contribution += light.tau * (shadow_term * (light.phi * 0.25 * PI_RCP) * d_rcp * d_rcp ) * exp(-d*light.tau)*exp(-l*light.tau) * step_size_worldspace;
+	
+		ray_position_lightview += step_size_lightview * delta_lightview;
+		ray_position_worldspace += step_size_worldspace * delta_worldspace;
+	}
+	
+	return light_contribution;
+}
+
+float volumetric_lighting_spotlight(vec3 frag_pos, Light light) {
+	float dither_value = dither_pattern[ (int(gl_FragCoord.x) % 4)* 4 + (int(gl_FragCoord.y) % 4) ];
+	
+	vec4 end_pos_worldspace  = vec4(view_pos, 1.0);
+	vec4 start_pos_worldspace = vec4(frag_pos, 1.0);
+	vec4 delta_worldspace = normalize(end_pos_worldspace - start_pos_worldspace);
+	
+	vec4 end_pos_lightview = light_view_matrices[light.shadow_map_index] * end_pos_worldspace;
+	vec4 start_pos_lightview = light_view_matrices[light.shadow_map_index] * start_pos_worldspace;
+	vec4 delta_lightview = normalize(end_pos_lightview - start_pos_lightview);
+	
+	float raymarch_distance_lightview = length(end_pos_lightview - start_pos_lightview);
+	float step_size_lightview = raymarch_distance_lightview / NUM_STEPS;
+	
+	float raymarch_distance_worldspace = length(end_pos_worldspace - start_pos_worldspace);
+	float step_size_worldspace = raymarch_distance_worldspace / NUM_STEPS;
+	
+	vec4 ray_position_lightview = start_pos_lightview + dither_value*step_size_lightview * delta_lightview;
+	vec4 ray_position_worldspace = start_pos_worldspace + dither_value*step_size_worldspace * delta_worldspace;
+	
+	float light_contribution = 0.0;
+	float epsilon = (light.cutoff - light.outer_cutoff);
+	for (float l = raymarch_distance_worldspace; l > step_size_worldspace; l -= step_size_worldspace) {
+		vec4 ray_position_lightspace = light_projection_matrices[light.shadow_map_index] * vec4(ray_position_lightview.xyz, 1);
+		// perform perspective divide            
+		vec3 proj_coords = ray_position_lightspace.xyz / ray_position_lightspace.w;
+		
+		// transform to [0,1] range
+		proj_coords = proj_coords * 0.5 + 0.5;		
+		
+		// get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+		vec4 closest_depth;
+		DIRECTIONAL_SHADOW_MAP(texture, light.shadow_map_index, proj_coords.xy, closest_depth)
+		
+		float shadow_term = 1.0;
+		
+		if (proj_coords.z > closest_depth.r) {
+			shadow_term = 0.0;
+		}
+		
+		float d = length(ray_position_worldspace.xyz - light.position);
+		float d_rcp = 1.0/d;
+		
 		vec3 light_delta = light.position - ray_position_worldspace.xyz;
 		float distance    = length(light_delta);
 		float intensity = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
@@ -201,7 +256,7 @@ float volumetric_lighting_directional(vec3 frag_pos, Light light) {
 	return light_contribution;
 }
 
-float volumetric_lighting_omni_directional(vec3 frag_pos, Light light) {
+float volumetric_lighting_pointlight(vec3 frag_pos, Light light) {
 	float dither_value = dither_pattern[ (int(gl_FragCoord.x) % 4)* 4 + (int(gl_FragCoord.y) % 4) ];
 	
 	vec4 start_pos_worldspace = vec4(view_pos, 1.0);
