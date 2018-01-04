@@ -211,6 +211,9 @@
     <ClInclude Include="DirectionalShadowStrategy.h">
       <Filter>Headerdateien\Utility\Shadow</Filter>
     </ClInclude>
+    <ClInclude Include="BrokenLampController.h">
+      <Filter>Headerdateien\Controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">
@@ -335,6 +338,9 @@
     </ClCompile>
     <ClCompile Include="OmniDirectionalShadowStrategy.cpp">
       <Filter>Quelldateien\Utility\Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="BrokenLampController.cpp">
+      <Filter>Quelldateien\Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

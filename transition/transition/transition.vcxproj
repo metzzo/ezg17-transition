@@ -157,6 +157,7 @@
     <ClInclude Include="BloomAddShader.h" />
     <ClInclude Include="BloomEffect.h" />
     <ClInclude Include="BloomGaussShader.h" />
+    <ClInclude Include="BrokenLampController.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="CarController.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="BloomAddShader.cpp" />
     <ClCompile Include="BloomEffect.cpp" />
     <ClCompile Include="BloomGaussShader.cpp" />
+    <ClCompile Include="BrokenLampController.cpp" />
     <ClCompile Include="FootParticleShader.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="CameraNode.cpp" />
