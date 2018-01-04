@@ -32,9 +32,12 @@ public:
 		this->itrafo_ = this->itrafo_ * imat;
 	}
 
-	//This has to be redefined, or else the other method is hiding it...
 	void apply_transformation(const Transformation& transformation) override {
 		Node::apply_transformation(transformation);
+	}
+
+	void set_transformation(const Transformation& transformation) {
+		set_transformation(transformation.get_transformation_matrix(), transformation.get_inverse_transformation_matrix());
 	}
 
 	virtual const glm::mat4& get_transformation() const

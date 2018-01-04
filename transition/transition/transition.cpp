@@ -15,6 +15,7 @@
 #include "RenderingEngine.h"
 #include "OmniDirectionalShadowStrategy.h"
 #include "LookAtController.h"
+#include "CarController.h"
 
 int main()
 {
@@ -46,21 +47,23 @@ int main()
 	
 	root->add_node(dir_light);*/
 
-	auto spot_light = new LightNode("test", SPOT_LIGHT);
-	spot_light->set_attenuation(1.0, 0.027, 0.0028);
-	spot_light->set_color(glm::vec3(0.8, 0.0, 0.0), glm::vec3(1.0, 0.0, 0.0));
-	spot_light->set_cutoff(12.5f, 25.0f);
-	spot_light->set_shadow_strategy(new DirectionalShadowStrategy(1024));
-	spot_light->set_volumetric(true, 10000.0, 0.05);
-	//spot_light->set_volumetric(true, 500.0, 0.1);
-	spot_light->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -7), glm::vec3(0, 0, -16), glm::vec3(0, 1, 0)));
-	root->add_node(spot_light);
+	auto car_light = new LightNode("car_light", SPOT_LIGHT);
+	car_light->set_attenuation(1.0, 0.027, 0.0028);
+	car_light->set_color(glm::vec3(0.8, 0.8, 0.8), glm::vec3(1.0, 0.0, 0.0));
+	car_light->set_cutoff(12.5f, 50.0f);
+	car_light->set_shadow_strategy(new DirectionalShadowStrategy(1024));
+	car_light->set_volumetric(true, 10000.0, 0.05);
+	root->add_node(car_light);
 
-	auto anim2 = new CameraController("cam_anim", cam);
-	root->add_node(anim2);
+	auto car_anim = new CarController("car_anim", car_light);
+	root->add_node(car_anim);
 
-	root->add_node(new LookAtController("lookat", cam, spot_light));
+
+	root->add_node(new LookAtController("lookat", cam, car_light));
 	
+	auto anim = new CameraController("cam_anim", cam);
+	root->add_node(anim);
+
 	engine->run();
 
 	delete world;

@@ -8,6 +8,7 @@
 #define PCF_TOTAL_SAMPLES (25)
 #define PCF_COUNT (2)
 #define PCF_OMNI_DIRECTIONAL_SAMPLES (20)
+#define BIAS (0.0)
 
 in VS_OUT {
 	vec2 tex_coords;
@@ -98,7 +99,7 @@ void main() {
 	float depth = texture(depth_tex, fs_in.tex_coords).r;
 	
 	if (depth == 1.0) {
-		discard; // here it would sample into infinity
+		//discard; // here it would sample into infinity
 	}
 	
 	vec3 frag_pos = world_pos_from_depth(depth);
@@ -179,7 +180,7 @@ float volumetric_lighting_directional(vec3 frag_pos, Light light) {
 		
 		float shadow_term = 1.0;
 		
-		if (proj_coords.z > closest_depth.r) {
+		if (proj_coords.z - BIAS > closest_depth.r) {
 			shadow_term = 0.0;
 		}
 		
@@ -231,7 +232,7 @@ float volumetric_lighting_spotlight(vec3 frag_pos, Light light) {
 		
 		float shadow_term = 1.0;
 		
-		if (proj_coords.z > closest_depth.r) {
+		if (proj_coords.z - BIAS > closest_depth.r) {
 			shadow_term = 0.0;
 		}
 		
@@ -278,7 +279,7 @@ float volumetric_lighting_pointlight(vec3 frag_pos, Light light) {
 		closest_depth.r *= light.far_plane;
 		
 		float shadow_term = 1.0;
-		if (distance > closest_depth.r) {
+		if (distance  - BIAS > closest_depth.r) {
 			shadow_term = 0.0;
 		}
 		
