@@ -3,14 +3,15 @@
 #include "TextureResource.h"
 #include "GeometryNode.h"
 
+static const int diffuse_texture_slot = 0;
+static const int shadow_map_texture_slot = 1;
+
 int MainShader::get_texture_slot() const
 {
-	// attention: if there is more than 1 diffuse texture (or specular tex)
-	// then this must be increased accordingly:
-	return this->directional_shadow_map_index_ + this->omni_directional_shadow_map_index_ + 1;
+	return this->directional_shadow_map_index_ + this->omni_directional_shadow_map_index_ + shadow_map_texture_slot;
 }
 
-MainShader::MainShader() : ShaderResource("assets/shaders/main_shader.vs", "assets/shaders/main_shader.fs")
+MainShader::MainShader(const char* vertex_path, const char* fragment_path, const char* geometry_path) : ShaderResource(vertex_path, fragment_path, geometry_path)
 {
 	this->directional_shadow_map_index_ = 0;
 	this->omni_directional_shadow_map_index_ = 0;
@@ -45,6 +46,7 @@ MainShader::MainShader() : ShaderResource("assets/shaders/main_shader.vs", "asse
 		this->cutoff_uniform_[i] = -1;
 		this->far_plane_uniform_[i] = -1;
 		this->near_plane_uniform_[i] = -1;
+		this->volumetric_uniform_[i] = -1;
 	}
 
 	for (auto i = 0; i < max_nr_directional_shadow_maps; i++)
@@ -81,9 +83,9 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 	auto material = node->get_mesh_resource()->get_material();
 	const auto texture = material.get_texture();
 	if (texture != nullptr) {
-		texture->bind(0);
+		texture->bind(diffuse_texture_slot);
 		glUniform1i(this->material_has_diffuse_tex_uniform_, 1);
-		glUniform1i(this->material_diffuse_tex_uniform_, 0);
+		glUniform1i(this->material_diffuse_tex_uniform_, diffuse_texture_slot);
 		glUniform1f(this->material_shininess_, material.get_shininess());
 		glUniform1i(this->material_material_type_, material.get_material_type());
 	}
@@ -106,18 +108,20 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 	this->directional_shadow_map_index_ = 0;
 	this->omni_directional_shadow_map_index_ = 0;
 
+
 	for (auto& light : light_nodes)
 	{
 		assert(this->light_type_uniform_[this->light_index_] >= 0);
 		assert(this->position_uniform_[this->light_index_] >= 0);
 		assert(this->direction_uniform_[this->light_index_] >= 0);
-		assert(this->linear_uniform_[this->light_index_] >= 0);
+		assert(this->constant_uniform_[this->light_index_] >= 0);
 		assert(this->linear_uniform_[this->light_index_] >= 0);
 		assert(this->quadratic_uniform_[this->light_index_] >= 0);
 		assert(this->diffuse_uniform_[this->light_index_] >= 0);
 		assert(this->specular_uniform_[this->light_index_] >= 0);
 		assert(this->shadow_casting_uniform_[this->light_index_] >= 0);
 		assert(this->shadow_map_index_uniform_[this->light_index_] >= 0);
+		assert(this->volumetric_uniform_[this->light_index_] >= 0);
 
 		if (light->is_rendering_enabled())
 		{
@@ -127,10 +131,10 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 		} else
 		{
 			glUniform1i(this->shadow_casting_uniform_[this->light_index_], 0);
-			
 		}
 
 		glUniform1i(this->light_type_uniform_[this->light_index_], light->get_light_type());
+		glUniform1i(this->volumetric_uniform_[this->light_index_], light->is_volumetric());
 		glUniform3fv(this->position_uniform_[this->light_index_], 1, &light->get_position()[0]);
 		glUniform3fv(this->direction_uniform_[this->light_index_], 1, &light->get_direction()[0]);
 		glUniform1f(this->constant_uniform_[this->light_index_], light->get_constant());
@@ -160,7 +164,7 @@ void MainShader::set_directional_shadow_map_uniforms(const LightNode *light, con
 	glUniform1i(this->directional_shadow_maps_uniform_[this->directional_shadow_map_index_], tex_id); // binds shadow map sampler
 	glUniformMatrix4fv(this->light_space_matrices_uniform_[this->directional_shadow_map_index_], 1, GL_FALSE, &light_space_matrix[0][0]); // trafo to transform into light space
 	glUniform1i(this->shadow_map_index_uniform_[this->light_index_], this->directional_shadow_map_index_); // tells the exact index of the shadow map
-	
+
 	this->directional_shadow_map_index_++;
 }
 
@@ -218,6 +222,7 @@ void MainShader::init()
 		this->outer_cutoff_uniform_[i] = get_uniform("lights", "outer_cutoff", i);
 		this->far_plane_uniform_[i] = get_uniform("lights", "far_plane", i);
 		this->near_plane_uniform_[i] = get_uniform("lights", "near_plane", i);
+		this->volumetric_uniform_[i] = get_uniform("lights", "volumetric", i);
 	}
 
 	for (auto i = 0; i < max_nr_directional_shadow_maps; i++)

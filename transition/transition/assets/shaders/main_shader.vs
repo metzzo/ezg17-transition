@@ -14,12 +14,15 @@ out VS_OUT {
 
 
 uniform mat4 light_space_matrices[MAX_NR_DIRECTIONAL_SHADOWS];
+uniform mat4 light_view_matrices[MAX_NR_DIRECTIONAL_SHADOWS];
 uniform int num_lights;
 
 struct MVP {
 	mat4 model;
 	mat4 view;
 	mat4 projection;
+	
+	mat3 model_normal; // TODO
 };
 
 uniform MVP mvp;
@@ -27,6 +30,7 @@ uniform MVP mvp;
 void main()
 {
 	vs_out.frag_pos = vec3(mvp.model * vec4(aPos, 1.0));
+	// TODO: do this inversion on CPU
 	vs_out.normal = mat3(transpose(inverse(mvp.model)))*aNormal;
 	vs_out.tex_coords = aTex;
 	

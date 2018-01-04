@@ -2,35 +2,40 @@
 #include "RenderingEngine.h"
 #include "MainShader.h"
 #include "LightNode.h"
+#include "VolumetricLightingShader.h"
+#include "VolumetricLightingEffect.h"
+#include "BloomEffect.h"
 
 CameraNode::CameraNode(const std::string& name, const glm::ivec2& viewport, const glm::mat4& projection) : RenderingNode(name, viewport, projection)
 {
-	screenMesh_ = nullptr;
-	renderTarget1_ = nullptr;
-	renderTarget2_ = nullptr;
+	screen_mesh_ = nullptr;
+	volumetric_lighting_result_render_target_ = nullptr;
+	main_render_target_ = nullptr;
+
+	volumetric_lighting_effect_ = new VolumetricLightingEffect();
+	bloom_effect_ = new BloomEffect(2);
 }
 
 CameraNode::~CameraNode()
 {
-	for (auto ef = effects_.begin(); ef != effects_.end(); ef++) {
-		delete (*ef);
-	}
+	delete volumetric_lighting_effect_;
+	delete bloom_effect_;
 }
 
 void CameraNode::init(RenderingEngine *rendering_engine)
 {
 	RenderingNode::init(rendering_engine);
-	for (auto ef = effects_.begin(); ef != effects_.end(); ef++) {
-		(*ef)->init(rendering_engine);
-	}
-	screenMesh_ = MeshResource::create_sprite(nullptr);
-	renderTarget1_ = new TextureFBO(rendering_engine->get_viewport().x, rendering_engine->get_viewport().y, 2);
-	renderTarget2_ = new TextureFBO(rendering_engine->get_viewport().x, rendering_engine->get_viewport().y, 1);
-}
 
-void CameraNode::add_post_processing_effect(PostProcessingEffect * effect)
-{
-	effects_.push_back(effect);
+	screen_mesh_ = MeshResource::create_sprite(nullptr);
+
+	main_render_target_ = new TextureFBO(rendering_engine->get_viewport().x, rendering_engine->get_viewport().y, 2);
+	main_render_target_->init_color(true);
+
+	volumetric_lighting_result_render_target_ = new TextureFBO(rendering_engine->get_viewport().x, rendering_engine->get_viewport().y, 2);
+	volumetric_lighting_result_render_target_->init_color();
+
+	volumetric_lighting_effect_->init(rendering_engine, this);
+	bloom_effect_->init(rendering_engine, this);
 }
 
 void CameraNode::before_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const
@@ -42,19 +47,13 @@ void CameraNode::before_render(const std::vector<IDrawable*> &drawables, const s
 
 	RenderingNode::before_render(drawables, light_nodes);
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	const auto shader = this->get_shader();
 	shader->use();
 	shader->set_light_uniforms(light_nodes);
 	shader->set_camera_uniforms(this);
 	
-	if (effects_.size() == 0) {
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
-	else {
-		renderTarget1_->bind_for_rendering();
-	}
+	main_render_target_->bind_for_rendering();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
@@ -62,15 +61,8 @@ void CameraNode::after_render(const std::vector<IDrawable*> &drawables, const st
 {
 	RenderingNode::after_render(drawables, light_nodes);
 
-	for (int i = 0; i < effects_.size(); i++) {
-		auto ef = effects_.at(i);
-		if (i%2 == 0) {
-			ef->perform_effect(renderTarget1_, (i == effects_.size()-1) ? 0 : renderTarget2_->get_fbo_id());
-		}
-		else {
-			ef->perform_effect(renderTarget2_, (i == effects_.size() - 1) ? 0 : renderTarget1_->get_fbo_id());
-		}
-	}
+	volumetric_lighting_effect_->perform_effect(main_render_target_, volumetric_lighting_result_render_target_->get_fbo_id(), light_nodes);
+	bloom_effect_->perform_effect(volumetric_lighting_result_render_target_, 0, light_nodes);
 }
 
 MainShader* CameraNode::get_shader() const 

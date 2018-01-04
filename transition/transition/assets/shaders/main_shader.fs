@@ -4,6 +4,9 @@
 #define MAX_NR_OMNI_DIRECTIONAL_SHADOWS (5)
 #define SHADOW_BIAS_MAX (0.001)
 #define SHADOW_BIAS_MIN (0.0001)
+#define PCF_TOTAL_SAMPLES (25)
+#define PCF_COUNT (2)
+#define PCF_OMNI_DIRECTIONAL_SAMPLES (20)
 
 in VS_OUT {
     vec3 frag_pos;
@@ -13,13 +16,22 @@ in VS_OUT {
 } fs_in;
 
 layout (location = 0) out vec4 FragColor;
-layout (location = 1) out vec4 BrightColor;
+
+struct MVP {
+	mat4 model;
+	mat4 view;
+	mat4 projection;	
+	
+	mat3 model_normal; // TODO
+};
+uniform MVP mvp;
 
 struct Light {
 	// light_type=1: directional light
 	// light_type=2: point light
 	// light_type=3: spot light
 	int light_type;
+	bool volumetric;
 	
 	vec3 position;
     vec3 direction;
@@ -46,6 +58,9 @@ uniform Light lights[MAX_NR_LIGHTS];
 uniform sampler2D directional_shadow_maps[MAX_NR_DIRECTIONAL_SHADOWS];
 uniform samplerCube omni_directional_shadow_maps[MAX_NR_OMNI_DIRECTIONAL_SHADOWS];
 uniform int num_lights;
+uniform mat4 light_space_matrices[MAX_NR_DIRECTIONAL_SHADOWS];
+uniform mat4 light_view_matrices[MAX_NR_DIRECTIONAL_SHADOWS];
+uniform mat4 light_projection_matrices[MAX_NR_DIRECTIONAL_SHADOWS];
 
 #define DIRECTIONAL_SHADOW_MAP(A,B,C,X) \
 	if (B == 0) { \
@@ -118,7 +133,16 @@ vec3 calc_spot_light(
 vec3 render_type_debug_depth(vec3 diffuse_tex);
 
 float shadow_calculation_directional(Light light, float bias);
-float shadow_calculation_omni_directional(Light light, float bias);
+float shadow_calculation_omni_directional(Light light, float bias, vec3 view_delta);
+
+vec3 sample_offset_directions[20] = vec3[]
+(
+   vec3( 1,  1,  1), vec3( 1, -1,  1), vec3(-1, -1,  1), vec3(-1,  1,  1), 
+   vec3( 1,  1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1,  1, -1),
+   vec3( 1,  1,  0), vec3( 1, -1,  0), vec3(-1, -1,  0), vec3(-1,  1,  0),
+   vec3( 1,  0,  1), vec3(-1,  0,  1), vec3( 1,  0, -1), vec3(-1,  0, -1),
+   vec3( 0,  1,  1), vec3( 0, -1,  1), vec3( 0, -1, -1), vec3( 0,  1, -1)
+);
 
 void main() {
 	vec3 diffuse_tex;
@@ -139,7 +163,8 @@ void main() {
 
 	vec3 color = material.ambient_color * diffuse_tex;
 	vec3 normal = normalize(fs_in.normal);
-    vec3 view_dir = normalize(view_pos - fs_in.frag_pos);
+	vec3 view_delta = view_pos - fs_in.frag_pos;
+    vec3 view_dir = normalize(view_delta);
 	
 	for (int i = 0; i < num_lights; i++) {
 		float shadow = 0.0, bias = 0.0;
@@ -176,6 +201,7 @@ void main() {
 		default:
 			color = vec3(0.0,1.0,0.0);
 		}
+		
 		if (lights[i].shadow_casting) {
 			switch (lights[i].light_type) {
 			case 1:
@@ -183,7 +209,7 @@ void main() {
 				shadow = shadow_calculation_directional(lights[i], bias);
 				break;
 			case 2:
-				shadow = shadow_calculation_omni_directional(lights[i], bias);
+				shadow = shadow_calculation_omni_directional(lights[i], bias, view_delta);
 				break;
 			}
 		}
@@ -191,13 +217,7 @@ void main() {
 		color += (1.0 - shadow)*add_color;
 	}
 	
-	FragColor = vec4(color, 1.0f);
-	float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
-	if (brightness > 0.8) {
-		BrightColor = FragColor;
-	} else {
-		BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
-	}
+	FragColor = vec4(color, 1.0);
 }
 
 #define DEBUG_PERSPECTIVE_DEPTH
@@ -303,16 +323,14 @@ vec3 calc_spot_light(
     float theta = dot(light_dir, normalize(-light.direction)); 
     float epsilon = (light.cutoff - light.outer_cutoff);
     float intensity = clamp((theta - light.outer_cutoff) / epsilon, 0.0, 1.0);
-    diffuse  *= intensity;
-    specular *= intensity;
 	
     // attenuation
     float distance    = length(light_delta);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
 
-    diffuse  *= attenuation;
-    specular *= attenuation;   
-    
+    diffuse  *= attenuation*intensity;
+    specular *= attenuation*intensity;
+	
     return (diffuse + specular)*diffuse_tex;
 }
 
@@ -328,36 +346,48 @@ float shadow_calculation_directional(Light light, float bias) {
 	// transform to [0,1] range
     proj_coords = proj_coords * 0.5 + 0.5;
     
-	// get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-	vec4 closest_depth;
-	DIRECTIONAL_SHADOW_MAP(texture, light.shadow_map_index, proj_coords.xy, closest_depth)
-    
-	// get depth of current fragment from light's perspective
-    float current_depth = proj_coords.z;
-    
-	// check whether current frag pos is in shadow
-    return current_depth - bias > closest_depth.r ? 1.0 : 0.0;
+	float current_depth = proj_coords.z - bias;
+	
+	float shadow = 0.0;
+	vec2 texel_size;
+	DIRECTIONAL_SHADOW_MAP(textureSize, light.shadow_map_index, 0, texel_size)
+	texel_size = 1.0 / texel_size;
+	
+	for(int x = -PCF_COUNT; x <= PCF_COUNT; ++x) {
+		for(int y = -PCF_COUNT; y <= PCF_COUNT; ++y) {
+			// get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+			vec4 closest_depth;
+			DIRECTIONAL_SHADOW_MAP(texture, light.shadow_map_index, (proj_coords.xy + vec2(x, y) * texel_size), closest_depth)
+			
+			shadow += current_depth - bias > closest_depth.r ? 1.0 : 0.0;        
+		}    
+	}
+	return shadow / PCF_TOTAL_SAMPLES;
+	
 }
 
-float shadow_calculation_omni_directional(Light light, float bias) {
+float shadow_calculation_omni_directional(Light light, float bias, vec3 view_delta) {
 	// get vector between fragment position and light position
     vec3 frag_to_light = fs_in.frag_pos - light.position;
-	
-    // fragment to light vector to sample from the depth map    
-    vec4 closest_depth;
-	OMNI_DIRECTIONAL_SHADOW_MAP(texture, light.shadow_map_index, frag_to_light, closest_depth)
-
-    // it is currently in linear range between [0,1], let's re-transform it back to original depth value
-    closest_depth.r *= light.far_plane;
 	
     // now get current linear depth as the length between the fragment and light position
     float current_depth = length(frag_to_light);
 	
     // test for shadows
-    float shadow = current_depth -  bias*(light.far_plane - light.near_plane) > closest_depth.r ? 1.0 : 0.0;     
-	
-    // display closest_depth as debug (to visualize depth cubemap)
-    // FragColor = vec4(vec3(closest_depth.r / light.far_plane), 1.0);    
-        
-    return shadow;
+	float shadow = 0.0;
+	float view_distance = length(view_pos - fs_in.frag_pos);
+	float disk_radius = (1.0 + (view_distance / light.far_plane)) / 20.0;
+	for(int i = 0; i < PCF_OMNI_DIRECTIONAL_SAMPLES; ++i) {
+		 // fragment to light vector to sample from the depth map    
+		vec4 closest_depth;
+		OMNI_DIRECTIONAL_SHADOW_MAP(texture, light.shadow_map_index, (frag_to_light + sample_offset_directions[i] * disk_radius), closest_depth)
+
+		// it is currently in linear range between [0,1], let's re-transform it back to original depth value
+		closest_depth.r *= light.far_plane;
+		
+		if(current_depth - bias	> closest_depth.r) {
+			shadow += 1.0;
+		}
+	}
+	return shadow / float(PCF_OMNI_DIRECTIONAL_SAMPLES);
 }

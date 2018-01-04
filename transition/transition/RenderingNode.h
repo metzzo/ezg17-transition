@@ -2,10 +2,10 @@
 #include "TransformationNode.h"
 #include <vector>
 #include <glm/glm.hpp>
-#include "IDrawable.h"
 #include "ShaderResource.h"
 
 class AnimatorNode;
+class IDrawable;
 
 class RenderingNode :
 	public TransformationNode
@@ -13,6 +13,7 @@ class RenderingNode :
 protected:
 	glm::ivec2 viewport_;
 	glm::mat4 projection_;
+	glm::mat4 projection_inv_;
 
 public:
 	RenderingNode(const std::string& name, const glm::ivec2 viewport, const glm::mat4 projection);
@@ -25,8 +26,9 @@ public:
 	virtual ShaderResource* get_shader() const = 0;
 	virtual bool is_rendering_enabled() const;
 	
-	glm::mat4 get_projection_matrix() const;
-	glm::mat4 get_view_matrix() const;
+	const glm::mat4& get_projection_matrix() const;
+	const glm::mat4& get_projection_inverse_matrix() const;
+	const glm::mat4& get_view_matrix() const;
 
 	void set_view_matrix(const glm::mat4& mat);
 	void set_projection_matrix(const glm::mat4& mat);

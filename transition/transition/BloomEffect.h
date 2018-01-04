@@ -22,8 +22,8 @@ public:
 	*/
 	BloomEffect(unsigned int intensity);
 
-	virtual void init(RenderingEngine *engine) override;
+	virtual void init(RenderingEngine *engine, CameraNode *camera) override;
 
-	virtual void perform_effect(const TextureFBO *from, GLuint fbo_to) override;
+	virtual void perform_effect(const TextureFBO *from, GLuint fbo_to, const std::vector<LightNode *> light_nodes) override;
 
 };

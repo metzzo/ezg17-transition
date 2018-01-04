@@ -3,6 +3,7 @@
 #include "ILightShader.h"
 
 class LightNode;
+class TextureResource;
 
 const unsigned int max_nr_lights = 10;
 const unsigned int max_nr_directional_shadow_maps = 5;
@@ -33,6 +34,7 @@ class MainShader :
 	GLint outer_cutoff_uniform_[max_nr_lights];
 	GLint far_plane_uniform_[max_nr_lights];
 	GLint near_plane_uniform_[max_nr_lights];
+	GLint volumetric_uniform_[max_nr_lights];
 	GLint omni_directional_shadow_maps_uniform_[max_nr_omni_directional_shadow_maps];
 	GLint directional_shadow_maps_uniform_[max_nr_directional_shadow_maps];
 	GLint light_space_matrices_uniform_[max_nr_directional_shadow_maps];
@@ -48,11 +50,10 @@ class MainShader :
 
 	int get_texture_slot() const;
 public:
-	MainShader();
+	explicit MainShader(const char *vertex_path = "assets/shaders/main_shader.vs", const char *fragment_path = "assets/shaders/main_shader.fs", const char *geometry_path = nullptr);
 	~MainShader();
 
 	void init() override;
-	
 	
 	void set_camera_uniforms(const RenderingNode* node) override;
 	void set_model_uniforms(const GeometryNode* node) override;

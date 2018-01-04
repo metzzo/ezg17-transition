@@ -1,10 +1,11 @@
 #include "RenderingNode.h"
 #include "glheaders.h"
+#include "IDrawable.h"
 
 RenderingNode::RenderingNode(const std::string& name, const glm::ivec2 viewport, const glm::mat4 projection) : TransformationNode(name)
 {
 	this->viewport_ = viewport;
-	this->projection_ = projection;
+	this->set_projection_matrix(projection);
 }
 
 RenderingNode::~RenderingNode()
@@ -47,10 +48,16 @@ bool RenderingNode::is_rendering_enabled() const
 	return true;
 }
 
-glm::mat4 RenderingNode::get_projection_matrix() const {
+const glm::mat4& RenderingNode::get_projection_matrix() const {
 	return projection_;
 }
-glm::mat4 RenderingNode::get_view_matrix() const {
+
+const glm::mat4& RenderingNode::get_projection_inverse_matrix() const
+{
+	return this->projection_inv_;
+}
+
+const glm::mat4& RenderingNode::get_view_matrix() const {
 	return this->get_inverse_transformation();
 }
 
@@ -61,4 +68,5 @@ void RenderingNode::set_view_matrix(const glm::mat4& mat) {
 void RenderingNode::set_projection_matrix(const glm::mat4& mat)
 {
 	this->projection_ = mat;
+	this->projection_inv_ = glm::inverse(this->projection_);
 }

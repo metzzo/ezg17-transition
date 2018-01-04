@@ -12,8 +12,34 @@
 #include "CameraController.h"
 #include "GeometryNode.h"
 #include "DirectionalShadowStrategy.h"
-#include "BloomEffect.h"
+#include "RenderingEngine.h"
+#include "OmniDirectionalShadowStrategy.h"
 
+class LookAtController : public AnimatorNode
+{
+	TransformationNode *target_node_;
+	TransformationNode *source_node_;
+
+public:
+	LookAtController(const std::string name, TransformationNode *target_node, TransformationNode *source_node) : AnimatorNode(name)
+	{
+		this->target_node_ = target_node;
+		this->source_node_ = source_node;
+	}
+	void update(double delta) override
+	{
+		if (!glfwGetKey(get_rendering_engine()->get_window(), GLFW_KEY_SPACE))
+		{
+			return;
+		}
+
+		auto target_pos = target_node_->get_position();
+		target_pos.y = 0;
+		auto origin_pos = source_node_->get_position();
+		auto mat = glm::inverse(glm::lookAt(origin_pos, target_pos, glm::vec3(1, 1, 0)));
+		source_node_->set_transformation(mat);
+	}
+};
 
 int main()
 {
@@ -27,14 +53,11 @@ int main()
 
 	const auto cam = new CameraNode("MainCamera",
 		engine->get_viewport(),
-		glm::perspective(glm::radians(60.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f)		
+		glm::perspective(glm::radians(60.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f)
 	);
 	//cam->set_view_matrix(glm::lookAt(glm::vec3(0, 5, 0), glm::vec3(-10, 3, 0), glm::vec3(0, 1, 0)));
-	cam->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -2), glm::vec3(3, 0, 3), glm::vec3(0, 1, 0)));
+	cam->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -7), glm::vec3(0, 0, -16), glm::vec3(0, 1, 0)));
 	root->add_node(cam);
-
-	BloomEffect* effect = new BloomEffect(2);
-	cam->add_post_processing_effect(effect);
 
 	auto importer = new ColladaImporter(engine);
 	//const auto world = importer->load_node("assets/models/gitti_d.dae");
@@ -54,7 +77,9 @@ int main()
 	spot_light->set_color(glm::vec3(0.8, 0.0, 0.0), glm::vec3(1.0, 0.0, 0.0));
 	spot_light->set_cutoff(12.5f, 25.0f);
 	spot_light->set_shadow_strategy(new DirectionalShadowStrategy(1024));
-	spot_light->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -2), glm::vec3(5, 0, 5), glm::vec3(0, 1, 0)));
+	spot_light->set_volumetric(true, 10000.0, 0.05);
+	//spot_light->set_volumetric(true, 500.0, 0.1);
+	spot_light->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -7), glm::vec3(0, 0, -16), glm::vec3(0, 1, 0)));
 	root->add_node(spot_light);
 
 	auto tmp = new TextureResource("assets/gfx/bg-tucard.jpg");
@@ -62,10 +87,10 @@ int main()
 	auto sprite = MeshResource::create_sprite(tmp);
 	engine->register_resource(sprite);
 	auto depth_sprite = new GeometryNode("test2", sprite);
-	auto tmpMat = glm::inverse(glm::lookAt(glm::vec3(-2, 5, -2), glm::vec3(5, 0, 5), glm::vec3(0, 1, 0)));
+	auto tmpMat = glm::inverse(glm::lookAt(glm::vec3(-2, 5, -7), glm::vec3(0, 0, -16), glm::vec3(0, 1, 0)));
 	depth_sprite->set_transformation(tmpMat);
 	depth_sprite->apply_transformation(Transformation::translate(glm::vec3(0, 2, 0)));
-	root->add_node(depth_sprite);
+	//root->add_node(depth_sprite);
 	
 	//auto anim = new CameraController("cam_anim1", spot_light);
 	//root->add_node(anim);
@@ -75,6 +100,9 @@ int main()
 
 	//auto anim3 = new CameraController("cam_anim2", depth_sprite);
 	//root->add_node(anim3);
+
+	root->add_node(new LookAtController("lookat", cam, spot_light));
+	root->add_node(new LookAtController("lookat", cam, depth_sprite));
 
 	engine->run();
 
