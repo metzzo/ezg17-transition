@@ -203,7 +203,7 @@ float volumetric_lighting_spotlight(vec3 frag_pos, Light light) {
 }
 
 float volumetric_lighting_pointlight(vec3 frag_pos, Light light) {
-	float dither_value = 0; //dither_pattern[ (int(gl_FragCoord.x) % 4)* 4 + (int(gl_FragCoord.y) % 4) ];
+	float dither_value = dither_pattern[ (int(gl_FragCoord.x) % 4)* 4 + (int(gl_FragCoord.y) % 4) ];
 	
 	vec4 start_pos_worldspace = vec4(view_pos, 1.0);
 	vec4 end_pos_worldspace = vec4(frag_pos, 1.0);
