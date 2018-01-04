@@ -188,7 +188,7 @@ float volumetric_lighting_directional(vec3 frag_pos, Light light) {
 		ray_position_worldspace += step_size_worldspace * delta_worldspace;
 	}
 	
-	return light_contribution;
+	return min(light_contribution, 1.0);
 }
 
 float volumetric_lighting_spotlight(vec3 frag_pos, Light light) {
@@ -249,7 +249,7 @@ float volumetric_lighting_spotlight(vec3 frag_pos, Light light) {
 		ray_position_worldspace += step_size_worldspace * delta_worldspace;
 	}
 	
-	return light_contribution;
+	return min(light_contribution, 1.0);
 }
 
 float volumetric_lighting_pointlight(vec3 frag_pos, Light light) {
@@ -289,5 +289,5 @@ float volumetric_lighting_pointlight(vec3 frag_pos, Light light) {
 		ray_position_worldspace += step_size_worldspace * delta_worldspace;
 	}
 	
-	return light_contribution;
+	return min(light_contribution, 1.0);
 }
