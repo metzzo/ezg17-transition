@@ -86,8 +86,8 @@ uniform VP vp;
 uniform vec3 view_pos;
 uniform sampler2D depth_tex;
 
-float volumetric_lighting_spotlight(vec3 frag_pos, Light light);
-float volumetric_lighting_pointlight(vec3 frag_pos, Light light);
+float volumetric_lighting_omni_directional(vec3 frag_pos, Light light);
+float volumetric_lighting_directional(vec3 frag_pos, Light light);
 vec3 world_pos_from_depth(float depth);
 
 
@@ -104,13 +104,12 @@ void main() {
 	
 	for (int i = 0; i < num_lights; i++) {
 		switch (lights[i].light_type) {
-			case 1: // directional light
-				break;
 			case 2: // point light
-				vol_color += volumetric_lighting_pointlight(frag_pos, lights[i])*lights[i].diffuse;
+				vol_color += volumetric_lighting_omni_directional(frag_pos, lights[i])*lights[i].diffuse;
 				break;
+			case 1: // directional light (not yet tested)
 			case 3: // spot light
-				vol_color += volumetric_lighting_spotlight(frag_pos, lights[i])*lights[i].diffuse;
+				vol_color += volumetric_lighting_directional(frag_pos, lights[i])*lights[i].diffuse;
 				break;
 		}
 	}
@@ -141,7 +140,7 @@ float dither_pattern[16] = float[16] (
 #define PI_RCP (0.31830988618379067153776752674503)
 #define NUM_STEPS (16)
 
-float volumetric_lighting_spotlight(vec3 frag_pos, Light light) {
+float volumetric_lighting_directional(vec3 frag_pos, Light light) {
 	float dither_value = dither_pattern[ (int(gl_FragCoord.x) % 4)* 4 + (int(gl_FragCoord.y) % 4) ];
 	
 	vec4 end_pos_worldspace  = vec4(view_pos, 1.0);
@@ -202,7 +201,7 @@ float volumetric_lighting_spotlight(vec3 frag_pos, Light light) {
 	return light_contribution;
 }
 
-float volumetric_lighting_pointlight(vec3 frag_pos, Light light) {
+float volumetric_lighting_omni_directional(vec3 frag_pos, Light light) {
 	float dither_value = dither_pattern[ (int(gl_FragCoord.x) % 4)* 4 + (int(gl_FragCoord.y) % 4) ];
 	
 	vec4 start_pos_worldspace = vec4(view_pos, 1.0);
