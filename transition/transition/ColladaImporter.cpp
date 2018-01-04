@@ -69,7 +69,6 @@ void ColladaImporter::process_lights(const aiScene* scene, std::vector<Node*>& l
 		}
 
 		lights.push_back(light_node);
-
 	}
 }
 
