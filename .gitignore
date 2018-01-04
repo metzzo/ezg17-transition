@@ -1,3 +1,8 @@
+#model-archives
+art/downloads/*.rar
+art/downloads/*.zip
+art/downloads/*.gz
+
 # Prerequisites
 *.d
 
