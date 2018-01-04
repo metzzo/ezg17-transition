@@ -339,7 +339,7 @@ float triNoise3d(in vec3 p, in float spd, in float time)
 }
 
 float sample_fog(vec3 pos) {
-	return triNoise3d(pos * 2.2 / 8, 0.025, time);
+	return triNoise3d(pos * 2.2 / 8, 0.2, time);
 }
 
 
