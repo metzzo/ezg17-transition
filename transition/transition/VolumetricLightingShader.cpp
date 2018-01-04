@@ -22,6 +22,7 @@ VolumetricLightingShader::VolumetricLightingShader() : ShaderResource("assets/sh
 	this->view_inv_uniform_ = -1;
 	this->projection_inv_uniform_ = -1;
 	this->view_pos_uniform_ = -1;
+	this->time_uniform_ = -1;
 
 	this->num_lights_uniform_ = -1;
 	for (auto i = 0; i < max_nr_lights; i++)
@@ -71,6 +72,7 @@ void VolumetricLightingShader::init()
 	this->view_inv_uniform_ = get_uniform("vp.view_inv");
 	this->projection_inv_uniform_ = get_uniform("vp.projection_inv");
 	this->view_pos_uniform_ = get_uniform("view_pos");
+	this->time_uniform_ = get_uniform("time");
 
 	this->num_lights_uniform_ = get_uniform("num_lights");
 
@@ -114,6 +116,7 @@ void VolumetricLightingShader::set_camera_uniforms(const RenderingNode* node)
 	assert(this->projection_inv_uniform_ >= 0);
 	assert(this->view_pos_uniform_ >= 0);
 
+	glUniform1f(this->time_uniform_, glfwGetTime());
 	glUniformMatrix4fv(this->view_inv_uniform_, 1, GL_FALSE, &node->get_transformation()[0][0]);
 	glUniformMatrix4fv(this->projection_inv_uniform_, 1, GL_FALSE, &node->get_projection_inverse_matrix()[0][0]);
 	glUniform3fv(this->view_pos_uniform_, 1, &node->get_position()[0]);
