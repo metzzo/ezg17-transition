@@ -3,8 +3,10 @@
 #include "RenderingEngine.h"
 #include "DirectionalDepthShader.h"
 
-LightNode::LightNode(const std::string& name, const LightType light_type): RenderingNode(name, glm::ivec2(),
-                                                                                         glm::mat4())
+LightNode::LightNode(const std::string& name, const LightType light_type) : RenderingNode(
+	name, 
+	glm::ivec2(),
+	glm::mat4())
 {
 	this->linear_ = 0;
 	this->quadratic_ = 0;
@@ -16,6 +18,8 @@ LightNode::LightNode(const std::string& name, const LightType light_type): Rende
 	this->volumetric_ = false;
 	this->phi_ = 0.0;
 	this->tau_ = 0.0;
+	this->min_bias_ = 0.0;
+	this->max_bias_ = 0.0;
 }
 
 LightNode::~LightNode()
@@ -35,9 +39,11 @@ void LightNode::set_attenuation(const float constant, const float linear, const 
 	this->quadratic_ = quadratic;
 }
 
-void LightNode::set_shadow_strategy(IShadowStrategy* shadow_strategy)
+void LightNode::set_shadow_strategy(IShadowStrategy* shadow_strategy, float min_bias, float max_bias)
 {
 	this->shadow_strategy_ = shadow_strategy;
+	this->min_bias_ = min_bias;
+	this->max_bias_ = max_bias;
 }
 
 void LightNode::set_cutoff(const float cutoff, const float outer_cutoff)

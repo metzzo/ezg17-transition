@@ -4,6 +4,7 @@
 #include "GeometryNode.h"
 
 static const int diffuse_texture_slot = 0;
+static const int alpha_texture_slot = 1;
 static const int shadow_map_texture_slot = 2;
 
 int MainShader::get_texture_slot() const
@@ -50,7 +51,8 @@ MainShader::MainShader(const char* vertex_path, const char* fragment_path, const
 		this->cutoff_uniform_[i] = -1;
 		this->far_plane_uniform_[i] = -1;
 		this->near_plane_uniform_[i] = -1;
-		this->volumetric_uniform_[i] = -1;
+		this->shadow_min_bias_[i] = -1;
+		this->shadow_max_bias_[i] = -1;
 	}
 
 	for (auto i = 0; i < max_nr_directional_shadow_maps; i++)
@@ -108,16 +110,15 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 	}
 	if (material.has_alpha_texture()) {
 		auto alpha = material.get_alpha_texture();
-		alpha->bind(1);
+		alpha->bind(alpha_texture_slot);
 		glUniform1i(this->material_has_alpha_tex_uniform, 1);
-		glUniform1i(this->material_alpha_tex_uniform_, 1);
+		glUniform1i(this->material_alpha_tex_uniform_, alpha_texture_slot);
 	}
 	else {
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		glUniform1i(this->material_has_alpha_tex_uniform, 0);
-		glUniform1i(this->material_alpha_tex_uniform_, 1);
 	}
 	glUniform3fv(this->material_ambient_color_, 1, &material.get_ambient_color()[0]);
 	glUniform3fv(this->material_diffuse_color_, 1, &material.get_diffuse_color()[0]);
@@ -145,12 +146,15 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 		assert(this->specular_uniform_[this->light_index_] >= 0);
 		assert(this->shadow_casting_uniform_[this->light_index_] >= 0);
 		assert(this->shadow_map_index_uniform_[this->light_index_] >= 0);
-		assert(this->volumetric_uniform_[this->light_index_] >= 0);
+		assert(this->shadow_min_bias_[this->light_index_] >= 0);
+		assert(this->shadow_max_bias_[this->light_index_] >= 0);
 
 		if (light->is_rendering_enabled())
 		{
 			light->set_uniforms(this);
 
+			glUniform1f(this->shadow_min_bias_[this->light_index_], light->get_min_bias());
+			glUniform1f(this->shadow_max_bias_[this->light_index_], light->get_max_bias());
 			glUniform1i(this->shadow_casting_uniform_[this->light_index_], 1); // boolean whether it is a shadow casting light
 		} else
 		{
@@ -158,7 +162,6 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 		}
 
 		glUniform1i(this->light_type_uniform_[this->light_index_], light->get_light_type());
-		glUniform1i(this->volumetric_uniform_[this->light_index_], light->is_volumetric());
 		glUniform3fv(this->position_uniform_[this->light_index_], 1, &light->get_position()[0]);
 		glUniform3fv(this->direction_uniform_[this->light_index_], 1, &light->get_direction()[0]);
 		glUniform1f(this->constant_uniform_[this->light_index_], light->get_constant());
@@ -166,8 +169,11 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 		glUniform1f(this->quadratic_uniform_[this->light_index_], light->get_quadratic());
 		glUniform3fv(this->diffuse_uniform_[this->light_index_], 1, &light->get_diffuse()[0]);
 		glUniform3fv(this->specular_uniform_[this->light_index_], 1, &light->get_specular()[0]);
-		glUniform1f(this->cutoff_uniform_[this->light_index_], glm::cos(glm::radians(light->get_cutoff())));
-		glUniform1f(this->outer_cutoff_uniform_[this->light_index_], glm::cos(glm::radians(light->get_outer_cutoff())));
+
+		if (light->get_light_type() == SPOT_LIGHT) {
+			glUniform1f(this->cutoff_uniform_[this->light_index_], glm::cos(glm::radians(light->get_cutoff())));
+			glUniform1f(this->outer_cutoff_uniform_[this->light_index_], glm::cos(glm::radians(light->get_outer_cutoff())));
+		}
 
 		this->light_index_++;
 	}
@@ -250,7 +256,8 @@ void MainShader::init()
 		this->outer_cutoff_uniform_[i] = get_uniform("lights", "outer_cutoff", i);
 		this->far_plane_uniform_[i] = get_uniform("lights", "far_plane", i);
 		this->near_plane_uniform_[i] = get_uniform("lights", "near_plane", i);
-		this->volumetric_uniform_[i] = get_uniform("lights", "volumetric", i);
+		this->shadow_min_bias_[i] = get_uniform("lights", "min_bias", i);
+		this->shadow_max_bias_[i] = get_uniform("lights", "max_bias", i);
 	}
 
 	for (auto i = 0; i < max_nr_directional_shadow_maps; i++)

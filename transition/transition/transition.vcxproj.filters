@@ -54,6 +54,7 @@
     </Filter>
     <Filter Include="ShaderPrograms">
       <UniqueIdentifier>{e75fc131-81b2-40d8-b34d-babe21b5507a}</UniqueIdentifier>
+      <Extensions>vs;fs;gs</Extensions>
     </Filter>
     <Filter Include="Quelldateien\Controller">
       <UniqueIdentifier>{d609958a-6565-47ae-a53c-4d7219920ef2}</UniqueIdentifier>
@@ -138,9 +139,6 @@
     <ClInclude Include="OmniDirectionalShadowStrategy.h">
       <Filter>Headerdateien\Utility\Shadow</Filter>
     </ClInclude>
-    <ClInclude Include="DirectionalShadowStrategy.h">
-      <Filter>Headerdateien\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="ParticleEmitterNode.h">
       <Filter>Headerdateien\SceneGraph</Filter>
     </ClInclude>
@@ -156,23 +154,14 @@
     <ClInclude Include="BloomGaussShader.h">
       <Filter>Headerdateien\Resource\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="BloomEffect.h">
-      <Filter>Headerdateien\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="DirectionalDepthShader.h">
       <Filter>Headerdateien\Resource\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="DummyEffect.h">
-      <Filter>Headerdateien\Utility</Filter>
     </ClInclude>
     <ClInclude Include="DummyShader.h">
       <Filter>Headerdateien\Resource\Shader</Filter>
     </ClInclude>
     <ClInclude Include="OmniDirectionalDepthShader.h">
       <Filter>Headerdateien\Resource\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="PostProcessingEffect.h">
-      <Filter>Headerdateien\Utility</Filter>
     </ClInclude>
     <ClInclude Include="TextureFBO.h">
       <Filter>Headerdateien\Utility</Filter>
@@ -209,6 +198,18 @@
     </ClInclude>
     <ClInclude Include="LookAtController.h">
       <Filter>Headerdateien\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="BloomEffect.h">
+      <Filter>Headerdateien\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="DummyEffect.h">
+      <Filter>Headerdateien\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcessingEffect.h">
+      <Filter>Headerdateien\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalShadowStrategy.h">
+      <Filter>Headerdateien\Utility\Shadow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -263,17 +264,11 @@
     <ClCompile Include="Material.cpp">
       <Filter>Quelldateien\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="DirectionalShadowStrategy.cpp">
-      <Filter>Quelldateien\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="ComputeShader.cpp">
       <Filter>Quelldateien\Resource\Shader</Filter>
     </ClCompile>
     <ClCompile Include="BloomAddShader.cpp">
       <Filter>Quelldateien\Resource\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="BloomEffect.cpp">
-      <Filter>Quelldateien\Utility</Filter>
     </ClCompile>
     <ClCompile Include="BloomGaussShader.cpp">
       <Filter>Quelldateien\Resource\Shader</Filter>
@@ -281,17 +276,11 @@
     <ClCompile Include="DirectionalDepthShader.cpp">
       <Filter>Quelldateien\Resource\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="DummyEffect.cpp">
-      <Filter>Quelldateien\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="DummyShader.cpp">
       <Filter>Quelldateien\Resource\Shader</Filter>
     </ClCompile>
     <ClCompile Include="OmniDirectionalDepthShader.cpp">
       <Filter>Quelldateien\Resource\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="OmniDirectionalShadowStrategy.cpp">
-      <Filter>Quelldateien\Utility</Filter>
     </ClCompile>
     <ClCompile Include="ParticleEmitterNode.cpp">
       <Filter>Quelldateien\SceneGraph</Filter>
@@ -335,9 +324,20 @@
     <ClCompile Include="LookAtController.cpp">
       <Filter>Quelldateien\Controller</Filter>
     </ClCompile>
+    <ClCompile Include="BloomEffect.cpp">
+      <Filter>Quelldateien\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="DummyEffect.cpp">
+      <Filter>Quelldateien\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalShadowStrategy.cpp">
+      <Filter>Quelldateien\Utility\Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="OmniDirectionalShadowStrategy.cpp">
+      <Filter>Quelldateien\Utility\Shadow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <None Include="assets\shaders\bloom_add.fs">
       <Filter>ShaderPrograms</Filter>
     </None>
@@ -392,22 +392,22 @@
     <None Include="assets\shaders\volumetric_lighting_upsample.vs">
       <Filter>ShaderPrograms</Filter>
     </None>
-    <None Include="assets\shaders\test_simple.fs" >
+    <None Include="assets\shaders\test_simple.fs">
       <Filter>ShaderPrograms</Filter>
     </None>
-    <None Include="assets\shaders\test_simple.vs" >
+    <None Include="assets\shaders\test_simple.vs">
       <Filter>ShaderPrograms</Filter>
     </None>
-    <None Include="assets\shaders\foot_part.fs" >
+    <None Include="assets\shaders\foot_part.fs">
       <Filter>ShaderPrograms</Filter>
     </None>
-    <None Include="assets\shaders\foot_part.gs" >
+    <None Include="assets\shaders\foot_part.gs">
       <Filter>ShaderPrograms</Filter>
     </None>
-    <None Include="assets\shaders\foot_part.vs" >
+    <None Include="assets\shaders\foot_part.vs">
       <Filter>ShaderPrograms</Filter>
     </None>
-    <None Include="assets\shaders\foot_part.comp" >
+    <None Include="assets\shaders\foot_part.comp">
       <Filter>ShaderPrograms</Filter>
     </None>
   </ItemGroup>

@@ -67,6 +67,8 @@ void VolumetricLightingEffect::perform_effect(const TextureFBO* from, GLuint fbo
 	TextureRenderable *depth_tex = from->get_texture(from->get_depth_index());
 	const glm::ivec2 size = this->ping_half_res_fbo_->get_size();
 
+	glDisable(GL_BLEND);
+
 	// down sample scene using depth aware downsampling
 	downsample_shader_->use();
 	downsample_shader_->set_depth_texture(depth_tex);
@@ -125,5 +127,7 @@ void VolumetricLightingEffect::perform_effect(const TextureFBO* from, GLuint fbo
 	glBindVertexArray(screen_mesh_->get_resource_id());
 	glDrawElements(GL_TRIANGLES, screen_mesh_->get_num_indices(), GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
+
+	glEnable(GL_BLEND);
 }
 
