@@ -4,6 +4,7 @@
 #include "GeometryNode.h"
 
 static const int diffuse_texture_slot = 0;
+static const int alpha_texture_slot = 1;
 static const int shadow_map_texture_slot = 2;
 
 int MainShader::get_texture_slot() const
@@ -109,16 +110,15 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 	}
 	if (material.has_alpha_texture()) {
 		auto alpha = material.get_alpha_texture();
-		alpha->bind(1);
+		alpha->bind(alpha_texture_slot);
 		glUniform1i(this->material_has_alpha_tex_uniform, 1);
-		glUniform1i(this->material_alpha_tex_uniform_, 1);
+		glUniform1i(this->material_alpha_tex_uniform_, alpha_texture_slot);
 	}
 	else {
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		glUniform1i(this->material_has_alpha_tex_uniform, 0);
-		glUniform1i(this->material_alpha_tex_uniform_, 1);
 	}
 	glUniform3fv(this->material_ambient_color_, 1, &material.get_ambient_color()[0]);
 	glUniform3fv(this->material_diffuse_color_, 1, &material.get_diffuse_color()[0]);
@@ -152,6 +152,7 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 		if (light->is_rendering_enabled())
 		{
 			light->set_uniforms(this);
+
 			glUniform1f(this->shadow_min_bias_[this->light_index_], light->get_min_bias());
 			glUniform1f(this->shadow_max_bias_[this->light_index_], light->get_max_bias());
 			glUniform1i(this->shadow_casting_uniform_[this->light_index_], 1); // boolean whether it is a shadow casting light
