@@ -80,7 +80,7 @@ int main()
 	spot_light->set_volumetric(true, 10000.0, 0.05);
 	//spot_light->set_volumetric(true, 500.0, 0.1);
 	spot_light->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -7), glm::vec3(0, 0, -16), glm::vec3(0, 1, 0)));
-	//root->add_node(spot_light);
+	root->add_node(spot_light);
 
 	auto tmp = new TextureResource("assets/gfx/bg-tucard.jpg");
 	engine->register_resource(tmp);
