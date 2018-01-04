@@ -22,7 +22,7 @@ struct MVP {
 	mat4 view;
 	mat4 projection;
 	
-	mat3 model_normal; // TODO
+	mat3 model_normal;
 };
 
 uniform MVP mvp;
@@ -30,8 +30,7 @@ uniform MVP mvp;
 void main()
 {
 	vs_out.frag_pos = vec3(mvp.model * vec4(aPos, 1.0));
-	// TODO: do this inversion on CPU
-	vs_out.normal = mat3(transpose(inverse(mvp.model)))*aNormal;
+	vs_out.normal = mvp.model_normal*aNormal;
 	vs_out.tex_coords = aTex;
 	
 	for (int i = 0; i < MAX_NR_DIRECTIONAL_SHADOWS; i++) {

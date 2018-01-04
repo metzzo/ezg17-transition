@@ -18,6 +18,7 @@ MainShader::MainShader(const char* vertex_path, const char* fragment_path, const
 	this->light_index_ = 0;
 
 	this->model_uniform_ = -1;
+	this->model_normal_uniform_ = -1;
 	this->view_uniform_ = -1;
 	this->projection_uniform_ = -1;
 	this->material_diffuse_tex_uniform_ = -1;
@@ -73,13 +74,19 @@ void MainShader::set_camera_uniforms(const RenderingNode* node) {
 }
 
 void MainShader::set_model_uniforms(const GeometryNode* node) {
-	//Check Existance of Uniforms
+	// Check Existance of Uniforms
 	assert(this->model_uniform_ >= 0);
 	assert(this->material_diffuse_tex_uniform_ >= 0);
 	assert(this->material_has_diffuse_tex_uniform_ >= 0);
-	//Give Model to Shader
+	// Give Model to Shader
 	glUniformMatrix4fv(this->model_uniform_, 1, GL_FALSE, &node->get_transformation()[0][0]);
-	//Bind Texture and give it to Shader 
+
+	// and bind the model normal
+	auto model_normal = glm::mat3(glm::transpose(node->get_inverse_transformation()));
+	glUniformMatrix3fv(this->model_normal_uniform_, 1, GL_FALSE, &model_normal[0][0]);
+
+
+	// Bind Texture and give it to Shader 
 	auto material = node->get_mesh_resource()->get_material();
 	const auto texture = material.get_texture();
 	if (texture != nullptr) {
@@ -193,6 +200,7 @@ void MainShader::init()
 
 	// extract uniforms
 	this->model_uniform_ = get_uniform("mvp.model");
+	this->model_normal_uniform_ = get_uniform("mvp.model_normal");
 	this->view_uniform_ = get_uniform("mvp.view");
 	this->projection_uniform_ = get_uniform("mvp.projection");
 	this->view_pos_uniform_ = get_uniform("view_pos");

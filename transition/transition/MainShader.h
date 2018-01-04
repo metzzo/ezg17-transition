@@ -14,6 +14,7 @@ class MainShader :
 	public ILightShader
 {
 	GLint model_uniform_;
+	GLint model_normal_uniform_;
 	GLint view_uniform_;
 	GLint projection_uniform_;
 	GLint material_diffuse_tex_uniform_;
