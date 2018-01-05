@@ -10,7 +10,7 @@ class DirectionalShadowStrategy : public IShadowStrategy
 	float far_plane_;
 
 public:
-	explicit DirectionalShadowStrategy(int shadow_map_size, float near_plane = 1.0f, float far_plane = 100.0f);
+	explicit DirectionalShadowStrategy(int shadow_map_size, float near_plane = 1.0f, float far_plane = 300.0f);
 	~DirectionalShadowStrategy();
 
 	void init(LightNode *light_node) override;

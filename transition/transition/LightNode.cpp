@@ -111,7 +111,7 @@ void LightNode::apply_transformation(const glm::mat4& trafo, const glm::mat4& it
 {
 	TransformationNode::apply_transformation(trafo, itrafo);
 
-	this->direction_ = glm::transpose(this->get_inverse_transformation()) * glm::vec4(0, 0, -1, 0);
+	this->direction_ = glm::transpose(this->get_inverse_transformation()) * glm::vec4(direction_, 0.0f);
 }
 
 void LightNode::set_uniforms(ILightShader* shader)

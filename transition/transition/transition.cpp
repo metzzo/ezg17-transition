@@ -34,7 +34,7 @@ int main()
 
 	const auto cam = new CameraNode("MainCamera",
 		engine->get_viewport(),
-		glm::perspective(glm::radians(60.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f)
+		glm::perspective(glm::radians(60.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 200.0f)
 	);
 	cam->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -7), glm::vec3(0, 0, -16), glm::vec3(0, 1, 0)));
 	root->add_node(cam);
@@ -83,6 +83,15 @@ int main()
 	left->apply_transformation(Transformation::translate(glm::vec3(-2, 0, 8)));
 	FootstepAnimator* footanim = new FootstepAnimator("footanim", left, right, false, glm::vec3(0, 0, -2));
 	root->add_node(footanim);
+
+	auto tree_light = new LightNode("tree_light", SPOT_LIGHT);
+	tree_light->set_attenuation(1.0, 0.0, 0.0);
+	tree_light->set_color(glm::vec3(1, 1, 1), glm::vec3(1, 1, 1));
+	tree_light->set_cutoff(12.5f, 50.0f);
+	tree_light->set_shadow_strategy(new DirectionalShadowStrategy(1024), 0, 0);
+	tree_light->set_volumetric(true, 1000000.0, 0.05, false);
+	tree_light->set_view_matrix(glm::lookAt(glm::vec3(140, 60, -19), glm::vec3(92, 0, -19), glm::vec3(0, 1, 0)));
+	root->add_node(tree_light);
 
 	engine->run();
 

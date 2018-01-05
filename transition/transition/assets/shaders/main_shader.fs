@@ -224,7 +224,7 @@ void main() {
 	}
 	if (alpha < 0.01) {
 		alpha = 0;
-		gl_FragDepth = 1;
+		gl_FragDepth = 100;
 	} else {
 		gl_FragDepth = gl_FragCoord.z;
 	}

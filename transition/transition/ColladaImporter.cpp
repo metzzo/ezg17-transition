@@ -41,7 +41,7 @@ void ColladaImporter::process_lights(const aiScene* scene, std::vector<Node*>& l
 		IShadowStrategy *strategy = nullptr;
 		if (light->mType == aiLightSource_POINT) {
 			light_type = POINT_LIGHT;
-			if (light->mName.data[light->mName.length - 1] != '*') {
+			if (light->mName.data[light->mName.length - 1] != '_') {
 				strategy = new OmniDirectionalShadowStrategy(1024);
 			}
 		}
@@ -52,7 +52,7 @@ void ColladaImporter::process_lights(const aiScene* scene, std::vector<Node*>& l
 		else if (light->mType == aiLightSource_SPOT)
 		{
 			light_type = SPOT_LIGHT;
-			if (light->mName.data[light->mName.length - 1] != '*') {
+			if (light->mName.data[light->mName.length - 1] != '_') {
 				strategy = new DirectionalShadowStrategy(1024);
 			}
 		}
@@ -104,9 +104,11 @@ void ColladaImporter::process_node(aiNode* node, const aiScene* scene, std::vect
 			}
 		}
 		if (!light) {
-			GroupNode* sub = new GroupNode(std::string(node->mChildren[i]->mName.C_Str()));
-			process_node(node->mChildren[i], scene, lights, textures, alpha_textures, sub);
-			parent->add_node(sub);
+			if (name.at(name.length() - 1) != '_') {
+				GroupNode* sub = new GroupNode(std::string(node->mChildren[i]->mName.C_Str()));
+				process_node(node->mChildren[i], scene, lights, textures, alpha_textures, sub);
+				parent->add_node(sub);
+			}
 		}
 	}
 
@@ -231,6 +233,7 @@ MeshResource* ColladaImporter::process_mesh(aiMesh* mesh, const aiScene* scene, 
 				}
 			}
 		}
+		material.set_ambient_color(material.get_ambient_color() * material.get_diffuse_color());
 	}
 
 	MeshResource* res = new MeshResource(vertices_positions, vertices_normals, vertices_uvs, mesh->mNumVertices, indices, mesh->mNumFaces*3, material);

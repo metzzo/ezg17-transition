@@ -1,5 +1,5 @@
 #include "CameraController.h"
-#include <GLFW/glfw3.h>
+#include "glheaders.h"
 #include "RenderingEngine.h"
 #include "TransformationNode.h"
 
@@ -22,6 +22,9 @@ void CameraController::update(double delta)
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT)) {
 		currentspeed /= 4;
 	}
+	else if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL)) {
+		currentspeed *= 2;
+	}
 	if (glfwGetKey(window, GLFW_KEY_W)) {
 		target_->apply_transformation(Transformation::translate(viewdirection*currentspeed*(float)delta));
 	}
@@ -34,11 +37,17 @@ void CameraController::update(double delta)
 	else if (glfwGetKey(window, GLFW_KEY_D)) {
 		target_->apply_transformation(Transformation::translate(sidedirection*currentspeed*(float)delta));
 	}
-	else if (glfwGetKey(window, GLFW_KEY_E)) {
+	if (glfwGetKey(window, GLFW_KEY_E)) {
 		target_->apply_transformation(Transformation::translate(glm::vec3(0, currentspeed*(float)delta, 0)));
 	}
 	else if (glfwGetKey(window, GLFW_KEY_Q)) {
 		target_->apply_transformation(Transformation::translate(glm::vec3(0, -currentspeed*(float)delta, 0)));
+	}
+	if (glfwGetKey(window, GLFW_KEY_P)) {
+		glClearColor(0.85, 0.85, 0.1, 1);
+	}
+	else if (glfwGetKey(window, GLFW_KEY_O)) {
+		glClearColor(0, 0, 0, 1);
 	}
 	double x = 0, y = 0;
 	glfwGetCursorPos(window, &x, &y);

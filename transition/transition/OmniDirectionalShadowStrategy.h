@@ -9,7 +9,7 @@ class OmniDirectionalShadowStrategy :
 	float far_plane_;
 	GLuint depth_cubemap_fbo_;
 public:
-	explicit OmniDirectionalShadowStrategy(int shadow_map_size, float near_plane = 1.0f, float far_plane = 100.0f);
+	explicit OmniDirectionalShadowStrategy(int shadow_map_size, float near_plane = 1.0f, float far_plane = 300.0f);
 	~OmniDirectionalShadowStrategy();
 
 	void init(LightNode *light_node) override;
