@@ -291,10 +291,12 @@ float volumetric_lighting_pointlight(vec3 frag_pos, Light light) {
 		float intensity = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
 		
 		float fog = light.has_fog ? sample_fog(ray_position_worldspace.xyz) : 1.0;
+		float ambient_fog_intensity = mix(1.0, 0.0, min(l, 10.0)/10.0);
+		float ambient_fog = 0.15 * fog * ambient_fog_intensity;
 		
-		light_contribution += fog * intensity * light.tau * (
+		light_contribution += (fog * intensity * light.tau * (
 			shadow_term * (light.phi * 0.25 * PI_RCP) * d_rcp * d_rcp 
-		) * exp(-distance*light.tau)*exp(-l*light.tau) * step_size_worldspace;
+		) * exp(-distance*light.tau)*exp(-l*light.tau) + ambient_fog) * step_size_worldspace;
 
 		ray_position_worldspace += step_size_worldspace * delta_worldspace;
 	}
