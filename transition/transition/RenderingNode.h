@@ -19,9 +19,9 @@ public:
 	RenderingNode(const std::string& name, const glm::ivec2 viewport, const glm::mat4 projection);
 	~RenderingNode();
 
-	virtual void before_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const;
-	virtual void after_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const;
-	void render(const std::vector<IDrawable*> &drawables, const std::vector<ParticleEmitterNode*> &emitters, const std::vector<LightNode*> &light_nodes) const;
+	virtual void before_render(const std::vector<IDrawable*> &drawables, const std::vector<IDrawable*>& transparents, const std::vector<LightNode*> &light_nodes) const;
+	virtual void after_render(const std::vector<IDrawable*> &drawables, const std::vector<IDrawable*>& transparents, const std::vector<LightNode*> &light_nodes) const;
+	void render(const std::vector<IDrawable*> &drawables, const std::vector<IDrawable*>& transparents, const std::vector<ParticleEmitterNode*> &emitters, const std::vector<LightNode*> &light_nodes) const;
 
 	virtual ShaderResource* get_shader() const = 0;
 	virtual bool renders_particles() const { return false; }

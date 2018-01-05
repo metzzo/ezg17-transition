@@ -13,7 +13,7 @@ RenderingNode::~RenderingNode()
 {
 }
 
-void RenderingNode::before_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const
+void RenderingNode::before_render(const std::vector<IDrawable*> &drawables, const std::vector<IDrawable*>& transparents, const std::vector<LightNode*> &light_nodes) const
 {
 	glViewport(0, 0, this->viewport_.x, this->viewport_.y);
 }
@@ -23,22 +23,27 @@ void RenderingNode::set_viewport(const glm::ivec2 viewport)
 	this->viewport_ = viewport;
 }
 
-void RenderingNode::after_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const
+void RenderingNode::after_render(const std::vector<IDrawable*> &drawables, const std::vector<IDrawable*>& transparents, const std::vector<LightNode*> &light_nodes) const
 {
 }
 
-void RenderingNode::render(const std::vector<IDrawable*>& drawables, const std::vector<ParticleEmitterNode*> &emitters, const std::vector<LightNode*>& light_nodes) const
+void RenderingNode::render(const std::vector<IDrawable*>& drawables, const std::vector<IDrawable*>& transparents, const std::vector<ParticleEmitterNode*> &emitters, const std::vector<LightNode*>& light_nodes) const
 {
 	if (!this->is_rendering_enabled())
 	{
 		return;
 	}
 
-	before_render(drawables, light_nodes);
+	before_render(drawables, transparents, light_nodes);
 	
 	for (auto &drawable : drawables)
 	{
 		drawable->draw(this->get_shader());
+	}
+
+	for (auto &transparent : transparents)
+	{
+		transparent->draw(this->get_shader());
 	}
 
 	if (this->renders_particles()) {
@@ -47,7 +52,7 @@ void RenderingNode::render(const std::vector<IDrawable*>& drawables, const std::
 		}
 	}
 
-	after_render(drawables, light_nodes);
+	after_render(drawables, transparents, light_nodes);
 }
 
 bool RenderingNode::is_rendering_enabled() const

@@ -222,6 +222,12 @@ void main() {
 	if (material.has_alpha_tex) {
 		alpha = alpha * texture(material.alpha_tex, fs_in.tex_coords).r;
 	}
+	if (alpha < 0.01) {
+		alpha = 0;
+		gl_FragDepth = 1;
+	} else {
+		gl_FragDepth = gl_FragCoord.z;
+	}
 	FragColor = vec4(color, alpha);
 }
 

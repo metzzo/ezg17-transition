@@ -118,6 +118,7 @@ void RenderingEngine::run()
 	this->root_node_->init(this);
 
 	this->drawables_ = this->root_node_->get_drawables();
+	this->transparent_drawables_ = this->root_node_->get_transparent_drawables();
 	this->light_nodes_ = this->root_node_->get_light_nodes();
 	this->animator_nodes_ = this->root_node_->get_animator_nodes();
 	this->particle_emitter_nodes_ = this->root_node_->get_particle_emitter_nodes();
@@ -154,7 +155,7 @@ void RenderingEngine::run()
 			particle_node->update_particles(delta);
 		}
 
-		main_camera->render(this->drawables_, this->particle_emitter_nodes_, this->light_nodes_);
+		main_camera->render(this->drawables_, this->transparent_drawables_, this->particle_emitter_nodes_, this->light_nodes_);
 
 		glfwSwapBuffers(window_);
 		glfwPollEvents();

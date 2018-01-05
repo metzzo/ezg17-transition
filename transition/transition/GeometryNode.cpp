@@ -11,7 +11,22 @@ GeometryNode::~GeometryNode()
 
 std::vector<IDrawable*> GeometryNode::get_drawables()
 {
-	return { this };
+	if (resource_->get_material().has_alpha_texture()) {
+		return{};
+	}
+	else {
+		return{ this };
+	}
+}
+
+std::vector<IDrawable*> GeometryNode::get_transparent_drawables()
+{
+	if (resource_->get_material().has_alpha_texture()) {
+		return{ this };
+	}
+	else {
+		return{ };
+	}
 }
 
 void GeometryNode::draw(ShaderResource *shader) const

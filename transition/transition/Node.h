@@ -24,6 +24,7 @@ public:
 	virtual void init(RenderingEngine *rendering_engine);
 
 	virtual std::vector<IDrawable*> get_drawables();
+	virtual std::vector<IDrawable*> get_transparent_drawables();
 	virtual std::vector<LightNode*> get_light_nodes();
 	virtual std::vector<AnimatorNode*> get_animator_nodes();
 	virtual std::vector<ParticleEmitterNode*> get_particle_emitter_nodes();

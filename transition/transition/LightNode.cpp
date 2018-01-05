@@ -66,9 +66,9 @@ void LightNode::init(RenderingEngine* rendering_engine)
 	}
 }
 
-void LightNode::before_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const
+void LightNode::before_render(const std::vector<IDrawable*> &drawables, const std::vector<IDrawable*>& transparents, const std::vector<LightNode*> &light_nodes) const
 {
-	RenderingNode::before_render(drawables, light_nodes);
+	RenderingNode::before_render(drawables, transparents, light_nodes);
 
 	if (this->shadow_strategy_)
 	{
@@ -76,13 +76,13 @@ void LightNode::before_render(const std::vector<IDrawable*> &drawables, const st
 	}
 }
 
-void LightNode::after_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const
+void LightNode::after_render(const std::vector<IDrawable*> &drawables, const std::vector<IDrawable*>& transparents, const std::vector<LightNode*> &light_nodes) const
 {
 	if (this->shadow_strategy_)
 	{
 		this->shadow_strategy_->after_render(this);
 	}
-	RenderingNode::after_render(drawables, light_nodes);
+	RenderingNode::after_render(drawables, transparents, light_nodes);
 }
 
 bool LightNode::is_rendering_enabled() const

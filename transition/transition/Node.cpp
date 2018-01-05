@@ -22,6 +22,11 @@ std::vector<IDrawable*> Node::get_drawables()
 	return std::vector<IDrawable*>();
 }
 
+std::vector<IDrawable*> Node::get_transparent_drawables()
+{
+	return{};
+}
+
 std::vector<LightNode*> Node::get_light_nodes()
 {
 	return std::vector<LightNode*>();

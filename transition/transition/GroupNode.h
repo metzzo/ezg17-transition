@@ -14,6 +14,7 @@ public:
 	void init(RenderingEngine* rendering_engine) override;
 
 	std::vector<IDrawable*> get_drawables() override;
+	std::vector<IDrawable*> get_transparent_drawables() override;
 	std::vector<LightNode*> get_light_nodes() override;
 	std::vector<AnimatorNode*> get_animator_nodes() override;
 	std::vector<ParticleEmitterNode*> get_particle_emitter_nodes() override;

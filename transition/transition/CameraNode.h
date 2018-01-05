@@ -29,8 +29,8 @@ public:
 	
 	virtual void init(RenderingEngine *rendering_engine) override;
 
-	void before_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const override;
-	void after_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const override;
+	void before_render(const std::vector<IDrawable*> &drawables, const std::vector<IDrawable*>& transparents, const std::vector<LightNode*> &light_nodes) const override;
+	void after_render(const std::vector<IDrawable*> &drawables, const std::vector<IDrawable*>& transparents, const std::vector<LightNode*> &light_nodes) const override;
 
 	MainShader* get_shader() const override;
 

@@ -27,9 +27,10 @@ Node* ColladaImporter::load_node(const std::string& path) {
 
 	std::vector<Node*> lights;
 	std::vector<TextureResource*> textures;
+	std::vector<TextureResource*> alpha_textures;
 	process_lights(scene, lights);
 	GroupNode* node = new GroupNode(std::string(scene->mRootNode->mName.C_Str()));
-	process_node(scene->mRootNode, scene, lights, textures, node);
+	process_node(scene->mRootNode, scene, lights, textures, alpha_textures, node);
 	return node;
 }
 
@@ -40,15 +41,22 @@ void ColladaImporter::process_lights(const aiScene* scene, std::vector<Node*>& l
 		IShadowStrategy *strategy = nullptr;
 		if (light->mType == aiLightSource_POINT) {
 			light_type = POINT_LIGHT;
-			strategy = new OmniDirectionalShadowStrategy(1024);
-		} else if (light->mType == aiLightSource_DIRECTIONAL)
+			if (light->mName.data[light->mName.length - 1] != '*') {
+				strategy = new OmniDirectionalShadowStrategy(1024);
+			}
+		}
+		else if (light->mType == aiLightSource_DIRECTIONAL)
 		{
 			light_type = DIRECTIONAL_LIGHT;
-		} else if (light->mType == aiLightSource_SPOT)
+		}
+		else if (light->mType == aiLightSource_SPOT)
 		{
 			light_type = SPOT_LIGHT;
-			strategy = new DirectionalShadowStrategy(1024);
-		} else
+			if (light->mName.data[light->mName.length - 1] != '*') {
+				strategy = new DirectionalShadowStrategy(1024);
+			}
+		}
+		else
 		{
 			// unsupported light type
 			continue;
@@ -72,12 +80,12 @@ void ColladaImporter::process_lights(const aiScene* scene, std::vector<Node*>& l
 	}
 }
 
-void ColladaImporter::process_node(aiNode* node, const aiScene* scene, std::vector<Node*>& lights, std::vector<TextureResource*>& textures, GroupNode* parent) {
+void ColladaImporter::process_node(aiNode* node, const aiScene* scene, std::vector<Node*>& lights, std::vector<TextureResource*>& textures, std::vector<TextureResource*>& alpha_textures, GroupNode* parent) {
 
 	//Alle aktuellen Meshes durchgehen und Objekte erzeugen
 	for (int i = 0; i < node->mNumMeshes; i++) {
 		aiMesh* aiMesh = scene->mMeshes[node->mMeshes[i]];
-		MeshResource* mesh = process_mesh(aiMesh, scene, textures);
+		MeshResource* mesh = process_mesh(aiMesh, scene, textures, alpha_textures);
 		GeometryNode* geoNode = new GeometryNode(parent->get_name() + "_" + std::to_string(i), mesh);
 		parent->add_node(geoNode);
 	}
@@ -97,7 +105,7 @@ void ColladaImporter::process_node(aiNode* node, const aiScene* scene, std::vect
 		}
 		if (!light) {
 			GroupNode* sub = new GroupNode(std::string(node->mChildren[i]->mName.C_Str()));
-			process_node(node->mChildren[i], scene, lights, textures, sub);
+			process_node(node->mChildren[i], scene, lights, textures, alpha_textures, sub);
 			parent->add_node(sub);
 		}
 	}
@@ -108,7 +116,7 @@ void ColladaImporter::process_node(aiNode* node, const aiScene* scene, std::vect
 	parent->apply_transformation(transformation, glm::inverse(transformation));
 }
 
-MeshResource* ColladaImporter::process_mesh(aiMesh* mesh, const aiScene* scene, std::vector<TextureResource*>& textures) {
+MeshResource* ColladaImporter::process_mesh(aiMesh* mesh, const aiScene* scene, std::vector<TextureResource*>& textures, std::vector<TextureResource*>& alpha_textures) {
 	float *vertices_positions = new float[mesh->mNumVertices*3];
 	float *vertices_normals = new float[mesh->mNumVertices * 3];
 	float *vertices_uvs = new float[mesh->mNumVertices * 2];
@@ -148,6 +156,10 @@ MeshResource* ColladaImporter::process_mesh(aiMesh* mesh, const aiScene* scene, 
 		std::vector<TextureResource*> diffuseMaps = load_material_textures(aimaterial, aiTextureType_DIFFUSE, textures);
 		if (diffuseMaps.size() != 0) {
 			material.set_texture(diffuseMaps.at(0));
+		}
+		std::vector<TextureResource*> opacityMaps = load_material_textures(aimaterial, aiTextureType_OPACITY, alpha_textures);
+		if (opacityMaps.size() != 0) {
+			material.set_alpha_texture(opacityMaps.at(0));
 		}
 		//Properties...
 		for (unsigned int i = 0; i < aimaterial->mNumProperties; i++) {
@@ -240,7 +252,13 @@ std::vector<TextureResource*> ColladaImporter::load_material_textures(aiMaterial
 			}
 		}
 		if (!alreadyLoaded) {
-			TextureResource* texture = new TextureResource(path);
+			TextureResource* texture;
+			if (type == aiTextureType_OPACITY) {
+				texture = new AlphaTextureResource(path);
+			}
+			else {
+				texture = new TextureResource(path);
+			}
 			this->engine_->register_resource(texture);
 			loaded_textures.push_back(texture);
 			textures.push_back(texture);

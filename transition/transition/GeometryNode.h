@@ -16,6 +16,7 @@ public:
 	~GeometryNode();
 
 	std::vector<IDrawable*> get_drawables() override;
+	std::vector<IDrawable*> get_transparent_drawables() override;
 
 	void draw(ShaderResource *shader) const override;
 	void init(RenderingEngine* rendering_engine) override;

@@ -20,6 +20,7 @@ class RenderingEngine
 	GroupNode *root_node_;
 
 	std::vector<IDrawable*> drawables_;
+	std::vector<IDrawable*> transparent_drawables_;
 	std::vector<IResource*>  resources_;
 	std::vector<LightNode*> light_nodes_;
 	std::vector<AnimatorNode*> animator_nodes_;

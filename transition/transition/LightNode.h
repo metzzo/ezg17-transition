@@ -53,8 +53,8 @@ public:
 
 	void init(RenderingEngine* rendering_engine) override;
 
-	void before_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodess) const override;
-	void after_render(const std::vector<IDrawable*> &drawables, const std::vector<LightNode*> &light_nodes) const override;
+	void before_render(const std::vector<IDrawable*> &drawables, const std::vector<IDrawable*>& transparents, const std::vector<LightNode*> &light_nodess) const override;
+	void after_render(const std::vector<IDrawable*> &drawables, const std::vector<IDrawable*>& transparents, const std::vector<LightNode*> &light_nodes) const override;
 	bool is_rendering_enabled() const override;
 
 	void set_transformation(const glm::mat4& trafo, const glm::mat4& itrafo) override;

@@ -36,6 +36,19 @@ std::vector<IDrawable*> GroupNode::get_drawables()
 	return vec;
 }
 
+std::vector<IDrawable*> GroupNode::get_transparent_drawables()
+{
+	auto vec = std::vector<IDrawable*>();
+
+	for (auto& node : get_nodes())
+	{
+		auto drawables = node->get_transparent_drawables();
+		vec.insert(vec.end(), drawables.begin(), drawables.end());
+	}
+
+	return vec;
+}
+
 std::vector<LightNode*> GroupNode::get_light_nodes()
 {
 	auto vec = std::vector<LightNode*>();
