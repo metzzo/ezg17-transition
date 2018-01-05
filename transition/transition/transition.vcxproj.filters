@@ -214,6 +214,9 @@
     <ClInclude Include="BrokenLampController.h">
       <Filter>Headerdateien\Controller</Filter>
     </ClInclude>
+    <ClInclude Include="FrustumG.h">
+      <Filter>Headerdateien\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">
@@ -341,6 +344,9 @@
     </ClCompile>
     <ClCompile Include="BrokenLampController.cpp">
       <Filter>Quelldateien\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="FrustumG.cpp">
+      <Filter>Quelldateien\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

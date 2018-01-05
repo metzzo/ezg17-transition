@@ -1,4 +1,5 @@
 #include "GeometryNode.h"
+#include <iostream>
 
 GeometryNode::GeometryNode(const std::string& name, MeshResource *resource) : TransformationNode(name)
 {
@@ -41,6 +42,9 @@ void GeometryNode::draw(ShaderResource *shader) const
 void GeometryNode::init(RenderingEngine* rendering_engine)
 {
 	Node::init(rendering_engine);
+
+	//calculate bounding sphere radius
+	bounding_sphere_radius_ = resource_->calculate_sphere_radius(this->get_transformation());
 }
 
 const MeshResource* GeometryNode::get_mesh_resource() const {
@@ -50,4 +54,9 @@ const MeshResource* GeometryNode::get_mesh_resource() const {
 MeshResource * GeometryNode::get_editable_mesh_resource()
 {
 	return resource_;
+}
+
+float GeometryNode::get_bounding_sphere_radius() const
+{
+	return bounding_sphere_radius_;
 }

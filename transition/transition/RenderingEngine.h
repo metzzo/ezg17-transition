@@ -13,6 +13,7 @@ class ParticleEmitterNode;
 struct GLFWwindow;
 class DirectionalDepthShader;
 class OmniDirectionalDepthShader;
+class FrustumG;
 
 class RenderingEngine
 {
@@ -33,6 +34,9 @@ class RenderingEngine
 	MainShader *main_shader_;
 	DirectionalDepthShader *directional_depth_shader_;
 	OmniDirectionalDepthShader *omni_directional_depth_shader_;
+
+	FrustumG *frustum_;
+
 public:
 	explicit RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int refresh_rate);
 	~RenderingEngine();

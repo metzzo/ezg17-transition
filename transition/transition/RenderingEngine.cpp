@@ -12,6 +12,7 @@
 #include "ParticleEmitterNode.h"
 #include "OmniDirectionalDepthShader.h"
 #include "ComputeShader.h"
+#include "FrustumG.h"
 
 RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int refresh_rate)
 {

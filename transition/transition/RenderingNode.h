@@ -3,6 +3,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include "ShaderResource.h"
+#include "FrustumG.h"
 
 class AnimatorNode;
 class IDrawable;
@@ -10,13 +11,18 @@ class IDrawable;
 class RenderingNode :
 	public TransformationNode
 {
+private:
+	FrustumG *frustum_;
+	bool culling_ = false;
+
 protected:
 	glm::ivec2 viewport_;
 	glm::mat4 projection_;
 	glm::mat4 projection_inv_;
 
 public:
-	RenderingNode(const std::string& name, const glm::ivec2 viewport, const glm::mat4 projection);
+	RenderingNode(const std::string& name, const glm::ivec2 viewport, const float fieldOfView, const float ratio, const float nearp, const float farp, const bool culling);
+	RenderingNode(const std::string& name, const glm::ivec2 viewport, const glm::mat4& proj);
 	~RenderingNode();
 
 	virtual void before_render(const std::vector<IDrawable*> &drawables, const std::vector<IDrawable*>& transparents, const std::vector<LightNode*> &light_nodes) const;
@@ -35,5 +41,14 @@ public:
 	void set_projection_matrix(const glm::mat4& mat);
 
 	void set_viewport(const glm::ivec2 viewport);
+
+	void initialize_culling(const float fieldOfView, const float ratio, const float nearp, const float farp) {
+		if (frustum_ != nullptr) {
+			delete frustum_;
+		}
+		frustum_ = new FrustumG();
+		frustum_->setCamInternals(glm::radians(fieldOfView), ratio, nearp, farp);
+		culling_ = true;
+	}
 };
 

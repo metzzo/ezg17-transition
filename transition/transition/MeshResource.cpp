@@ -146,3 +146,15 @@ void MeshResource::init()
 
 	glBindVertexArray(0);
 }
+
+float MeshResource::calculate_sphere_radius(const glm::mat4& trafo) const
+{
+	float maxlen = 0;
+	glm::vec3 origin = trafo * glm::vec4(0, 0, 0, 1);
+	for (int i = 0; i < num_vertices_; i++) {
+		glm::vec3 transformed = trafo * glm::vec4(vertices_[i * 3], vertices_[i * 3 + 1], vertices_[i * 3 + 2], 1);
+		float len = glm::distance(origin, transformed);
+		if (len > maxlen) maxlen = len;
+	}
+	return maxlen;
+}

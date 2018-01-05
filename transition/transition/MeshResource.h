@@ -30,6 +30,9 @@ public:
 	int get_resource_id() const override;
 	void init() override;
 
+	//calculates the radius of a sphere with center at the origin which contains all vertices
+	float calculate_sphere_radius(const glm::mat4& trafo) const;
+
 	int get_num_indices() const
 	{
 		return num_indices_;

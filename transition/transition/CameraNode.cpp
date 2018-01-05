@@ -6,7 +6,7 @@
 #include "VolumetricLightingEffect.h"
 #include "BloomEffect.h"
 
-CameraNode::CameraNode(const std::string& name, const glm::ivec2& viewport, const glm::mat4& projection) : RenderingNode(name, viewport, projection)
+CameraNode::CameraNode(const std::string& name, const glm::ivec2& viewport, const float fieldOfView, const float ratio, const float nearp, const float farp, const bool culling) : RenderingNode(name, viewport, fieldOfView, ratio, nearp, farp, culling)
 {
 	screen_mesh_ = nullptr;
 	volumetric_lighting_result_render_target_ = nullptr;

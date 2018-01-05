@@ -23,7 +23,7 @@ private:
 	BloomEffect *bloom_effect_;
 
 public:
-	CameraNode(const std::string& name, const glm::ivec2& viewport, const glm::mat4& projection);
+	CameraNode(const std::string& name, const glm::ivec2& viewport, const float fieldOfView, const float ratio, const float nearp, const float farp, const bool culling);
 	~CameraNode();
 
 	

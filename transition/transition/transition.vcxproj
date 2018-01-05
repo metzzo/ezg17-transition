@@ -170,6 +170,7 @@
     <ClInclude Include="DirectionalShadowStrategy.h" />
     <ClInclude Include="DummyEffect.h" />
     <ClInclude Include="DummyShader.h" />
+    <ClInclude Include="FrustumG.h" />
     <ClInclude Include="GeometryNode.h" />
     <ClInclude Include="GLDebugContext.h" />
     <ClInclude Include="glheaders.h" />
@@ -220,6 +221,7 @@
     <ClCompile Include="DirectionalShadowStrategy.cpp" />
     <ClCompile Include="DummyEffect.cpp" />
     <ClCompile Include="DummyShader.cpp" />
+    <ClCompile Include="FrustumG.cpp" />
     <ClCompile Include="GeometryNode.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="GroupNode.cpp" />

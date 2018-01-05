@@ -26,6 +26,7 @@ void DirectionalShadowStrategy::init(LightNode* light_node)
 	if (light_node->get_light_type() == SPOT_LIGHT)
 	{
 		light_node->set_projection_matrix(glm::perspective(glm::radians(2 * light_node->get_outer_cutoff()), 1.0f, this->near_plane_, this->far_plane_));
+		light_node->initialize_culling(2 * light_node->get_outer_cutoff(), 1.0f, this->near_plane_, this->far_plane_);
 	}
 	else if (light_node->get_light_type() == DIRECTIONAL_LIGHT)
 	{

@@ -11,6 +11,8 @@ class GeometryNode :
 	public IDrawable
 {
 	MeshResource* resource_;
+	float bounding_sphere_radius_ = 0;
+
 public:
 	explicit GeometryNode(const std::string& name, MeshResource *resource);
 	~GeometryNode();
@@ -23,5 +25,11 @@ public:
 
 	const MeshResource* get_mesh_resource() const;
 	MeshResource* get_editable_mesh_resource();
+
+	float get_bounding_sphere_radius() const override;
+
+	glm::vec3 get_position() const override {
+		return TransformationNode::get_position();
+	}
 };
 

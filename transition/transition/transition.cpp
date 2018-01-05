@@ -34,7 +34,7 @@ int main()
 
 	const auto cam = new CameraNode("MainCamera",
 		engine->get_viewport(),
-		glm::perspective(glm::radians(60.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 200.0f)
+		60.0f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 200.0f, true
 	);
 	cam->set_view_matrix(glm::lookAt(glm::vec3(-2, 5, -7), glm::vec3(0, 0, -16), glm::vec3(0, 1, 0)));
 	root->add_node(cam);
