@@ -13,7 +13,7 @@ CameraNode::CameraNode(const std::string& name, const glm::ivec2& viewport, cons
 	main_render_target_ = nullptr;
 
 	volumetric_lighting_effect_ = new VolumetricLightingEffect();
-	bloom_effect_ = new BloomEffect(2);
+	bloom_effect_ = new BloomEffect(1);
 }
 
 CameraNode::~CameraNode()

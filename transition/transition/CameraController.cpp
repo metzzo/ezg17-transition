@@ -44,7 +44,7 @@ void CameraController::update(double delta)
 		target_->apply_transformation(Transformation::translate(glm::vec3(0, -currentspeed*(float)delta, 0)));
 	}
 	if (glfwGetKey(window, GLFW_KEY_P)) {
-		glClearColor(0.85, 0.85, 0.1, 1);
+		glClearColor(0.8, 0.8, 0.5, 1);
 	}
 	else if (glfwGetKey(window, GLFW_KEY_O)) {
 		glClearColor(0, 0, 0, 1);
