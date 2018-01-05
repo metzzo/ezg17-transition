@@ -16,11 +16,16 @@ BrokenLampController::~BrokenLampController()
 
 void BrokenLampController::update(double delta)
 {
-	auto time = glfwGetTime()/25.0;
-	double val = glm::perlin(glm::vec2(time, sin(time)*100));
-	val = val*val;
+	const auto time = glfwGetTime();
+	
+	double val = glm::perlin(glm::vec2(time, 0.0));
+	val *= val;
+
+	const auto diff_color = mix(on_diffuse_color_, on_diffuse_color_*0.5f, val);
+	const auto spec_color = mix(on_specular_color_, on_specular_color_*0.5f, val);
+
 	this->lamp_->set_color(
-		mix(on_diffuse_color_, on_diffuse_color_*0.3f, val), 
-		mix(on_specular_color_, on_specular_color_*0.3f, val)
+		diff_color, 
+		spec_color
 	);
 }
