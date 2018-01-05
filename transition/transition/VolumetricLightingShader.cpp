@@ -42,6 +42,7 @@ VolumetricLightingShader::VolumetricLightingShader() : ShaderResource("assets/sh
 		this->phi_uniform_[i] = -1;
 		this->tau_uniform_[i] = -1;
 		this->bias_uniform_[i] = -1;
+		this->has_fog_uniform_[i] = -1;
 	}
 
 	for (auto i = 0; i < max_nr_directional_shadow_maps; i++)
@@ -93,6 +94,7 @@ void VolumetricLightingShader::init()
 		this->phi_uniform_[i] = get_uniform("lights", "phi", i);
 		this->tau_uniform_[i] = get_uniform("lights", "tau", i);
 		this->bias_uniform_[i] = get_uniform("lights", "bias", i);
+		this->has_fog_uniform_[i] = get_uniform("lights", "has_fog", i);
 	}
 
 	for (auto i = 0; i < max_nr_directional_shadow_maps; i++)
@@ -151,6 +153,7 @@ void VolumetricLightingShader::set_light_uniforms(const std::vector<LightNode*>&
 		assert(this->phi_uniform_[this->light_index_] >= 0);
 		assert(this->tau_uniform_[this->light_index_] >= 0);
 		assert(this->bias_uniform_[this->light_index_] >= 0);
+		assert(this->has_fog_uniform_[this->light_index_] >= 0);
 
 		light->set_uniforms(this);
 
@@ -166,6 +169,7 @@ void VolumetricLightingShader::set_light_uniforms(const std::vector<LightNode*>&
 		glUniform1f(this->phi_uniform_[this->light_index_], light->get_phi());
 		glUniform1f(this->tau_uniform_[this->light_index_], light->get_tau());
 		glUniform1f(this->bias_uniform_[this->light_index_], light->get_min_bias());
+		glUniform1i(this->has_fog_uniform_[this->light_index_], light->has_fog());
 
 		this->light_index_++;
 	}

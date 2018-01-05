@@ -19,6 +19,7 @@
 #include "FootstepNode.h"
 #include "FootstepAnimator.h"
 #include "BloomEffect.h"
+#include "BrokenLampController.h"
 
 
 int main()
@@ -64,6 +65,9 @@ int main()
 
 	auto lamp = static_cast<LightNode*>(root->find_by_name("Lamp"));
 	lamp->set_volumetric(true, 1000.0, 0.01);
+
+	auto broken_lamp = new BrokenLampController("broken_lamp", lamp);
+	root->add_node(broken_lamp);
 
 	root->add_node(new LookAtController("lookat", cam, car_light));
 	
