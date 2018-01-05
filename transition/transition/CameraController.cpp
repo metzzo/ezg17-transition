@@ -18,17 +18,27 @@ void CameraController::update(double delta)
 	viewdirection = glm::normalize(viewdirection);
 	sidedirection = glm::normalize(sidedirection);
 	GLFWwindow* window = get_rendering_engine()->get_window();
+	float currentspeed = speed_;
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT)) {
+		currentspeed /= 4;
+	}
 	if (glfwGetKey(window, GLFW_KEY_W)) {
-		target_->apply_transformation(Transformation::translate(viewdirection*speed_*(float)delta));
+		target_->apply_transformation(Transformation::translate(viewdirection*currentspeed*(float)delta));
 	}
 	else if (glfwGetKey(window, GLFW_KEY_S)) {
-		target_->apply_transformation(Transformation::translate(viewdirection*-speed_*(float)delta));
+		target_->apply_transformation(Transformation::translate(viewdirection*-currentspeed*(float)delta));
 	}
 	if (glfwGetKey(window, GLFW_KEY_A)) {
-		target_->apply_transformation(Transformation::translate(sidedirection*-speed_*(float)delta));
+		target_->apply_transformation(Transformation::translate(sidedirection*-currentspeed*(float)delta));
 	}
 	else if (glfwGetKey(window, GLFW_KEY_D)) {
-		target_->apply_transformation(Transformation::translate(sidedirection*speed_*(float)delta));
+		target_->apply_transformation(Transformation::translate(sidedirection*currentspeed*(float)delta));
+	}
+	else if (glfwGetKey(window, GLFW_KEY_E)) {
+		target_->apply_transformation(Transformation::translate(glm::vec3(0, currentspeed*(float)delta, 0)));
+	}
+	else if (glfwGetKey(window, GLFW_KEY_Q)) {
+		target_->apply_transformation(Transformation::translate(glm::vec3(0, -currentspeed*(float)delta, 0)));
 	}
 	double x = 0, y = 0;
 	glfwGetCursorPos(window, &x, &y);
