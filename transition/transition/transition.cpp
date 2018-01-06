@@ -88,7 +88,7 @@ int main()
 	auto tree_light = new LightNode("tree_light", DIRECTIONAL_LIGHT);
 	//tree_light->set_attenuation(1.0, 0.0, 0.0);
 	tree_light->set_color(glm::vec3(0.9, 0.9, 0.8), glm::vec3(0.8, 0.8, 0.8));
-	tree_light->set_cutoff(12.5f, 50.0f);
+	//tree_light->set_cutoff(12.5f, 50.0f);
 	tree_light->set_shadow_strategy(new DirectionalShadowStrategy(1024), 0, 0);
 	//tree_light->set_volumetric(true, 1000000.0, 0.05, false);
 	tree_light->set_volumetric(true, 900000.0, 0.04, false);

@@ -42,13 +42,6 @@ public:
 
 	void set_viewport(const glm::ivec2 viewport);
 
-	void initialize_culling(const float fieldOfView, const float ratio, const float nearp, const float farp) {
-		if (frustum_ != nullptr) {
-			delete frustum_;
-		}
-		frustum_ = new FrustumG();
-		frustum_->setCamInternals(glm::radians(fieldOfView), ratio, nearp, farp);
-		culling_ = true;
-	}
+	void initialize_culling(const float fieldOfView, const float ratio, const float nearp, const float farp);
 };
 
