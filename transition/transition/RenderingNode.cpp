@@ -7,7 +7,7 @@ RenderingNode::RenderingNode(const std::string& name, const glm::ivec2 viewport,
 {
 	this->viewport_ = viewport;
 	this->set_projection_matrix(glm::perspective(glm::radians(fieldOfView), ratio, nearp, farp));
-	culling_ = culling;
+	this->culling_ = culling;
 	if (culling_) {
 		frustum_ = new FrustumG();
 		frustum_->setCamInternals(glm::radians(fieldOfView), ratio, nearp, farp);
@@ -18,7 +18,8 @@ RenderingNode::RenderingNode(const std::string & name, const glm::ivec2 viewport
 {
 	this->viewport_ = viewport;
 	this->set_projection_matrix(proj);
-	frustum_ = nullptr;
+	this->frustum_ = nullptr;
+	this->culling_ = false;
 }
 
 RenderingNode::~RenderingNode()

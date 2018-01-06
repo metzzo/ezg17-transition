@@ -102,7 +102,7 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 		glUniform1i(this->material_material_type_, material.get_material_type());
 	}
 	else {
-		glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE0 + diffuse_texture_slot);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		glUniform1i(this->material_has_diffuse_tex_uniform_, 0);
@@ -115,10 +115,10 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 		glUniform1i(this->material_alpha_tex_uniform_, alpha_texture_slot);
 	}
 	else {
-		glActiveTexture(GL_TEXTURE1);
+		glActiveTexture(GL_TEXTURE0 + alpha_texture_slot);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		glUniform1i(this->material_has_alpha_tex_uniform, 0);
+		glUniform1i(this->material_has_alpha_tex_uniform, 0);		glUniform1i(this->material_alpha_tex_uniform_, alpha_texture_slot);
 	}
 	glUniform3fv(this->material_ambient_color_, 1, &material.get_ambient_color()[0]);
 	glUniform3fv(this->material_diffuse_color_, 1, &material.get_diffuse_color()[0]);
@@ -193,6 +193,7 @@ void MainShader::set_directional_shadow_map_uniforms(const LightNode *light, con
 	const auto tex_id = get_texture_slot();
 	glActiveTexture(GL_TEXTURE0 + tex_id);
 	glBindTexture(GL_TEXTURE_2D, shadow_map);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 	glUniform1i(this->directional_shadow_maps_uniform_[this->directional_shadow_map_index_], tex_id); // binds shadow map sampler
 	glUniformMatrix4fv(this->light_space_matrices_uniform_[this->directional_shadow_map_index_], 1, GL_FALSE, &light_space_matrix[0][0]); // trafo to transform into light space
@@ -207,6 +208,7 @@ void MainShader::set_omni_directional_shadow_map_uniforms(const LightNode* light
 
 	const auto tex_id = get_texture_slot();
 	glActiveTexture(GL_TEXTURE0 + tex_id);
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, shadow_map);
 	glUniform1f(this->far_plane_uniform_[this->light_index_], far_plane);
 	glUniform1f(this->near_plane_uniform_[this->light_index_], near_plane);

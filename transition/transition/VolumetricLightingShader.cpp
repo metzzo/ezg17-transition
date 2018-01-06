@@ -139,6 +139,7 @@ void VolumetricLightingShader::set_light_uniforms(const std::vector<LightNode*>&
 		// only volumetric lights should be passed to the shader and whose lights have a shadow map
 		if (!light->is_volumetric() || !light->is_rendering_enabled())
 		{
+			
 			continue;
 		}
 
@@ -184,6 +185,7 @@ void VolumetricLightingShader::set_directional_shadow_map_uniforms(const LightNo
 	const auto tex_id = get_texture_slot();
 	glActiveTexture(GL_TEXTURE0 + tex_id);
 	glBindTexture(GL_TEXTURE_2D, shadow_map);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 	glUniform1i(this->directional_shadow_maps_uniform_[this->directional_shadow_map_index_], tex_id); // binds shadow map sampler
 	glUniform1i(this->shadow_map_index_uniform_[this->light_index_], this->directional_shadow_map_index_); // tells the exact index of the shadow map
@@ -204,6 +206,7 @@ void VolumetricLightingShader::set_omni_directional_shadow_map_uniforms(const Li
 
 	const auto tex_id = get_texture_slot();
 	glActiveTexture(GL_TEXTURE0 + tex_id);
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, shadow_map);
 	glUniform1f(this->far_plane_uniform_[this->light_index_], far_plane);
 	glUniform1f(this->near_plane_uniform_[this->light_index_], near_plane);

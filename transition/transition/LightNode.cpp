@@ -2,6 +2,7 @@
 #include "ILightShader.h"
 #include "RenderingEngine.h"
 #include "DirectionalDepthShader.h"
+#include "DirectionalShadowStrategy.h"
 
 LightNode::LightNode(const std::string& name, const LightType light_type) : RenderingNode(
 	name, 
@@ -20,6 +21,7 @@ LightNode::LightNode(const std::string& name, const LightType light_type) : Rend
 	this->tau_ = 0.0;
 	this->min_bias_ = 0.0;
 	this->max_bias_ = 0.0;
+	this->has_fog_ = false;
 }
 
 LightNode::~LightNode()

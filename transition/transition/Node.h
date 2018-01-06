@@ -73,7 +73,7 @@ public:
 		enabled_ = enabled;
 	}
 
-	bool is_enabled() const {
+	virtual bool is_enabled() const {
 		return enabled_;
 	}
 };
