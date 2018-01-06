@@ -30,7 +30,7 @@ void DirectionalShadowStrategy::init(LightNode* light_node)
 	}
 	else if (light_node->get_light_type() == DIRECTIONAL_LIGHT)
 	{
-		light_node->set_projection_matrix(glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, this->near_plane_, this->far_plane_));
+		light_node->set_projection_matrix(glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, this->near_plane_, this->far_plane_));
 	}
 
 	glGenFramebuffers(1, &this->depth_map_fbo_);

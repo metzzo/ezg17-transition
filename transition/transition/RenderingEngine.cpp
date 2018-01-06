@@ -180,7 +180,7 @@ void RenderingEngine::run()
 		} else if (glfwGetKey(window_, GLFW_KEY_M) == GLFW_PRESS) {
 			main_camera->set_bloom_params(3, 0.8, 1);
 		} else if (glfwGetKey(window_, GLFW_KEY_P)) {
-			glClearColor(0.8, 0.8, 0.5, 1);
+			glClearColor(9/255.0, 94/255.0, 232/255.0, 1);
 		} else if (glfwGetKey(window_, GLFW_KEY_O)) {
 			glClearColor(0, 0, 0, 1);
 		}

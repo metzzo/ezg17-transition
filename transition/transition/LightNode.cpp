@@ -129,11 +129,13 @@ void LightNode::set_uniforms(ILightShader* shader)
  * \param is_volumetric is this light node actually volumetric
  * \param phi power of light source
  * \param tau probability of collision
+ * \param num_samples how many samples are done per ray
  */
-void LightNode::set_volumetric(const bool is_volumetric, float phi, float tau, bool has_fog)
+void LightNode::set_volumetric(const bool is_volumetric, float phi, float tau, bool has_fog, int num_samples)
 {
 	this->volumetric_ = is_volumetric;
 	this->phi_ = phi;
 	this->tau_ = tau;
 	this->has_fog_ = has_fog;
+	this->num_samples_ = num_samples;
 }

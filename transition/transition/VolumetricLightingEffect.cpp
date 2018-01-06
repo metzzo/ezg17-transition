@@ -66,6 +66,7 @@ void VolumetricLightingEffect::perform_effect(const TextureFBO* from, GLuint fbo
 	TextureRenderable *scene_tex = from->get_texture(0);
 	TextureRenderable *depth_tex = from->get_texture(from->get_depth_index());
 	const glm::ivec2 size = this->ping_half_res_fbo_->get_size();
+	auto frustum = camera_->get_frustum();
 
 	glDisable(GL_BLEND);
 
@@ -108,6 +109,7 @@ void VolumetricLightingEffect::perform_effect(const TextureFBO* from, GLuint fbo
 	// blur volumetric lighting using depth aware gauss horizontally
 	blur_shader_->set_vertical_pass(false);
 	blur_shader_->set_volumetric_texture(ping_half_res_fbo_);
+	blur_shader_->set_near_far_plane(frustum->nearD, frustum->farD);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, this->pong_half_res_fbo_->get_fbo_id());
 	glViewport(0, 0, size.x, size.y);
@@ -121,6 +123,7 @@ void VolumetricLightingEffect::perform_effect(const TextureFBO* from, GLuint fbo
 	upsample_shader_->set_volumetric_texture(pong_half_res_fbo_);
 	upsample_shader_->set_scene_texture(scene_tex);
 	upsample_shader_->set_bloom_treshold(bloom_treshold_);
+	upsample_shader_->set_near_far_plane(frustum->nearD, frustum->farD);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo_to);
 	glViewport(0, 0, viewport_.x, viewport_.y);

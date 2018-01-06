@@ -9,6 +9,8 @@ class VolumetricLightingUpSampleShader :
 	GLint volumetric_tex_uniform_;
 	GLint scene_tex_uniform_;
 	GLint bloom_treshold_uniform_;
+	GLint near_plane_uniform_;
+	GLint far_plane_uniform_;
 public:
 	VolumetricLightingUpSampleShader();
 	~VolumetricLightingUpSampleShader();
@@ -21,5 +23,6 @@ public:
 	void set_volumetric_texture(TextureRenderable *tex) const;
 	void set_scene_texture(TextureRenderable *tex) const;
 	void set_bloom_treshold(float treshold) const;
+	void set_near_far_plane(const float near_plane, const float far_plane) const;
 };
 

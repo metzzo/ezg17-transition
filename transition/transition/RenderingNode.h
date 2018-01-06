@@ -36,6 +36,7 @@ public:
 	const glm::mat4& get_projection_matrix() const;
 	const glm::mat4& get_projection_inverse_matrix() const;
 	const glm::mat4& get_view_matrix() const;
+	const FrustumG * get_frustum() const;
 
 	void set_view_matrix(const glm::mat4& mat);
 	void set_projection_matrix(const glm::mat4& mat);

@@ -11,6 +11,8 @@ in vec2 TexCoords;
 
 uniform sampler2D volumetric_tex;
 uniform bool is_vert;
+uniform float near_plane;
+uniform float far_plane;
 
 vec4 bilateral_blur(vec2 direction, vec2 texel_size, int kernel_radius);
 
@@ -28,9 +30,6 @@ void main() {
 }
 
 float linear_eye_depth(float depth_value) {
-	float near_plane = 0.1; // TODO as uniform
-	float far_plane = 100.0; // TODO as uniform
-
 	float z = depth_value * 2.0 - 1.0; // Back to NDC 
     return (2.0 * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane));	
 }

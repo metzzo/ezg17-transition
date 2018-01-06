@@ -16,6 +16,8 @@ float linear_eye_depth(float depth_value);
 uniform sampler2D scene_tex;
 uniform sampler2D volumetric_tex;
 uniform float bloom_treshold;
+uniform float near_plane;
+uniform float far_plane;
 
 void main() {
 	vec4 scene_color = texture(scene_tex, TexCoordsCenter);
@@ -71,9 +73,6 @@ void main() {
 }
 
 float linear_eye_depth(float depth_value) {
-	float near_plane = 0.1; // TODO as uniform
-	float far_plane = 100.0; // TODO as uniform
-
 	float z = depth_value * 2.0 - 1.0; // Back to NDC 
     return (2.0 * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane));	
 }

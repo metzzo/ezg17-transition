@@ -40,6 +40,7 @@ struct Light {
 	float phi;
 	float tau;
 	bool has_fog;
+	int num_samples;
 };
 uniform Light lights[MAX_NR_LIGHTS];
 uniform sampler2D directional_shadow_maps[MAX_NR_DIRECTIONAL_SHADOWS];
@@ -141,7 +142,6 @@ float dither_pattern[16] = float[16] (
 );
 
 #define PI_RCP (0.31830988618379067153776752674503)
-#define NUM_STEPS (16)
 
 float volumetric_lighting_directional(vec3 frag_pos, Light light) {
 	float dither_value = dither_pattern[ (int(gl_FragCoord.x) % 4)* 4 + (int(gl_FragCoord.y) % 4) ];
@@ -155,16 +155,15 @@ float volumetric_lighting_directional(vec3 frag_pos, Light light) {
 	vec4 delta_lightview = normalize(end_pos_lightview - start_pos_lightview);
 	
 	float raymarch_distance_lightview = length(end_pos_lightview - start_pos_lightview);
-	float step_size_lightview = raymarch_distance_lightview / NUM_STEPS;
+	float step_size_lightview = raymarch_distance_lightview / light.num_samples;
 	
 	float raymarch_distance_worldspace = length(end_pos_worldspace - start_pos_worldspace);
-	float step_size_worldspace = raymarch_distance_worldspace / NUM_STEPS;
+	float step_size_worldspace = raymarch_distance_worldspace / light.num_samples;
 	
 	vec4 ray_position_lightview = start_pos_lightview + dither_value*step_size_lightview * delta_lightview;
 	vec4 ray_position_worldspace = start_pos_worldspace + dither_value*step_size_worldspace * delta_worldspace;
 	
 	float light_contribution = 0.0;
-	float epsilon = (light.cutoff - light.outer_cutoff);
 	for (float l = raymarch_distance_worldspace; l > step_size_worldspace; l -= step_size_worldspace) {
 		vec4 ray_position_lightspace = light_projection_matrices[light.shadow_map_index] * vec4(ray_position_lightview.xyz, 1);
 		// perform perspective divide            
@@ -209,10 +208,10 @@ float volumetric_lighting_spotlight(vec3 frag_pos, Light light) {
 	vec4 delta_lightview = normalize(end_pos_lightview - start_pos_lightview);
 	
 	float raymarch_distance_lightview = length(end_pos_lightview - start_pos_lightview);
-	float step_size_lightview = raymarch_distance_lightview / NUM_STEPS;
+	float step_size_lightview = raymarch_distance_lightview / light.num_samples;
 	
 	float raymarch_distance_worldspace = length(end_pos_worldspace - start_pos_worldspace);
-	float step_size_worldspace = raymarch_distance_worldspace / NUM_STEPS;
+	float step_size_worldspace = raymarch_distance_worldspace / light.num_samples;
 	
 	vec4 ray_position_lightview = start_pos_lightview + dither_value*step_size_lightview * delta_lightview;
 	vec4 ray_position_worldspace = start_pos_worldspace + dither_value*step_size_worldspace * delta_worldspace;
@@ -268,7 +267,7 @@ float volumetric_lighting_pointlight(vec3 frag_pos, Light light) {
 	vec4 delta_worldspace = normalize(end_pos_worldspace - start_pos_worldspace);
 	
 	float raymarch_distance_worldspace = length(end_pos_worldspace - start_pos_worldspace);
-	float step_size_worldspace = raymarch_distance_worldspace / NUM_STEPS;
+	float step_size_worldspace = raymarch_distance_worldspace / light.num_samples;
 		
 	vec4 ray_position_worldspace = start_pos_worldspace + dither_value * step_size_worldspace * delta_worldspace;
 	

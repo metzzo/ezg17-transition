@@ -40,6 +40,7 @@ protected:
 	float phi_; // power of light source
 	float tau_; // probability of collision
 	bool has_fog_;
+	int num_samples_; // how many ray march steps
 public:
 	explicit LightNode(const std::string& name, LightType light_type);
 	~LightNode();
@@ -62,7 +63,7 @@ public:
 	void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) override;
 
 	void set_uniforms(ILightShader *shader);
-	void set_volumetric(const bool is_volumetric, float phi, float tau, bool has_fog = true);
+	void set_volumetric(const bool is_volumetric, float phi, float tau, bool has_fog = true, int num_samples = 16);
 
 	ShaderResource* get_shader() const override;
 
@@ -143,6 +144,11 @@ public:
 	bool has_fog() const
 	{
 		return this->has_fog_;
+	}
+
+	int get_num_samples() const
+	{
+		return this->num_samples_;
 	}
 };
 

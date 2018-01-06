@@ -44,6 +44,11 @@ void RenderingNode::set_viewport(const glm::ivec2 viewport)
 	this->viewport_ = viewport;
 }
 
+const FrustumG* RenderingNode::get_frustum() const
+{
+	return this->frustum_;
+}
+
 void RenderingNode::initialize_culling(const float fieldOfView, const float ratio, const float nearp, const float farp)
 {
 	if (frustum_ != nullptr)
