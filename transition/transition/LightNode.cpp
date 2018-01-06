@@ -87,7 +87,7 @@ void LightNode::after_render(const std::vector<IDrawable*> &drawables, const std
 
 bool LightNode::is_rendering_enabled() const
 {
-	return this->shadow_strategy_ != nullptr;
+	return this->is_enabled() && this->shadow_strategy_ != nullptr;
 }
 
 ShaderResource* LightNode::get_shader() const

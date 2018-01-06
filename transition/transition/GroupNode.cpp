@@ -118,3 +118,11 @@ Node* GroupNode::find_by_name(const std::string& name) {
 	}
 	return nullptr;
 }
+
+void GroupNode::set_enabled(bool enabled)
+{
+	Node::set_enabled(enabled);
+	for (auto& node : nodes_) {
+		node->set_enabled(enabled);
+	}
+}

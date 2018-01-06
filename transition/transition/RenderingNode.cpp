@@ -58,31 +58,37 @@ void RenderingNode::render(const std::vector<IDrawable*>& drawables, const std::
 	
 	for (auto &drawable : drawables)
 	{
-		bool drawing = true;
-		if (culling_) {
-			int res = frustum_->sphereInFrustum(drawable->get_position(), drawable->get_bounding_sphere_radius());
-			drawing = (res != FrustumG::OUTSIDE);
-		}
-		if (drawing) {
-			drawable->draw(this->get_shader());
+		if (drawable->is_enabled()) {
+			bool drawing = true;
+			if (culling_) {
+				int res = frustum_->sphereInFrustum(drawable->get_position(), drawable->get_bounding_sphere_radius());
+				drawing = (res != FrustumG::OUTSIDE);
+			}
+			if (drawing) {
+				drawable->draw(this->get_shader());
+			}
 		}
 	}
 
 	for (auto &transparent : transparents)
 	{
-		bool drawing = true;
-		if (culling_) {
-			int res = frustum_->sphereInFrustum(transparent->get_position(), transparent->get_bounding_sphere_radius());
-			drawing = (res != FrustumG::OUTSIDE);
-		}
-		if (drawing) {
-			transparent->draw(this->get_shader());
+		if (transparent->is_enabled()) {
+			bool drawing = true;
+			if (culling_) {
+				int res = frustum_->sphereInFrustum(transparent->get_position(), transparent->get_bounding_sphere_radius());
+				drawing = (res != FrustumG::OUTSIDE);
+			}
+			if (drawing) {
+				transparent->draw(this->get_shader());
+			}
 		}
 	}
 
 	if (this->renders_particles()) {
 		for (auto& emitter : emitters) {
-			emitter->draw_particles(this);
+			if (emitter->is_enabled()) {
+				emitter->draw_particles(this);
+			}
 		}
 	}
 

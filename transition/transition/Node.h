@@ -16,6 +16,7 @@ class Node
 	Node *parent_;
 	RenderingEngine *rendering_engine_;
 	std::string name_;
+	bool enabled_ = true;
 
 public:
 	explicit Node(const std::string& name);
@@ -66,6 +67,14 @@ public:
 		else {
 			return nullptr;
 		}
+	}
+
+	virtual void set_enabled(bool enabled) {
+		enabled_ = enabled;
+	}
+
+	bool is_enabled() const {
+		return enabled_;
 	}
 };
 

@@ -339,3 +339,4 @@ __pycache__/
 
 # OpenCover UI analysis results
 OpenCover/
+*.blend1

@@ -58,7 +58,7 @@ int main()
 	car_light->set_cutoff(12.5f, 50.0f);
 	car_light->set_shadow_strategy(new DirectionalShadowStrategy(1024), 0, 0);
 	car_light->set_volumetric(true, 10000.0, 0.05);
-	root->add_node(car_light);
+	((GroupNode*)root->find_by_name("darkroom"))->add_node(car_light);
 
 	auto car_anim = new CarController("car_anim", car_light);
 	root->add_node(car_anim);
@@ -93,7 +93,7 @@ int main()
 	//tree_light->set_volumetric(true, 1000000.0, 0.05, false);
 	tree_light->set_volumetric(true, 900000.0, 0.04, false);
 	tree_light->set_view_matrix(glm::lookAt(glm::vec3(140, 60, -19), glm::vec3(92, 0, -19), glm::vec3(0, 1, 0)));
-	root->add_node(tree_light);
+	((GroupNode*)root->find_by_name("treeroom"))->add_node(tree_light);
 
 	engine->run();
 

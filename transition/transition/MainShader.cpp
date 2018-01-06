@@ -136,46 +136,49 @@ void MainShader::set_light_uniforms(const std::vector<LightNode*>& light_nodes)
 
 	for (auto& light : light_nodes)
 	{
-		assert(this->light_type_uniform_[this->light_index_] >= 0);
-		assert(this->position_uniform_[this->light_index_] >= 0);
-		assert(this->direction_uniform_[this->light_index_] >= 0);
-		assert(this->constant_uniform_[this->light_index_] >= 0);
-		assert(this->linear_uniform_[this->light_index_] >= 0);
-		assert(this->quadratic_uniform_[this->light_index_] >= 0);
-		assert(this->diffuse_uniform_[this->light_index_] >= 0);
-		assert(this->specular_uniform_[this->light_index_] >= 0);
-		assert(this->shadow_casting_uniform_[this->light_index_] >= 0);
-		assert(this->shadow_map_index_uniform_[this->light_index_] >= 0);
-		assert(this->shadow_min_bias_[this->light_index_] >= 0);
-		assert(this->shadow_max_bias_[this->light_index_] >= 0);
+		if (light->is_enabled()) {
+			assert(this->light_type_uniform_[this->light_index_] >= 0);
+			assert(this->position_uniform_[this->light_index_] >= 0);
+			assert(this->direction_uniform_[this->light_index_] >= 0);
+			assert(this->constant_uniform_[this->light_index_] >= 0);
+			assert(this->linear_uniform_[this->light_index_] >= 0);
+			assert(this->quadratic_uniform_[this->light_index_] >= 0);
+			assert(this->diffuse_uniform_[this->light_index_] >= 0);
+			assert(this->specular_uniform_[this->light_index_] >= 0);
+			assert(this->shadow_casting_uniform_[this->light_index_] >= 0);
+			assert(this->shadow_map_index_uniform_[this->light_index_] >= 0);
+			assert(this->shadow_min_bias_[this->light_index_] >= 0);
+			assert(this->shadow_max_bias_[this->light_index_] >= 0);
 
-		if (light->is_rendering_enabled())
-		{
-			light->set_uniforms(this);
+			if (light->is_rendering_enabled())
+			{
+				light->set_uniforms(this);
 
-			glUniform1f(this->shadow_min_bias_[this->light_index_], light->get_min_bias());
-			glUniform1f(this->shadow_max_bias_[this->light_index_], light->get_max_bias());
-			glUniform1i(this->shadow_casting_uniform_[this->light_index_], 1); // boolean whether it is a shadow casting light
-		} else
-		{
-			glUniform1i(this->shadow_casting_uniform_[this->light_index_], 0);
+				glUniform1f(this->shadow_min_bias_[this->light_index_], light->get_min_bias());
+				glUniform1f(this->shadow_max_bias_[this->light_index_], light->get_max_bias());
+				glUniform1i(this->shadow_casting_uniform_[this->light_index_], 1); // boolean whether it is a shadow casting light
+			}
+			else
+			{
+				glUniform1i(this->shadow_casting_uniform_[this->light_index_], 0);
+			}
+
+			glUniform1i(this->light_type_uniform_[this->light_index_], light->get_light_type());
+			glUniform3fv(this->position_uniform_[this->light_index_], 1, &light->get_position()[0]);
+			glUniform3fv(this->direction_uniform_[this->light_index_], 1, &light->get_direction()[0]);
+			glUniform1f(this->constant_uniform_[this->light_index_], light->get_constant());
+			glUniform1f(this->linear_uniform_[this->light_index_], light->get_linear());
+			glUniform1f(this->quadratic_uniform_[this->light_index_], light->get_quadratic());
+			glUniform3fv(this->diffuse_uniform_[this->light_index_], 1, &light->get_diffuse()[0]);
+			glUniform3fv(this->specular_uniform_[this->light_index_], 1, &light->get_specular()[0]);
+
+			if (light->get_light_type() == SPOT_LIGHT) {
+				glUniform1f(this->cutoff_uniform_[this->light_index_], glm::cos(glm::radians(light->get_cutoff())));
+				glUniform1f(this->outer_cutoff_uniform_[this->light_index_], glm::cos(glm::radians(light->get_outer_cutoff())));
+			}
+
+			this->light_index_++;
 		}
-
-		glUniform1i(this->light_type_uniform_[this->light_index_], light->get_light_type());
-		glUniform3fv(this->position_uniform_[this->light_index_], 1, &light->get_position()[0]);
-		glUniform3fv(this->direction_uniform_[this->light_index_], 1, &light->get_direction()[0]);
-		glUniform1f(this->constant_uniform_[this->light_index_], light->get_constant());
-		glUniform1f(this->linear_uniform_[this->light_index_], light->get_linear());
-		glUniform1f(this->quadratic_uniform_[this->light_index_], light->get_quadratic());
-		glUniform3fv(this->diffuse_uniform_[this->light_index_], 1, &light->get_diffuse()[0]);
-		glUniform3fv(this->specular_uniform_[this->light_index_], 1, &light->get_specular()[0]);
-
-		if (light->get_light_type() == SPOT_LIGHT) {
-			glUniform1f(this->cutoff_uniform_[this->light_index_], glm::cos(glm::radians(light->get_cutoff())));
-			glUniform1f(this->outer_cutoff_uniform_[this->light_index_], glm::cos(glm::radians(light->get_outer_cutoff())));
-		}
-
-		this->light_index_++;
 	}
 	assert(this->num_lights_uniform_ >= 0);
 	glUniform1i(this->num_lights_uniform_, this->light_index_);

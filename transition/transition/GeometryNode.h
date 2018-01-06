@@ -31,5 +31,9 @@ public:
 	glm::vec3 get_position() const override {
 		return TransformationNode::get_position();
 	}
+
+	bool is_enabled() const override {
+		return Node::is_enabled();
+	}
 };
 

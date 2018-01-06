@@ -124,6 +124,15 @@ void RenderingEngine::run()
 	this->animator_nodes_ = this->root_node_->get_animator_nodes();
 	this->particle_emitter_nodes_ = this->root_node_->get_particle_emitter_nodes();
 
+	auto darkroom = this->root_node_->find_by_name("darkroom");
+	auto livingroom = this->root_node_->find_by_name("livingroom");
+	auto hallroom = this->root_node_->find_by_name("hallroom");
+	auto treeroom = this->root_node_->find_by_name("treeroom");
+	auto doors = this->root_node_->find_by_name("Doors");
+	livingroom->set_enabled(false);
+	hallroom->set_enabled(false);
+	//treeroom->set_enabled(false);	//somehow this breaks things
+
 	const auto main_camera = static_cast<CameraNode*>(this->root_node_->find_by_name("MainCamera"));
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -142,11 +151,27 @@ void RenderingEngine::run()
 		if (glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 			glfwSetWindowShouldClose(window_, true);
 		}
-		/*if (glfwGetKey(window_, GLFW_KEY_Q) == GLFW_PRESS) {
-			for (auto& particle_node : this->particle_emitter_nodes_) {
-				particle_node->start_emitting();
-			}
-		}*/
+		if (glfwGetKey(window_, GLFW_KEY_1) == GLFW_PRESS) {
+			darkroom->set_enabled(true);
+		} else if (glfwGetKey(window_, GLFW_KEY_2) == GLFW_PRESS) {
+			livingroom->set_enabled(true);
+		} else if (glfwGetKey(window_, GLFW_KEY_3) == GLFW_PRESS) {
+			hallroom->set_enabled(true);
+		} else if (glfwGetKey(window_, GLFW_KEY_4) == GLFW_PRESS) {
+			treeroom->set_enabled(true);
+		} else if (glfwGetKey(window_, GLFW_KEY_5) == GLFW_PRESS) {
+			doors->set_enabled(true);
+		} else if (glfwGetKey(window_, GLFW_KEY_6) == GLFW_PRESS) {
+			darkroom->set_enabled(false);
+		} else if (glfwGetKey(window_, GLFW_KEY_7) == GLFW_PRESS) {
+			livingroom->set_enabled(false);
+		} else if (glfwGetKey(window_, GLFW_KEY_8) == GLFW_PRESS) {
+			hallroom->set_enabled(false);
+		} else if (glfwGetKey(window_, GLFW_KEY_9) == GLFW_PRESS) {
+			treeroom->set_enabled(false);
+		} else if (glfwGetKey(window_, GLFW_KEY_0) == GLFW_PRESS) {
+			doors->set_enabled(false);
+		}
 
 		for (auto& animator_node : this->animator_nodes_)
 		{

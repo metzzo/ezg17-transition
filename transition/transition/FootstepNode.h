@@ -54,4 +54,8 @@ public:
 		ParticleEmitterNode::apply_transformation(transformation);//indirectly calls the other one
 	}
 
+	void set_enabled(bool enabled) override {
+		ParticleEmitterNode::set_enabled(enabled);
+		foot_node_->set_enabled(enabled);
+	}
 };

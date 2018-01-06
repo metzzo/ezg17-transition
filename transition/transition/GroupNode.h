@@ -25,5 +25,7 @@ public:
 	void apply_transformation(const glm::mat4& transformation, const glm::mat4& inverse_transformation) override;
 
 	Node* find_by_name(const std::string& name) override;
+
+	virtual void set_enabled(bool enabled) override;
 };
 
