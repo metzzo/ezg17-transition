@@ -171,6 +171,18 @@ void RenderingEngine::run()
 			treeroom->set_enabled(false);
 		} else if (glfwGetKey(window_, GLFW_KEY_0) == GLFW_PRESS) {
 			doors->set_enabled(false);
+		} else if (glfwGetKey(window_, GLFW_KEY_V) == GLFW_PRESS) {
+			main_camera->set_bloom_params(0, 1, 0);
+		} else if (glfwGetKey(window_, GLFW_KEY_B) == GLFW_PRESS) {
+			main_camera->set_bloom_params(1, 0.8, 1);
+		} else if (glfwGetKey(window_, GLFW_KEY_N) == GLFW_PRESS) {
+			main_camera->set_bloom_params(1, 1, 0.5);
+		} else if (glfwGetKey(window_, GLFW_KEY_M) == GLFW_PRESS) {
+			main_camera->set_bloom_params(3, 0.8, 1);
+		} else if (glfwGetKey(window_, GLFW_KEY_P)) {
+			glClearColor(0.8, 0.8, 0.5, 1);
+		} else if (glfwGetKey(window_, GLFW_KEY_O)) {
+			glClearColor(0, 0, 0, 1);
 		}
 
 		for (auto& animator_node : this->animator_nodes_)

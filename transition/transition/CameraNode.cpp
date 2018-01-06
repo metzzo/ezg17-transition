@@ -69,3 +69,10 @@ MainShader* CameraNode::get_shader() const
 {
 	return this->get_rendering_engine()->get_main_shader();
 }
+
+void CameraNode::set_bloom_params(int iterations, float treshold, float addintensity)
+{
+	bloom_effect_->set_iterations(iterations);
+	bloom_effect_->set_addintensity(addintensity);
+	volumetric_lighting_effect_->set_bloom_treshold(treshold);
+}

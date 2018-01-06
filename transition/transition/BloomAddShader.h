@@ -10,6 +10,7 @@ class BloomAddShader : public ShaderResource {
 private:
 	GLint texture1_uniform_;
 	GLint texture2_uniform_;
+	GLint addintensity_uniform_;
 
 public:
 	BloomAddShader();
@@ -20,5 +21,5 @@ public:
 	void set_camera_uniforms(const RenderingNode* node) override;
 	void set_model_uniforms(const GeometryNode* node) override;
 
-	void set_textures(TextureRenderable *tex1, TextureRenderable *tex2);
+	void set_textures(TextureRenderable *tex1, TextureRenderable *tex2, float addintensity);
 };

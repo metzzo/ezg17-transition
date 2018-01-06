@@ -6,6 +6,7 @@ VolumetricLightingUpSampleShader::VolumetricLightingUpSampleShader() : ShaderRes
 {
 	this->scene_tex_uniform_ = -1;
 	this->volumetric_tex_uniform_ = -1;
+	this->bloom_treshold_uniform_ = -1;
 }
 
 
@@ -20,6 +21,7 @@ void VolumetricLightingUpSampleShader::init()
 
 	this->scene_tex_uniform_ = get_uniform("scene_tex");
 	this->volumetric_tex_uniform_ = get_uniform("volumetric_tex");
+	this->bloom_treshold_uniform_ = get_uniform("bloom_treshold");
 }
 
 void VolumetricLightingUpSampleShader::set_camera_uniforms(const RenderingNode* node)
@@ -42,4 +44,10 @@ void VolumetricLightingUpSampleShader::set_scene_texture(TextureRenderable* tex)
 	assert(scene_tex_uniform_ >= 0);
 	tex->bind(1);
 	glUniform1i(scene_tex_uniform_, 1);
+}
+
+void VolumetricLightingUpSampleShader::set_bloom_treshold(float treshold) const
+{
+	assert(bloom_treshold_uniform_ >= 0);
+	glUniform1f(bloom_treshold_uniform_, treshold);
 }

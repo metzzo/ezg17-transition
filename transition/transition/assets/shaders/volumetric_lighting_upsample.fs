@@ -15,6 +15,7 @@ float linear_eye_depth(float depth_value);
 
 uniform sampler2D scene_tex;
 uniform sampler2D volumetric_tex;
+uniform float bloom_treshold;
 
 void main() {
 	vec4 scene_color = texture(scene_tex, TexCoordsCenter);
@@ -62,7 +63,7 @@ void main() {
 	FragColor = volumetric_color + scene_color;
 	
 	float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
-	if (brightness > 0.8) {
+	if (brightness > bloom_treshold) {
 		BrightColor = FragColor;
 	} else {
 		BrightColor = vec4(0.0, 0.0, 0.0, 1.0);

@@ -35,5 +35,7 @@ public:
 	MainShader* get_shader() const override;
 
 	bool renders_particles() const override { return true; }
+	
+	void set_bloom_params(int iterations, float treshold, float addintensity);
 };
 

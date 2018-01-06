@@ -22,6 +22,9 @@ class VolumetricLightingEffect : public PostProcessingEffect {
 
 	CameraNode *camera_;
 	DummyShader *dummy_shader_;
+
+	float bloom_treshold_ = 0.8;
+
 public:
 	VolumetricLightingEffect();
 	virtual ~VolumetricLightingEffect();
@@ -29,5 +32,7 @@ public:
 	virtual void init(RenderingEngine *engine, CameraNode *camera) override;
 
 	virtual void perform_effect(const TextureFBO *from, GLuint fbo_to, const std::vector<LightNode *> light_nodes) override;
+
+	void set_bloom_treshold(float treshold);
 
 };

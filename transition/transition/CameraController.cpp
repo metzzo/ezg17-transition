@@ -43,12 +43,6 @@ void CameraController::update(double delta)
 	else if (glfwGetKey(window, GLFW_KEY_Q)) {
 		target_->apply_transformation(Transformation::translate(glm::vec3(0, -currentspeed*(float)delta, 0)));
 	}
-	if (glfwGetKey(window, GLFW_KEY_P)) {
-		glClearColor(0.8, 0.8, 0.5, 1);
-	}
-	else if (glfwGetKey(window, GLFW_KEY_O)) {
-		glClearColor(0, 0, 0, 1);
-	}
 	double x = 0, y = 0;
 	glfwGetCursorPos(window, &x, &y);
 	double dX = cursorX_ - x;

@@ -120,6 +120,7 @@ void VolumetricLightingEffect::perform_effect(const TextureFBO* from, GLuint fbo
 	upsample_shader_->use();
 	upsample_shader_->set_volumetric_texture(pong_half_res_fbo_);
 	upsample_shader_->set_scene_texture(scene_tex);
+	upsample_shader_->set_bloom_treshold(bloom_treshold_);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo_to);
 	glViewport(0, 0, viewport_.x, viewport_.y);
@@ -129,5 +130,10 @@ void VolumetricLightingEffect::perform_effect(const TextureFBO* from, GLuint fbo
 	glBindVertexArray(0);
 
 	glEnable(GL_BLEND);
+}
+
+void VolumetricLightingEffect::set_bloom_treshold(float treshold)
+{
+	this->bloom_treshold_ = treshold;
 }
 

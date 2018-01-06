@@ -1,8 +1,8 @@
 #include "BloomEffect.h"
 
-BloomEffect::BloomEffect(unsigned int intensity)
+BloomEffect::BloomEffect(unsigned int iterations)
 {
-	this->intensity_ = intensity;
+	this->iterations_ = iterations;
 }
 
 void BloomEffect::init(RenderingEngine *engine, CameraNode *camera)
@@ -28,9 +28,8 @@ void BloomEffect::perform_effect(const TextureFBO * from, GLuint fbo_to, const s
 	TextureRenderable * brighttex = from->get_texture(1);
 	gauss_shader_->use();
 	gauss_shader_->set_gauss_uniforms(brighttex, true);
-
 	bool horizontal = true;
-	for (unsigned int i = 0; i < 2 * intensity_; i++) {
+	for (unsigned int i = 0; i < 2 * iterations_; i++) {
 		help_buffer_[horizontal]->bind_for_rendering();
 		if (i != 0) {
 			gauss_shader_->set_gauss_uniforms(help_buffer_[!horizontal], horizontal);
@@ -45,7 +44,7 @@ void BloomEffect::perform_effect(const TextureFBO * from, GLuint fbo_to, const s
 	}
 
 	add_shader_->use();
-	add_shader_->set_textures(from->get_texture(0), help_buffer_[!horizontal]);
+	add_shader_->set_textures(from->get_texture(0), help_buffer_[!horizontal], addintensity_);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo_to);
 	glViewport(0, 0, viewport_.x, viewport_.y);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -53,4 +52,14 @@ void BloomEffect::perform_effect(const TextureFBO * from, GLuint fbo_to, const s
 	glDrawElements(GL_TRIANGLES, screenMesh_->get_num_indices(), GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 
+}
+
+void BloomEffect::set_iterations(int iterations)
+{
+	this->iterations_ = iterations;
+}
+
+void BloomEffect::set_addintensity(float intensity)
+{
+	this->addintensity_ = intensity;
 }
