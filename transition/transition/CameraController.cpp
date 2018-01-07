@@ -10,14 +10,16 @@ CameraController::CameraController(const std::string name, TransformationNode *t
 
 void CameraController::update(double delta)
 {
-	//std::cout << "Position " << this->target_->get_position().x << " " << this->target_->get_position().y << " " << this->target_->get_position().z << std::endl;
+	GLFWwindow* window = get_rendering_engine()->get_window();
+	if (glfwGetKey(window, GLFW_KEY_L)) {
+		std::cout << "Position " << this->target_->get_position().x << " " << this->target_->get_position().y << " " << this->target_->get_position().z << std::endl;
+	}
 	glm::vec3 viewdirection = glm::transpose(target_->get_inverse_transformation()) * glm::vec4(0, 0, -1, 0);
 	glm::vec3 sidedirection = glm::cross(viewdirection, glm::vec3(0, 1, 0));
 	viewdirection.y = 0;
 	sidedirection.y = 0;
 	viewdirection = glm::normalize(viewdirection);
 	sidedirection = glm::normalize(sidedirection);
-	GLFWwindow* window = get_rendering_engine()->get_window();
 	float currentspeed = speed_;
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT)) {
 		currentspeed /= 4;

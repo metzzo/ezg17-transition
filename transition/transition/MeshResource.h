@@ -21,6 +21,7 @@ class MeshResource : public IResource
 	Material material_;
 
 public:
+	static MeshResource *create_cube(glm::vec3 color);
 	static MeshResource *create_sprite(TextureRenderable *resource);
 	static MeshResource *create_sprite(TextureRenderable *resource, TextureRenderable *alpha, bool switch_uv);
 

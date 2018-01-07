@@ -20,6 +20,7 @@
 #include "FootstepAnimator.h"
 #include "BloomEffect.h"
 #include "BrokenLampController.h"
+#include "CameraSplineController.h"
 
 
 int main()
@@ -77,15 +78,25 @@ int main()
 	root->add_node(footanim);
 
 	auto tree_light = new LightNode("tree_light", SPOT_LIGHT);
-	//auto tree_light = new LightNode("tree_light", DIRECTIONAL_LIGHT);
 	tree_light->set_attenuation(1.0, 0.0, 0.0);
 	tree_light->set_color(glm::vec3(0.9, 0.9, 0.8), glm::vec3(0.8, 0.8, 0.8));
 	tree_light->set_cutoff(12.5f, 50.0f);
 	tree_light->set_shadow_strategy(new DirectionalShadowStrategy(4096), 0, 0);
-	//tree_light->set_volumetric(true, 1000000.0, 0.05, false);
 	tree_light->set_volumetric(true, 100000000, 0.00001, false, 64);
 	tree_light->set_view_matrix(glm::lookAt(glm::vec3(120, 50, -19), glm::vec3(92, 21, -19), glm::vec3(0, 1, 0)));
 	((GroupNode*)root->find_by_name("treeroom"))->add_node(tree_light);
+
+	auto cam_spline_controller = new CameraSplineController("spline_cam_controller", cam, root);
+	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(0, 0, 0), glm::vec3()));
+	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(-2, 5, -7), glm::vec3()));
+	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(-2, 5, 7), glm::vec3()));
+	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(6, 9, -12), glm::vec3()));
+	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(8, 9, -25), glm::vec3()));
+	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(-8, 2, -22), glm::vec3()));
+	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(8, 9, -20), glm::vec3()));
+	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(8, 9, -24), glm::vec3()));
+	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(92, 21, -19), glm::vec3()));
+	root->add_node(cam_spline_controller);
 
 	engine->run();
 

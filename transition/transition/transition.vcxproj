@@ -160,6 +160,7 @@
     <ClInclude Include="BrokenLampController.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="CameraNode.h" />
+    <ClInclude Include="CameraSplineController.h" />
     <ClInclude Include="CarController.h" />
     <ClInclude Include="ColladaImporter.h" />
     <ClInclude Include="ComputeShader.h" />
@@ -209,6 +210,7 @@
     <ClCompile Include="BloomEffect.cpp" />
     <ClCompile Include="BloomGaussShader.cpp" />
     <ClCompile Include="BrokenLampController.cpp" />
+    <ClCompile Include="CameraSplineController.cpp" />
     <ClCompile Include="FootParticleShader.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="CameraNode.cpp" />

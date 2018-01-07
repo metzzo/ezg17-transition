@@ -19,7 +19,11 @@ private:
 	TextureRenderable* texture_			= nullptr;
 	TextureRenderable* alpha_texture_	= nullptr;
 public:
-	Material() {};
+	Material()
+	{
+		this->texture_ = nullptr;
+		this->alpha_texture_ = nullptr;
+	};
 
 	glm::vec3 get_ambient_color() const;
 	void set_ambient_color(const glm::vec3& color);

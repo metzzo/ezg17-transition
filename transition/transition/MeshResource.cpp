@@ -2,6 +2,168 @@
 #include <cstring>
 #include "glheaders.h"
 #include "TextureRenderable.h"
+#include <ostream>
+#include <iostream>
+
+MeshResource* MeshResource::create_cube(glm::vec3 color)
+{	
+	float vertices[] = {
+		-1.0f,-1.0f,-1.0f, // triangle 1 : begin
+		-1.0f,-1.0f, 1.0f,
+		-1.0f, 1.0f, 1.0f, // triangle 1 : end
+		1.0f, 1.0f,-1.0f, // triangle 2 : begin
+		-1.0f,-1.0f,-1.0f,
+		-1.0f, 1.0f,-1.0f, // triangle 2 : end
+		1.0f,-1.0f, 1.0f,
+		-1.0f,-1.0f,-1.0f,
+		1.0f,-1.0f,-1.0f,
+		1.0f, 1.0f,-1.0f,
+		1.0f,-1.0f,-1.0f,
+		-1.0f,-1.0f,-1.0f,
+		-1.0f,-1.0f,-1.0f,
+		-1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f,-1.0f,
+		1.0f,-1.0f, 1.0f,
+		-1.0f,-1.0f, 1.0f,
+		-1.0f,-1.0f,-1.0f,
+		-1.0f, 1.0f, 1.0f,
+		-1.0f,-1.0f, 1.0f,
+		1.0f,-1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f,-1.0f,-1.0f,
+		1.0f, 1.0f,-1.0f,
+		1.0f,-1.0f,-1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f,-1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f,-1.0f,
+		-1.0f, 1.0f,-1.0f,
+		1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f,-1.0f,
+		-1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f, 1.0f,
+		1.0f,-1.0f, 1.0f
+	};
+
+	float normals[] = { 
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+
+		0.0f,  0.0f,  1.0f,
+		0.0f,  0.0f,  1.0f,
+		0.0f,  0.0f,  1.0f,
+		0.0f,  0.0f,  1.0f,
+		0.0f,  0.0f,  1.0f,
+		0.0f,  0.0f,  1.0f,
+
+		-1.0f,  0.0f,  0.0f,
+		-1.0f,  0.0f,  0.0f,
+		-1.0f,  0.0f,  0.0f,
+		-1.0f,  0.0f,  0.0f,
+		-1.0f,  0.0f,  0.0f,
+		-1.0f,  0.0f,  0.0f,
+
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f
+	};
+
+	float uvs[] = {
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+	
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0,
+		0.0, 0.0
+	};
+
+	float *cube_uvs = new float[6 * 6 * 2];
+	memcpy(cube_uvs, &uvs, 6 * 6 * 2 * sizeof(float));
+
+	float *cube_vertices = new float[6 * 6 * 3];
+	memcpy(cube_vertices, &vertices, 6 * 6 * 3 * sizeof(float));
+
+	float *cube_normals = new float[6 * 6 * 3];
+	memcpy(cube_normals, &normals, 6 * 6 * 3 * sizeof(float));
+
+	unsigned int *cube_indices = new unsigned int[6 * 6 * 3];
+	for (int i = 0; i < 6 * 6 * 3; i++)
+	{
+		cube_indices[i] = i;
+	}
+
+	Material mat;
+	mat.set_ambient_color(color);
+	mat.set_diffuse_color(glm::vec3(0, 0, 0));
+	mat.set_specular_color(glm::vec3(0, 0, 0));
+
+	return new MeshResource(
+		cube_vertices,
+		cube_normals,
+		cube_uvs,
+		6 * 6,
+		cube_indices,
+		6 * 6 * 3,
+		mat
+	);
+}
 
 MeshResource *MeshResource::create_sprite(TextureRenderable* resource)
 {
@@ -136,13 +298,13 @@ void MeshResource::init()
 
 	//Bind Normals to Shader-Location 2
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo_normals_);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*this->num_vertices_*3, this->normals_, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*this->num_vertices_ * 3, this->normals_, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 
-
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo_);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*this->num_indices_, this->indices_, GL_STATIC_DRAW);
+
 
 	glBindVertexArray(0);
 }

@@ -217,6 +217,9 @@
     <ClInclude Include="FrustumG.h">
       <Filter>Headerdateien\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="CameraSplineController.h">
+      <Filter>Headerdateien\Controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">
@@ -347,6 +350,9 @@
     </ClCompile>
     <ClCompile Include="FrustumG.cpp">
       <Filter>Quelldateien\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraSplineController.cpp">
+      <Filter>Quelldateien\Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
