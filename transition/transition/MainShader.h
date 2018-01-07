@@ -20,7 +20,8 @@ class MainShader :
 	GLint material_diffuse_tex_uniform_;
 	GLint material_has_diffuse_tex_uniform_;
 	GLint material_alpha_tex_uniform_;
-	GLint material_has_alpha_tex_uniform;
+	GLint material_has_alpha_tex_uniform_;
+	GLint material_alpha_cutoff_;
 
 	GLint num_lights_uniform_;
 	GLint light_type_uniform_[max_nr_lights];

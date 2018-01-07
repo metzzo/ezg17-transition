@@ -91,3 +91,13 @@ MaterialType Material::get_material_type() const
 	}
 }
 
+float Material::get_alpha_cutoff() const
+{
+	return alpha_cutoff_;
+}
+
+void Material::set_alpha_cutoff(float cutoff)
+{
+	alpha_cutoff_ = cutoff;
+}
+

@@ -86,6 +86,7 @@ void FootstepNode::init(RenderingEngine * engine)
 	engine->register_resource(alpha);
 	MeshResource *step_mesh = MeshResource::create_sprite(texture, alpha, left_);
 	step_mesh->get_editable_material().set_opacity(0);
+	step_mesh->get_editable_material().set_alpha_cutoff(0.0);
 	step_mesh->init();
 	engine->register_resource(step_mesh);
 	this->foot_node_ = new GeometryNode(this->get_name().append("-foot1"), step_mesh);

@@ -25,7 +25,8 @@ MainShader::MainShader(const char* vertex_path, const char* fragment_path, const
 	this->material_diffuse_tex_uniform_ = -1;
 	this->material_has_diffuse_tex_uniform_ = -1;
 	this->material_alpha_tex_uniform_ = -1;
-	this->material_has_alpha_tex_uniform = -1;
+	this->material_has_alpha_tex_uniform_ = -1;
+	this->material_alpha_cutoff_ = -1;
 	this->material_shininess_ = -1;
 	this->material_ambient_color_ = -1;
 	this->material_diffuse_color_ = -1;
@@ -111,15 +112,17 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 	if (material.has_alpha_texture()) {
 		auto alpha = material.get_alpha_texture();
 		alpha->bind(alpha_texture_slot);
-		glUniform1i(this->material_has_alpha_tex_uniform, 1);
+		glUniform1i(this->material_has_alpha_tex_uniform_, 1);
 		glUniform1i(this->material_alpha_tex_uniform_, alpha_texture_slot);
 	}
 	else {
 		glActiveTexture(GL_TEXTURE0 + alpha_texture_slot);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		glUniform1i(this->material_has_alpha_tex_uniform, 0);		glUniform1i(this->material_alpha_tex_uniform_, alpha_texture_slot);
+		glUniform1i(this->material_has_alpha_tex_uniform_, 0);		
+		glUniform1i(this->material_alpha_tex_uniform_, alpha_texture_slot);
 	}
+	glUniform1f(this->material_alpha_cutoff_, material.get_alpha_cutoff());
 	glUniform3fv(this->material_ambient_color_, 1, &material.get_ambient_color()[0]);
 	glUniform3fv(this->material_diffuse_color_, 1, &material.get_diffuse_color()[0]);
 	glUniform3fv(this->material_specular_color_, 1, &material.get_specular_color()[0]);
@@ -235,7 +238,8 @@ void MainShader::init()
 	this->material_diffuse_tex_uniform_ = get_uniform("material.diffuse_tex");
 	this->material_has_diffuse_tex_uniform_ = get_uniform("material.has_diffuse_tex");
 	this->material_alpha_tex_uniform_ = get_uniform("material.alpha_tex");
-	this->material_has_alpha_tex_uniform = get_uniform("material.has_alpha_tex");
+	this->material_has_alpha_tex_uniform_ = get_uniform("material.has_alpha_tex");
+	this->material_alpha_cutoff_ = get_uniform("material.alpha_cutoff");
 	this->material_shininess_ = get_uniform("material.shininess");
 	this->material_ambient_color_ = get_uniform("material.ambient_color");
 	this->material_diffuse_color_ = get_uniform("material.diffuse_color");
