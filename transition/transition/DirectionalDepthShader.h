@@ -8,6 +8,8 @@ class DirectionalDepthShader :
 	public ShaderResource
 {
 	GLint mvp_uniform_;
+	GLint has_alpha_tex_uniform_;
+	GLint alpha_tex_uniform_;
 	glm::mat4 view_projection_;
 public:
 	DirectionalDepthShader();
