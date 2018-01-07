@@ -72,6 +72,7 @@ int main()
 	root->add_node(right);
 	right->apply_transformation(Transformation::translate(glm::vec3(0, 0, 7)));
 	auto left = new FootstepNode("emitter", main_shader, true);
+	left->set_color(glm::vec3(0, 1, 0));
 	root->add_node(left);
 	left->apply_transformation(Transformation::translate(glm::vec3(-2, 0, 8)));
 	FootstepAnimator* footanim = new FootstepAnimator("footanim", left, right, false, glm::vec3(0, 0, -2));

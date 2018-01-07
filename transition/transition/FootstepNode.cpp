@@ -78,15 +78,16 @@ void FootstepNode::init(RenderingEngine * engine)
 	}
 	glBindVertexArray(0);
 
-	TextureResource *texture = new TextureResource("assets/gfx/footstep2.png");
+	/*TextureResource *texture = new TextureResource("assets/gfx/footstep2.png");
 	texture->init();
-	engine->register_resource(texture);
+	engine->register_resource(texture);*/
 	TextureResource *alpha = new AlphaTextureResource("assets/gfx/footstep1alpha3.png");
 	alpha->init();
 	engine->register_resource(alpha);
-	MeshResource *step_mesh = MeshResource::create_sprite(texture, alpha, left_);
+	MeshResource *step_mesh = MeshResource::create_sprite(nullptr, alpha, left_);
 	step_mesh->get_editable_material().set_opacity(0);
 	step_mesh->get_editable_material().set_alpha_cutoff(0.0);
+	step_mesh->get_editable_material().set_ambient_color(color_);
 	step_mesh->init();
 	engine->register_resource(step_mesh);
 	this->foot_node_ = new GeometryNode(this->get_name().append("-foot1"), step_mesh);
@@ -138,6 +139,8 @@ void FootstepNode::stop_emitting()
 
 void FootstepNode::update_particles(float deltaT)
 {
+	this->foot_node_->get_editable_mesh_resource()->get_editable_material().set_ambient_color(color_);
+
 	float alpha = (4 - since_emitting)/4;
 	if (alpha > 0) {
 		//alpha = alpha*alpha;
@@ -197,4 +200,9 @@ void FootstepNode::draw_particles(const RenderingNode *cam) const
 	glBindVertexArray(this->vao_ssbo_pos_id_[this->pingpongindex_]);
 	glDrawArrays(GL_POINTS, 0, particle_count_);
 	glBindVertexArray(0);
+}
+
+void FootstepNode::set_color(const glm::vec3& color)
+{
+	color_ = color;
 }

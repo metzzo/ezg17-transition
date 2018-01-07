@@ -26,6 +26,7 @@ private:
 	bool is_emitting_ = false;
 	float since_emitting = 10;
 	bool left_ = false;
+	glm::vec3 color_ = glm::vec3(1, 0, 0);
 
 	std::default_random_engine rand_engine_ = std::default_random_engine(10);
 	std::normal_distribution<float> color_distribution_[2] = { std::normal_distribution<float>(0.7, 0.3), std::normal_distribution<float>(0.3, 0.2) };
@@ -58,4 +59,6 @@ public:
 		ParticleEmitterNode::set_enabled(enabled);
 		foot_node_->set_enabled(enabled);
 	}
+
+	void set_color(const glm::vec3& color);
 };
