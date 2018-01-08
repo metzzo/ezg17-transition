@@ -13,6 +13,7 @@
 #include "OmniDirectionalDepthShader.h"
 #include "ComputeShader.h"
 #include "FrustumG.h"
+#include <irrKlang\irrKlang.h>
 
 RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int refresh_rate)
 {
@@ -135,6 +136,9 @@ void RenderingEngine::run()
 
 	const auto main_camera = static_cast<CameraNode*>(this->root_node_->find_by_name("MainCamera"));
 
+	irrklang::ISoundEngine* sound = irrklang::createIrrKlangDevice();
+	sound->play2D("assets/sfx/transition_short.mp3", false);
+
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	double last_time = glfwGetTime();
 	double last_fps_time = 0;
@@ -203,4 +207,5 @@ void RenderingEngine::run()
 	for (auto& resource : resources_) {
 		delete resource;
 	}
+	sound->drop();
 }
