@@ -47,7 +47,7 @@ int main()
 
 	auto car_light = new LightNode("car_light", SPOT_LIGHT);
 	car_light->set_attenuation(1.0, 0.027, 0.0028);
-	car_light->set_color(glm::vec3(0.8, 0.8, 0.8), glm::vec3(1.0, 0.0, 0.0));
+	car_light->set_color(glm::vec3(255/255.0, 255 / 255.0, 223 / 255.0), glm::vec3(1.0, 0.0, 0.0));
 	car_light->set_cutoff(12.5f, 50.0f);
 	car_light->set_shadow_strategy(new DirectionalShadowStrategy(1024), 0, 0);
 	car_light->set_volumetric(true, 20000.0, 0.05, true, 16);
