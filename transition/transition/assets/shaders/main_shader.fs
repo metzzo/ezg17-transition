@@ -93,6 +93,7 @@ struct Material {
 	sampler2D specular_tex;
 	bool has_alpha_tex;
 	sampler2D alpha_tex;
+	float alpha_cutoff;
 	float shininess;
 	float opacity;
 	
@@ -222,7 +223,7 @@ void main() {
 	if (material.has_alpha_tex) {
 		alpha = alpha * texture(material.alpha_tex, fs_in.tex_coords).r;
 	}
-	if (alpha < 0.01) {
+	if (alpha < material.alpha_cutoff) {
 		alpha = 0;
 		gl_FragDepth = 100;
 	} else {

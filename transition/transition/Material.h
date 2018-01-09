@@ -18,6 +18,7 @@ private:
 	float opacity_						= 1;
 	TextureRenderable* texture_			= nullptr;
 	TextureRenderable* alpha_texture_	= nullptr;
+	float alpha_cutoff_					= 0.8;
 public:
 	Material()
 	{
@@ -49,4 +50,7 @@ public:
 	void set_alpha_texture(TextureRenderable* texture);
 
 	MaterialType get_material_type() const;
+
+	float get_alpha_cutoff() const;
+	void set_alpha_cutoff(float cutoff);
 };
