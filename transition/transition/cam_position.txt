@@ -1,0 +1,7 @@
+cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-6.45114, 6.19808, 0.177606), glm::vec3(-3.76675, 10.1675, -8.96505), 5)); // front of window => looking at lamp
+cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-6.20997, 9.45193, -11.4241), glm::vec3(-1.63775, 2.39651, -0.59542), 10)); // at light => looking towards feet
+cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-1.4495, 3.92423, 11.7188), glm::vec3(-0.89963, 0.536566, 6.61612), 5)); // behind feet => looking towards door
+cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.87209, 4.50955, -10.1275), glm::vec3(2.84903, 4.50955, -13.133), 10)); // going towards door
+cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(0.672872, 4.50955, -22.6491), glm::vec3(0.234719, 4.50955, -26.9259), 0)); // second room
+cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(41.7444, 3.50056, -21.9777), glm::vec3(50.7807, 3.50056, -20.9662), 0)); // third room
+cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(10.2732, 9.23145, 0.109445), glm::vec3(0, 0, 0), 0));

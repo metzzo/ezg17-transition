@@ -4,12 +4,12 @@
 #include <iostream>
 
 static const glm::vec2 car_positions[] = {
-	glm::vec2(-25, 0),
 	glm::vec2(-20, 0),
+	glm::vec2(-18, 0),
 	glm::vec2(-14, 0),
 	glm::vec2(-14, 10),
 	glm::vec2(-14, -10),
-	glm::vec2(-25, 0),
+	glm::vec2(-20, 0),
 };
 #define CAR_POSITIONS (6)
 

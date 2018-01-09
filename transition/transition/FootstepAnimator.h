@@ -11,10 +11,11 @@ private:
 	float right_countdown_ = -1;
 	bool left_start_ = false;
 	glm::vec3 step_size_;
+	bool animating_;
 
 public:
 	FootstepAnimator(const std::string& name, FootstepNode* left_foot_, FootstepNode* right_foot_, bool left_start_, glm::vec3 stepsize);
 	
 	void update(double delta);
-
+	void is_animating(bool animating);
 };

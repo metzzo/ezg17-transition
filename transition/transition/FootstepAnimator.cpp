@@ -7,13 +7,19 @@ FootstepAnimator::FootstepAnimator(const std::string& name, FootstepNode* left_f
 	this->right_foot_ = right_foot;
 	this->left_start_ = left_start;
 	this->step_size_ = step_size;
+	this->animating_ = false;
 }
 
 void FootstepAnimator::update(double delta)
 {
+	if (!this->animating_)
+	{
+		return;
+	}
+
 	if (left_countdown_ == -1) {
 		if (left_start_) {
-			left_countdown_ = 4;
+			left_countdown_ = 3;
 			right_countdown_ = 2;
 			left_foot_->start_emitting();
 		}
@@ -27,14 +33,19 @@ void FootstepAnimator::update(double delta)
 		left_countdown_ -= delta;
 		right_countdown_ -= delta;
 		if (left_countdown_ <= 0) {
-			left_countdown_ = 4;
+			left_countdown_ = 3;
 			left_foot_->apply_transformation(Transformation::translate(step_size_));
 			left_foot_->start_emitting();
 		}
 		if (right_countdown_ <= 0) {
-			right_countdown_ = 4;
+			right_countdown_ = 3;
 			right_foot_->apply_transformation(Transformation::translate(step_size_));
 			right_foot_->start_emitting();
 		}
 	}
+}
+
+void FootstepAnimator::is_animating(bool animating)
+{
+	this->animating_ = animating;
 }

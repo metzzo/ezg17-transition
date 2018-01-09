@@ -20,7 +20,6 @@ CameraSplineController::CameraSplineController(std::string name, TransformationN
 
 #ifdef VISUALIZE_KEYPOINTS
 	this->keypoint_visualizer_ = MeshResource::create_cube(glm::vec3(0, 0, 1));
-	this->tween_visualizer_ = MeshResource::create_cube(glm::vec3(0, 1, 0));
 	this->cam_visualizer_ = MeshResource::create_cube(glm::vec3(1, 0, 0));
 	this->visualizer_container_ = visualizer_container;
 	this->test_cam_ = nullptr;
@@ -46,14 +45,17 @@ void CameraSplineController::update(double delta)
 {
 	// position
 	float tween = this->progress_ / this->duration_ * this->position_spline_->getMaxT();
+
+	if (int(this->progress_) % 2 == 0) {
+		std::cout << "Tween: " << tween << std::endl;
+	}
+
 	const Vector3 interpolated_pos = this->position_spline_->getPosition(tween);
 	const glm::vec3 new_pos = glm::vec3(interpolated_pos[0], interpolated_pos[1], interpolated_pos[2]);
 	
 	// rotation
 	KeyPoint *current_keypoint = this->keypoints_[int(tween + 1)];
-	int next_keypoint_index = (current_keypoint->at_time + current_keypoint->duration) / this->duration_ * this->position_spline_->getMaxT();
-	glm::vec3 target_look_at = this->keypoints_[int(next_keypoint_index) + 1]->look_at_pos;
-
+	glm::vec3 target_look_at = current_keypoint->look_at_pos;
 	glm::vec3 forward = glm::normalize(glm::transpose(get_target()->get_inverse_transformation()) * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
 	glm::mat4 current_rotation = glm::inverse(glm::lookAt(glm::vec3(0, 0, 0), forward, glm::vec3(0, 1, 0)));
 	glm::vec3 target_direction = target_look_at - new_pos;
@@ -63,7 +65,7 @@ void CameraSplineController::update(double delta)
 	{
 		glm::mat4 target_rotation = glm::inverse(glm::lookAt(glm::vec3(0, 0, 0), target_direction, glm::vec3(0, 1, 0)));
 
-		new_rotation = glm::interpolate(current_rotation, target_rotation, float(global_tween));
+		new_rotation = glm::interpolate(current_rotation, target_rotation, 0.5f*float(delta));
 
 	} else
 	{
@@ -101,8 +103,6 @@ void CameraSplineController::init(RenderingEngine* rendering_engine)
 #ifdef VISUALIZE_KEYPOINTS
 	this->keypoint_visualizer_->init();
 	rendering_engine->register_resource(this->keypoint_visualizer_);
-	this->tween_visualizer_->init();
-	rendering_engine->register_resource(this->tween_visualizer_);
 	this->cam_visualizer_->init();
 	rendering_engine->register_resource(this->cam_visualizer_);
 #endif
@@ -132,8 +132,8 @@ void CameraSplineController::build_spline()
 	std::vector<KeyPoint*> new_keypoints;
 	new_keypoints.push_back(first);
 	std::vector<Vector3> position_spline_points;
-	position_spline_points.push_back(Vector3({ this->keypoints_[0]->pos.x, this->keypoints_[0]->pos.y, this->keypoints_[0]->pos.z }));
-	for (int i = 0; i < timeless_position_spline.getMaxT(); i++)
+	position_spline_points.push_back(Vector3({ first->pos.x, first->pos.y, first->pos.z }));
+	for (int i = 0; i <= timeless_position_spline.getMaxT(); i++)
 	{
 		position_spline_points.push_back(timeless_position_spline.getPosition(i));
 		auto keypoint = this->keypoints_[i + 1];
@@ -148,8 +148,6 @@ void CameraSplineController::build_spline()
 			new_keypoints.push_back(kp);
 		}
 	}
-	position_spline_points.push_back(Vector3({ nexttolast->pos.x, nexttolast->pos.y, nexttolast->pos.z }));
-	new_keypoints.push_back(nexttolast);
 	position_spline_points.push_back(Vector3({ last->pos.x, last->pos.y, last->pos.z }));
 	new_keypoints.push_back(last);
 	this->keypoints_ = new_keypoints;
@@ -164,8 +162,8 @@ void CameraSplineController::build_spline()
 		this->visualizer_container_->add_node(node);
 	}
 
-	//this->test_cam_ = new GeometryNode("keypoint", this->keypoint_visualizer_);
-	//this->visualizer_container_->add_node(this->test_cam_);
+	this->test_cam_ = new GeometryNode("keypoint", this->keypoint_visualizer_);
+	this->visualizer_container_->add_node(this->test_cam_);
 
 #endif
 	std::cout << "Finished building Spline..." << std::endl;

@@ -193,6 +193,7 @@
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="RenderingNode.h" />
     <ClInclude Include="ShaderResource.h" />
+    <ClInclude Include="ShowFeetKeyPointAction.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextureRenderable.h" />
     <ClInclude Include="TextureFBO.h" />

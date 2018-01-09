@@ -4,7 +4,7 @@
 #include <spline_library/splines/uniform_cr_spline.h>
 #include <spline_library/vector.h>
 
-#define VISUALIZE_KEYPOINTS
+//#define VISUALIZE_KEYPOINTS
 
 class MeshResource;
 class TransformationNode;
@@ -61,7 +61,6 @@ class CameraSplineController :
 
 #ifdef VISUALIZE_KEYPOINTS
 	MeshResource* keypoint_visualizer_;
-	MeshResource* tween_visualizer_;
 	MeshResource* cam_visualizer_;
 	GeometryNode* test_cam_;
 	GroupNode *visualizer_container_;
