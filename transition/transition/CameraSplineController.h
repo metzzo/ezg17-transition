@@ -14,15 +14,15 @@ struct KeyPoint
 {
 	glm::vec3 pos;
 	glm::vec3 look_at_pos;
-	float duration;
+	int duration;
 	float at_time;
-	float end_time;
 
-	KeyPoint(glm::vec3 pos, glm::vec3 look_at_pos, float duration_)
+	KeyPoint(glm::vec3 pos, glm::vec3 look_at_pos, int duration)
 	{
 		this->pos = pos;
 		this->look_at_pos = look_at_pos;
-		this->duration = duration_;
+		this->duration = duration;
+		this->at_time = -1;
 	}
 };
 

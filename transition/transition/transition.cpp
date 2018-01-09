@@ -87,7 +87,7 @@ int main()
 	((GroupNode*)root->find_by_name("treeroom"))->add_node(tree_light);
 
 	auto cam_spline_controller = new CameraSplineController("spline_cam_controller", cam, root);
-	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(0, 0, 0), glm::vec3(), 1));
+	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(0, 0, 0), glm::vec3(), 0));
 	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(-2, 5, -7), glm::vec3(), 5));
 	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(-2, 5, 7), glm::vec3(), 6));
 	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(6, 9, -12), glm::vec3(), 30));

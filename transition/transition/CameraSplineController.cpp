@@ -41,38 +41,9 @@ void CameraSplineController::add_keypoint(const KeyPoint& key_point)
 
 void CameraSplineController::update(double delta)
 {
-	const KeyPoint keypoints[4] = {
-		this->keypoints_[this->current_segment_ - 1],
-		this->keypoints_[this->current_segment_],
-		this->keypoints_[this->current_segment_ + 1],
-		this->keypoints_[this->current_segment_ + 2]
-	};
-
-
-	const auto start_time = keypoints[1].at_time - this->keypoints_[0].duration;
-	const auto tween = (this->progress_ - start_time) / keypoints[1].duration;
-
-	auto interpolated_time = glm::catmullRom(glm::vec1(keypoints[0].at_time), glm::vec1(keypoints[1].at_time), glm::vec1(keypoints[2].at_time), glm::vec1(keypoints[3].at_time), float(tween)).x;
-	
-	auto last = this->keypoints_.size() - 1;
-	auto tmp = glm::catmullRom(glm::vec1(keypoints[0].at_time), glm::vec1(keypoints[1].at_time), glm::vec1(keypoints[2].at_time), glm::vec1(keypoints[3].at_time), 1.0).x;
-	auto tmp_interpolated = tmp / this->duration_ * this->position_spline_->getMaxT();
-
-	auto i = 1;
-	while (i  < this->current_segment_)
-	{
-		tmp -= this->keypoints_[i].duration;
-		interpolated_time -= this->keypoints_[i].duration;
-	}
-
-	const auto position_at = float(this->current_segment_ + interpolated_time / keypoints[3].duration);
-	const auto interpolated_pos = this->position_spline_->getPosition(position_at);
+	const auto interpolated_pos = this->position_spline_->getPosition(this->progress_ / this->duration_ * this->position_spline_->getMaxT());
 	const glm::vec3 new_pos = glm::vec3(interpolated_pos[0], interpolated_pos[1], interpolated_pos[2]);
 	
-	std::cout << "Pr: " << this->progress_ << " Po: " << position_at << " Dur: " << keypoints[1].duration << " Tw: " << interpolated_time << std::endl;
-
-	this->current_segment_ = std::min(this->current_segment_ + floor(tween), this->keypoints_.size() - 4.0);
-
 #ifdef VISUALIZE_KEYPOINTS
 	this->test_cam_->set_transformation(glm::translate(new_pos));
 #endif
@@ -107,18 +78,48 @@ void CameraSplineController::init(RenderingEngine* rendering_engine)
 void CameraSplineController::build_spline()
 {
 	this->duration_ = 0;
-	std::vector<Vector3> position_spline_points;
+	std::vector<Vector3> timeless_position_spline_points;
 	for (auto &point : this->keypoints_)
 	{
 		point.at_time = this->duration_;
 		this->duration_ += point.duration;
 
-		position_spline_points.push_back(Vector3({ point.pos.x, point.pos.y, point.pos.z }));
+		timeless_position_spline_points.push_back(Vector3({ point.pos.x, point.pos.y, point.pos.z }));
 	}
-
 	// remove both of the last 2 points
-	this->duration_ -= this->keypoints_[0].duration + this->keypoints_[this->keypoints_.size() - 1].duration + this->keypoints_[this->keypoints_.size() - 2].duration;
+	auto last = this->keypoints_[this->keypoints_.size() - 1];
+	auto nexttolast = this->keypoints_[this->keypoints_.size() - 2];
+	auto first = this->keypoints_[0];
+	this->duration_ -= first.duration + last.duration + nexttolast.duration;
 
+	UniformCRSpline<Vector3> timeless_position_spline = UniformCRSpline<Vector3>(timeless_position_spline_points);
+
+	std::vector<KeyPoint> new_keypoints;
+	new_keypoints.push_back(first);
+	std::vector<Vector3> position_spline_points;
+	position_spline_points.push_back(Vector3({ this->keypoints_[0].pos.x, this->keypoints_[0].pos.y, this->keypoints_[0].pos.z }));
+	for (int i = 0; i < timeless_position_spline.getMaxT(); i++)
+	{
+		position_spline_points.push_back(timeless_position_spline.getPosition(i));
+		auto keypoint = this->keypoints_[i + 1];
+		new_keypoints.push_back(keypoint);
+		for (int time = 1; time < keypoint.duration; time++)
+		{ 
+			auto tweened_pos = timeless_position_spline.getPosition(i + float(time) / keypoint.duration);
+			position_spline_points.push_back(tweened_pos);
+
+			auto kp = keypoint;
+			kp.pos = glm::vec3(tweened_pos[0], tweened_pos[1], tweened_pos[2]);
+			new_keypoints.push_back(kp);
+		}
+	}
+	position_spline_points.push_back(Vector3({ nexttolast.pos.x, nexttolast.pos.y, nexttolast.pos.z }));
+	new_keypoints.push_back(nexttolast);
+	position_spline_points.push_back(Vector3({ last.pos.x, last.pos.y, last.pos.z }));
+	new_keypoints.push_back(last);
+	this->keypoints_ = new_keypoints;
+
+	
 	position_spline_ = new UniformCRSpline<Vector3>(position_spline_points);
 	total_arc_length_ = position_spline_->totalLength();
 
@@ -130,7 +131,7 @@ void CameraSplineController::build_spline()
 		this->visualizer_container_->add_node(node);
 	}
 
-	float progress = 0;
+	/*float progress = 0;
 	float max_t = position_spline_->getMaxT();
 	while (progress < max_t)
 	{
@@ -141,8 +142,8 @@ void CameraSplineController::build_spline()
 		node->set_transformation(glm::translate(new_pos) * glm::scale(glm::vec3(0.1, 0.1, 0.1)));
 		this->visualizer_container_->add_node(node);
 
-		progress += 1.0 / total_arc_length_ * 10;
-	}
+		progress += 1.0 / total_arc_length_;
+	}*/
 	
 	
 	this->test_cam_ = new GeometryNode("keypoint", this->keypoint_visualizer_);
