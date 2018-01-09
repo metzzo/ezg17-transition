@@ -14,7 +14,8 @@ public:
 
 	void update(CameraSplineController* controller, float delta, float tween) override
 	{
-		this->animator_->is_animating(true);
+		if (controller->get_progress() >= 60 + 6 - 12) {
+			this->animator_->is_animating(true);
+		}
 	}
 };
-#pragma once

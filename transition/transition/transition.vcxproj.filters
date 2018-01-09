@@ -229,6 +229,9 @@
     <ClInclude Include="ShowFeetKeyPointAction.h">
       <Filter>Headerdateien\Controller\Actions</Filter>
     </ClInclude>
+    <ClInclude Include="LightKeyPointAction.h">
+      <Filter>Headerdateien\Controller\Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">

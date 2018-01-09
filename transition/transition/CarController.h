@@ -1,17 +1,17 @@
 #pragma once
 #include "AnimatorNode.h"
-class TransformationNode;
+class LightNode;
 
 class CarController :
 	public AnimatorNode
 {
-	TransformationNode* moving_;
+	LightNode* moving_;
 	double progress_;
-	int segment_;
-	int last_segment_;
-	double last_progress_;
+
+	glm::vec3 diff_color_;
+	glm::vec3 spec_color_;
 public:
-	explicit CarController(std::string name, TransformationNode *moving);
+	explicit CarController(std::string name, LightNode *moving);
 	~CarController();
 
 	void update(double delta) override;

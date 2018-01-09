@@ -20,6 +20,7 @@
 #include "CameraSplineController.h"
 #include "AccelerateKeyPointAction.h"
 #include "ShowFeetKeyPointAction.h"
+#include "LightKeyPointAction.h"
 
 int main()
 {
@@ -85,11 +86,11 @@ int main()
 	auto cam_spline_controller = new CameraSplineController("spline_cam_controller", cam, root);
 
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-2.55638, 2.61466, 17.1405), glm::vec3(-3.79753, 8.84761, -6.76775), 0));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-2.40652, 2.61466, 13.6777), glm::vec3(-3.79753, 8.84761, -6.76775), 15, { new AccelerateKeyPointAction(12, 1) }));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-2.40652, 2.61466, 13.6777), glm::vec3(-3.79753, 8.84761, -6.76775), 15, { new AccelerateKeyPointAction(12, 0), new LightKeyPointAction(broken_lamp, cam) }));
 
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-6.45114, 5.0, 0.177606), glm::vec3(-3.79753, 8.84761, -6.76775), 18)); // front of window => looking at  lamp
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(8, 9.23145, 0.109445), glm::vec3(-3.79753, 8.84761, -6.76775), 13)); // go to wall, looking at lamp
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-6.20997, 8, -11.4241), glm::vec3(-0.89963, 0.536566, 6.61612), 18)); // at light => looking towards feet
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-6.20997, 8, -11.4241), glm::vec3(-0.89963, 0.536566, 6.61612), 18, { new ShowFeetKeyPointAction(footanim) })); // at light => looking towards feet
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-1.4495, 3.92423, 11.7188), glm::vec3(-0.89963, 0.536566, 6.61612), 15, { new ShowFeetKeyPointAction(footanim) })); // behind feet => looking towards door
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.87209, 4.50955, -10.1275), glm::vec3(0.234719, 4.50955, -26.9259), 14)); // going towards door
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(0.672872, 4.50955, -22.6491), glm::vec3(0.234719, 4.50955, -26.9259), 20)); // second room

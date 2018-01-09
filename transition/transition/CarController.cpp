@@ -1,25 +1,16 @@
 #include "CarController.h"
-#include "TransformationNode.h"
+#include "LightNode.h"
 #include <glm/gtx/spline.hpp>
 #include <iostream>
+#include <algorithm>
 
-static const glm::vec2 car_positions[] = {
-	glm::vec2(-20, 0),
-	glm::vec2(-18, 0),
-	glm::vec2(-14, 0),
-	glm::vec2(-14, 10),
-	glm::vec2(-14, -10),
-	glm::vec2(-20, 0),
-};
-#define CAR_POSITIONS (6)
-
-CarController::CarController(std::string name, TransformationNode *moving) : AnimatorNode(name)
+CarController::CarController(std::string name, LightNode *moving) : AnimatorNode(name)
 {
 	this->moving_ = moving;
-	this->progress_ = 0.0;
-	this->last_progress_ = 0.0;
-	this->segment_ = 1;
-	this->last_segment_ = 1;
+	this->progress_ = 4.5;
+
+	diff_color_ = this->moving_->get_diffuse();
+	spec_color_ = this->moving_->get_specular();
 }
 
 
@@ -29,35 +20,23 @@ CarController::~CarController()
 
 void CarController::update(double delta)
 {
-	const auto eye = glm::catmullRom(
-		car_positions[(this->last_segment_ - 1) % CAR_POSITIONS],
-		car_positions[(this->last_segment_) % CAR_POSITIONS],
-		car_positions[(this->last_segment_ + 1) % CAR_POSITIONS],
-		car_positions[(this->last_segment_ + 2) % CAR_POSITIONS],
-		this->last_progress_
-	);
-	const auto center = glm::catmullRom(
-		car_positions[(this->segment_ - 1) % CAR_POSITIONS],
-		car_positions[(this->segment_) % CAR_POSITIONS],
-		car_positions[(this->segment_ + 1) % CAR_POSITIONS],
-		car_positions[(this->segment_ + 2) % CAR_POSITIONS],
-		this->progress_
-	);
-	const auto mat = glm::lookAt(
-		glm::vec3(eye.x, 7.5, eye.y), 
-		glm::vec3(center.x, 7.5, center.y), 
-		glm::vec3(0, 1, 0));
-	this->moving_->set_transformation(glm::inverse(mat), mat);
+	auto pos = glm::mix(glm::vec3(-25.7828, 8, -0.330354), glm::vec3(-15, 8, -0.330354), this->progress_ / 15);
 
-	this->last_segment_ = this->segment_;
-	this->last_progress_ = this->progress_;
-	this->progress_ += 0.25*delta;
+	auto intensity = (std::max(this->progress_ - 11, 0.0) / 4.0) + ((4.0 - std::min(this->progress_, 4.0)) / 4.0);
+	intensity *= intensity;
 
-	while (this->progress_ >= 1.0)
-	{
-		this->progress_ -= 1.0;
-		this->segment_ = this->segment_ + 1;
-	}
+	glm::mat4 mat = glm::inverse(glm::lookAt(pos, glm::vec3(25.9261, 8, 2.84429), glm::vec3(0,1,0)));
+	this->moving_->set_transformation(mat);
+
+	const auto diff_color = mix(diff_color_, glm::vec3(0), intensity);
+	const auto spec_color = mix(spec_color_, glm::vec3(0), intensity);
+
+	this->moving_->set_color(
+		diff_color,
+		spec_color
+	);
+
+	this->progress_ = fmod(this->progress_ + delta, 15);
 
 	//std::cout << "Progress " << this->progress_ << " Segment: " << this->segment_ << std::endl;
 }

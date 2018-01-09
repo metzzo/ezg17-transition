@@ -132,7 +132,7 @@ void RenderingEngine::run()
 	auto doors = this->root_node_->find_by_name("Doors");
 	livingroom->set_enabled(false);
 	hallroom->set_enabled(false);
-	//treeroom->set_enabled(false);	//somehow this breaks things
+	treeroom->set_enabled(false);
 
 	const auto main_camera = static_cast<CameraNode*>(this->root_node_->find_by_name("MainCamera"));
 

@@ -180,6 +180,7 @@
     <ClInclude Include="IDrawable.h" />
     <ClInclude Include="ILightShader.h" />
     <ClInclude Include="IResource.h" />
+    <ClInclude Include="LightKeyPointAction.h" />
     <ClInclude Include="LightNode.h" />
     <ClInclude Include="LookAtController.h" />
     <ClInclude Include="Material.h" />
