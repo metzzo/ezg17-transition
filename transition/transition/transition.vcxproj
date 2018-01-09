@@ -153,6 +153,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AccelerateKeyPointAction.h" />
     <ClInclude Include="AnimatorNode.h" />
     <ClInclude Include="BloomAddShader.h" />
     <ClInclude Include="BloomEffect.h" />

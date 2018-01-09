@@ -84,12 +84,17 @@ int main()
 	((GroupNode*)root->find_by_name("treeroom"))->add_node(tree_light);
 
 	auto cam_spline_controller = new CameraSplineController("spline_cam_controller", cam, root);
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(0, 0, 0), glm::vec3(), 0));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-2, 5, -7), glm::vec3(0, 0, 0), 5, { new AccelerateKeyPointAction(5, 5) }));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-2, 5, 7), glm::vec3(3, 6, -7), 6));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(6, 9, -12), glm::vec3(-2, 5, -7), 30));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(8, 9, -25), glm::vec3(), 10));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-8, 2, -22), glm::vec3(), 2));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-1.64051, 2.54197, 15.908), glm::vec3(-1.93054, 2.42926, 14.9576), 0));
+
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-2.23365, 2.55561, 15.2759), glm::vec3(-2.24164, 2.32264, 14.3035), 0));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-2.24602, 2.55561, 13.7713), glm::vec3(-2.35003, 2.53865, 12.7769), 5));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-5.07677, 6.07044, 7.20452), glm::vec3(-4.68854, 5.83747, 6.31288), 15));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-9.03794, 6.90925, 2.95441), glm::vec3(-8.17498, 6.65934, 2.51526), 20));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-9.40388, 6.90925, -4.87318), glm::vec3(-8.40574, 6.84869, -4.88139), 25));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-6.16499, 9.71622, -8.50972), glm::vec3(-5.80746, 9.10094, -7.80715), 30));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.2447, 9.71622, -11.3584), glm::vec3(1.87976, 9.23949, -10.5587), 35));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(7.78491, 9.71622, -2.6806), glm::vec3(7.31751, 9.22422, -3.41509), 40));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(3.61329, 5.4619, -11.743), glm::vec3(3.5104, 5.31458, -12.7267), 45));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(8, 9, -20), glm::vec3(), 60));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(8, 9, -24), glm::vec3(), 30));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(92, 21, -19), glm::vec3(), 120));

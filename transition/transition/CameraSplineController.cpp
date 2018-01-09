@@ -164,8 +164,8 @@ void CameraSplineController::build_spline()
 		this->visualizer_container_->add_node(node);
 	}
 
-	this->test_cam_ = new GeometryNode("keypoint", this->keypoint_visualizer_);
-	this->visualizer_container_->add_node(this->test_cam_);
+	//this->test_cam_ = new GeometryNode("keypoint", this->keypoint_visualizer_);
+	//this->visualizer_container_->add_node(this->test_cam_);
 
 #endif
 	std::cout << "Finished building Spline..." << std::endl;

@@ -62,6 +62,9 @@
     <Filter Include="Headerdateien\Controller">
       <UniqueIdentifier>{4bb8ead4-bebd-45ed-9351-c0b726a913b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Controller\Actions">
+      <UniqueIdentifier>{852128e5-5364-4624-b945-de87eb693974}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -219,6 +222,9 @@
     </ClInclude>
     <ClInclude Include="CameraSplineController.h">
       <Filter>Headerdateien\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="AccelerateKeyPointAction.h">
+      <Filter>Headerdateien\Controller\Actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
