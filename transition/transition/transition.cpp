@@ -12,16 +12,13 @@
 #include "CameraController.h"
 #include "GeometryNode.h"
 #include "DirectionalShadowStrategy.h"
-#include "RenderingEngine.h"
-#include "OmniDirectionalShadowStrategy.h"
 #include "LookAtController.h"
 #include "CarController.h"
 #include "FootstepNode.h"
 #include "FootstepAnimator.h"
-#include "BloomEffect.h"
 #include "BrokenLampController.h"
 #include "CameraSplineController.h"
-
+#include "AccelerateKeyPointAction.h"
 
 int main()
 {
@@ -87,15 +84,15 @@ int main()
 	((GroupNode*)root->find_by_name("treeroom"))->add_node(tree_light);
 
 	auto cam_spline_controller = new CameraSplineController("spline_cam_controller", cam, root);
-	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(0, 0, 0), glm::vec3(), 0));
-	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(-2, 5, -7), glm::vec3(0, 0, 0), 5));
-	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(-2, 5, 7), glm::vec3(3, 6, -7), 6));
-	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(6, 9, -12), glm::vec3(-2, 5, -7), 30));
-	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(8, 9, -25), glm::vec3(), 10));
-	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(-8, 2, -22), glm::vec3(), 2));
-	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(8, 9, -20), glm::vec3(), 60));
-	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(8, 9, -24), glm::vec3(), 30));
-	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(92, 21, -19), glm::vec3(), 120));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(0, 0, 0), glm::vec3(), 0));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-2, 5, -7), glm::vec3(0, 0, 0), 5, { new AccelerateKeyPointAction(5, 5) }));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-2, 5, 7), glm::vec3(3, 6, -7), 6));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(6, 9, -12), glm::vec3(-2, 5, -7), 30));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(8, 9, -25), glm::vec3(), 10));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-8, 2, -22), glm::vec3(), 2));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(8, 9, -20), glm::vec3(), 60));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(8, 9, -24), glm::vec3(), 30));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(92, 21, -19), glm::vec3(), 120));
 	cam_spline_controller->build_spline();
 	root->add_node(cam_spline_controller);
 
