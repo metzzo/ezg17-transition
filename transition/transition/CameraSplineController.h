@@ -37,6 +37,7 @@ class CameraSplineController :
 	float total_arc_length_;
 
 	UniformCRSpline<Vector3> *position_spline_;
+	glm::vec3 current_look_at_;
 
 #ifdef VISUALIZE_KEYPOINTS
 	MeshResource* keypoint_visualizer_;
@@ -51,6 +52,8 @@ public:
 
 	void add_keypoint(const KeyPoint &key_point);
 	void build_spline();
+
+	TransformationNode* get_target() const;
 
 	void update(double delta) override;
 	void init(RenderingEngine* rendering_engine) override;

@@ -118,7 +118,8 @@ void MainShader::set_model_uniforms(const GeometryNode* node) {
 		glActiveTexture(GL_TEXTURE0 + alpha_texture_slot);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		glUniform1i(this->material_has_alpha_tex_uniform, 0);		glUniform1i(this->material_alpha_tex_uniform_, alpha_texture_slot);
+		glUniform1i(this->material_has_alpha_tex_uniform, 0);		
+		glUniform1i(this->material_alpha_tex_uniform_, alpha_texture_slot);
 	}
 	glUniform3fv(this->material_ambient_color_, 1, &material.get_ambient_color()[0]);
 	glUniform3fv(this->material_diffuse_color_, 1, &material.get_diffuse_color()[0]);

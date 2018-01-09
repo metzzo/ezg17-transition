@@ -88,9 +88,9 @@ int main()
 
 	auto cam_spline_controller = new CameraSplineController("spline_cam_controller", cam, root);
 	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(0, 0, 0), glm::vec3(), 0));
-	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(-2, 5, -7), glm::vec3(), 5));
-	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(-2, 5, 7), glm::vec3(), 6));
-	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(6, 9, -12), glm::vec3(), 30));
+	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(-2, 5, -7), glm::vec3(0, 0, 0), 5));
+	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(-2, 5, 7), glm::vec3(3, 6, -7), 6));
+	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(6, 9, -12), glm::vec3(-2, 5, -7), 30));
 	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(8, 9, -25), glm::vec3(), 10));
 	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(-8, 2, -22), glm::vec3(), 2));
 	cam_spline_controller->add_keypoint(KeyPoint(glm::vec3(8, 9, -20), glm::vec3(), 60));

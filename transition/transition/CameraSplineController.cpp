@@ -5,11 +5,42 @@
 #include <spline_library/spline.h>
 #include <spline_library/vector.h>
 #include <spline_library/splines/uniform_cr_spline.h>
-#include <spline_library/utils/arclength.h>
 #include <stdlib.h>
-#include <glm/gtx/spline.hpp>
-#include <glm/gtc/vec1.hpp> 
+#include <glm/gtx/norm.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/matrix_interpolation.hpp>
 
+glm::quat rotation_between_vectors(glm::vec3 start, glm::vec3 dest) {
+	start = glm::normalize(start);
+	dest = glm::normalize(dest);
+
+	const float cos_theta = dot(start, dest);
+	glm::vec3 rotation_axis;
+
+	if (cos_theta < -1 + 0.001f) {
+		// special case when vectors in opposite directions:
+		// there is no "ideal" rotation axis
+		// So guess one; any will do as long as it's perpendicular to start
+		rotation_axis = cross(glm::vec3(0.0f, 0.0f, 1.0f), start);
+		if (glm::length2(rotation_axis) < 0.01) // bad luck, they were parallel, try again!
+			rotation_axis = cross(glm::vec3(1.0f, 0.0f, 0.0f), start);
+
+		rotation_axis = normalize(rotation_axis);
+		return glm::angleAxis(glm::radians(180.0f), rotation_axis);
+	}
+
+	rotation_axis = cross(start, dest);
+
+	float s = sqrt((1 + cos_theta) * 2);
+	float invs = 1 / s;
+
+	return glm::quat(
+		s * 0.5f,
+		rotation_axis.x * invs,
+		rotation_axis.y * invs,
+		rotation_axis.z * invs
+	);
+}
 
 CameraSplineController::CameraSplineController(std::string name, TransformationNode* target, GroupNode *visualizer_container) : AnimatorNode(name)
 {
@@ -41,12 +72,35 @@ void CameraSplineController::add_keypoint(const KeyPoint& key_point)
 
 void CameraSplineController::update(double delta)
 {
-	const auto interpolated_pos = this->position_spline_->getPosition(this->progress_ / this->duration_ * this->position_spline_->getMaxT());
+	// position
+	float tween = this->progress_ / this->duration_ * this->position_spline_->getMaxT();
+	const Vector3 interpolated_pos = this->position_spline_->getPosition(tween);
 	const glm::vec3 new_pos = glm::vec3(interpolated_pos[0], interpolated_pos[1], interpolated_pos[2]);
 	
-#ifdef VISUALIZE_KEYPOINTS
-	this->test_cam_->set_transformation(glm::translate(new_pos));
-#endif
+	// rotation
+	KeyPoint current_keypoint = this->keypoints_[int(tween + 1)];
+	int next_keypoint_index = (current_keypoint.at_time + current_keypoint.duration) / this->duration_ * this->position_spline_->getMaxT();
+	glm::vec3 target_look_at = this->keypoints_[int(next_keypoint_index) + 1].look_at_pos;
+
+	glm::vec3 forward = glm::normalize(glm::transpose(get_target()->get_inverse_transformation()) * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
+	glm::mat4 current_rotation = glm::inverse(glm::lookAt(glm::vec3(0, 0, 0), forward, glm::vec3(0, 1, 0)));
+	glm::vec3 target_direction = target_look_at - new_pos;
+	glm::mat4 new_rotation;
+	if (glm::length(target_direction) >= 0.00001)
+	{
+		glm::mat4 target_rotation = glm::inverse(glm::lookAt(glm::vec3(0, 0, 0), target_direction, glm::vec3(0, 1, 0)));
+
+		auto rotation_tween = (this->progress_ - this->keypoints_[int(tween) + 1].at_time) / this->keypoints_[int(tween) + 1].duration;
+		new_rotation = glm::interpolate(current_rotation, target_rotation, float(rotation_tween));
+
+	} else
+	{
+		new_rotation = current_rotation;
+	}
+	
+	glm::mat4 mat = glm::translate(new_pos) * new_rotation;
+	get_target()->set_transformation(mat);
+
 
 	if (this->progress_ < this->duration_) {
 		this->progress_ += delta;
@@ -63,7 +117,10 @@ void CameraSplineController::update(double delta)
 void CameraSplineController::init(RenderingEngine* rendering_engine)
 {
 	AnimatorNode::init(rendering_engine);
-
+	const auto interpolated_pos = position_spline_->getPosition(0);
+	const glm::vec3 new_pos = glm::vec3(interpolated_pos[0], interpolated_pos[1], interpolated_pos[2]);
+	auto mat = glm::lookAt(new_pos, this->keypoints_[1].look_at_pos, glm::vec3(0, 1, 0));
+	get_target()->set_transformation(glm::inverse(mat), mat);
 
 #ifdef VISUALIZE_KEYPOINTS
 	this->keypoint_visualizer_->init();
@@ -77,6 +134,8 @@ void CameraSplineController::init(RenderingEngine* rendering_engine)
 
 void CameraSplineController::build_spline()
 {
+	std::cout << "Building Spline..." << std::endl;
+
 	this->duration_ = 0;
 	std::vector<Vector3> timeless_position_spline_points;
 	for (auto &point : this->keypoints_)
@@ -118,8 +177,8 @@ void CameraSplineController::build_spline()
 	position_spline_points.push_back(Vector3({ last.pos.x, last.pos.y, last.pos.z }));
 	new_keypoints.push_back(last);
 	this->keypoints_ = new_keypoints;
+	this->current_look_at_ = this->keypoints_[1].look_at_pos;
 
-	
 	position_spline_ = new UniformCRSpline<Vector3>(position_spline_points);
 	total_arc_length_ = position_spline_->totalLength();
 
@@ -149,5 +208,15 @@ void CameraSplineController::build_spline()
 	this->test_cam_ = new GeometryNode("keypoint", this->keypoint_visualizer_);
 	this->visualizer_container_->add_node(this->test_cam_);
 
+#endif
+	std::cout << "Finished building Spline..." << std::endl;
+}
+
+TransformationNode* CameraSplineController::get_target() const
+{
+#ifdef VISUALIZE_KEYPOINTS
+	return test_cam_ ? test_cam_ : this->target_;
+#else
+		return this->target_;
 #endif
 }
