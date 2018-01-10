@@ -13,11 +13,11 @@ private:
 	bool left_start_ = false;
 	glm::vec3 step_size_;
 	bool animating_;
-	CameraSplineController* spline_controller_;
 	bool flash_done_;
+	double progress_;
 
 public:
-	FootstepAnimator(const std::string& name, FootstepNode* left_foot_, FootstepNode* right_foot_, bool left_start_, glm::vec3 stepsize, CameraSplineController *spline_controller);
+	FootstepAnimator(const std::string& name, FootstepNode* left_foot_, FootstepNode* right_foot_, bool left_start_, glm::vec3 stepsize);
 	
 	void update(double delta);
 	void is_animating(bool animating);

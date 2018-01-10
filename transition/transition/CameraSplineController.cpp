@@ -11,6 +11,39 @@
 #include <glm/gtx/matrix_interpolation.hpp>
 
 
+
+glm::quat look_at(glm::vec3 start, glm::vec3 dest) {
+	start = glm::normalize(start);
+	dest = glm::normalize(dest);
+
+	const float cos_theta = dot(start, dest);
+	glm::vec3 rotation_axis;
+
+	if (cos_theta < -1 + 0.001f) {
+		// special case when vectors in opposite directions:
+		// there is no "ideal" rotation axis
+		// So guess one; any will do as long as it's perpendicular to start
+		rotation_axis = cross(glm::vec3(0.0f, 0.0f, 1.0f), start);
+		if (glm::length2(rotation_axis) < 0.01) // bad luck, they were parallel, try again!
+			rotation_axis = cross(glm::vec3(1.0f, 0.0f, 0.0f), start);
+
+		rotation_axis = normalize(rotation_axis);
+		return glm::angleAxis(glm::radians(180.0f), rotation_axis);
+	}
+
+	rotation_axis = cross(start, dest);
+
+	float s = sqrt((1 + cos_theta) * 2);
+	float invs = 1 / s;
+
+	return glm::quat(
+		s * 0.5f,
+		rotation_axis.x * invs,
+		rotation_axis.y * invs,
+		rotation_axis.z * invs
+	);
+}
+
 CameraSplineController::CameraSplineController(std::string name, TransformationNode* target, GroupNode *visualizer_container) : AnimatorNode(name)
 {
 	this->target_ = target;
@@ -51,17 +84,23 @@ void CameraSplineController::update(double delta)
 	
 	// rotation
 	KeyPoint *current_keypoint = this->keypoints_[int(tween) + 1];
+	KeyPoint *next_keypoint = this->keypoints_[int(tween) + 1];
 	glm::vec3 target_look_at = current_keypoint->look_at_pos; // this->target_->get_position();  
 	//std::cout << "Look At " << target_look_at.x << " " << target_look_at.y << " " << target_look_at.z << std::endl;
 
-	glm::vec3 target_direction = target_look_at - new_pos;
+	glm::vec3 target_direction = glm::normalize(target_look_at - this->get_target()->get_position());
 
 	glm::mat4 new_rotation;
-	float global_tween = (tween - current_keypoint->at_time) / float(current_keypoint->duration / this->duration_ * this->position_spline_->getMaxT());
+	float global_tween = (tween - next_keypoint->at_time) / float(next_keypoint->duration / this->duration_ * this->position_spline_->getMaxT());
 	if (glm::length(target_direction) >= 0.00001)
 	{
-		glm::mat4 target_rotation = glm::inverse(glm::lookAt(glm::vec3(0, 0, 0), target_direction, glm::vec3(0, 1, 0)));
-		glm::quat quat_target = glm::quat_cast(target_rotation);
+		glm::mat4 target_rotation = glm::inverse(glm::lookAt(this->get_target()->get_position(), target_look_at, glm::vec3(0, 1, 0)));
+		glm::quat quat_target = glm::quat_cast(target_rotation); //look_at(target_direction, glm::vec3(0,0,1)); // 
+
+		if (glm::dot(this->current_rotation_, quat_target) < 0.0)
+		{
+			quat_target = -quat_target;
+		}
 
 		this->current_rotation_ = glm::mix(this->current_rotation_, quat_target, global_tween*global_tween);
 
@@ -72,7 +111,7 @@ void CameraSplineController::update(double delta)
 
 
 	if (this->progress_ < this->duration_) {
-		this->progress_ += delta;
+		this->progress_ += delta*(1 + glfwGetKey(get_rendering_engine()->get_window(), GLFW_KEY_PAGE_UP)*5);
 	}
 	this->progress_ = std::min(this->progress_, this->duration_);
 
