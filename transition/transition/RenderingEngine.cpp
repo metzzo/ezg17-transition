@@ -134,6 +134,11 @@ void RenderingEngine::run()
 	hallroom->set_enabled(false);
 	treeroom->set_enabled(false);
 
+	this->rooms_.push_back(darkroom);
+	this->rooms_.push_back(livingroom);
+	this->rooms_.push_back(hallroom);
+	this->rooms_.push_back(treeroom);
+
 	const auto main_camera = static_cast<CameraNode*>(this->root_node_->find_by_name("MainCamera"));
 
 	irrklang::ISoundEngine* sound = irrklang::createIrrKlangDevice();
@@ -208,4 +213,9 @@ void RenderingEngine::run()
 		delete resource;
 	}
 	sound->drop();
+}
+
+void RenderingEngine::set_room_enabled(int room, bool enable)
+{
+	this->rooms_[room]->set_enabled(enable);
 }

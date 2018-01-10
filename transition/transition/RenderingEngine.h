@@ -14,6 +14,7 @@ struct GLFWwindow;
 class DirectionalDepthShader;
 class OmniDirectionalDepthShader;
 class FrustumG;
+class Node;
 
 class RenderingEngine
 {
@@ -26,6 +27,7 @@ class RenderingEngine
 	std::vector<LightNode*> light_nodes_;
 	std::vector<AnimatorNode*> animator_nodes_;
 	std::vector<ParticleEmitterNode*> particle_emitter_nodes_;
+	std::vector<Node*> rooms_;
 
 	glm::ivec2 viewport_;
 	bool fullscreen_;
@@ -73,5 +75,7 @@ public:
 	GLFWwindow* get_window() const {
 		return this->window_;
 	}
+
+	void set_room_enabled(int room, bool enable);
 };
 

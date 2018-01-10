@@ -193,6 +193,7 @@
     <ClInclude Include="PostProcessingEffect.h" />
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="RenderingNode.h" />
+    <ClInclude Include="RoomEnableKeyPoint.h" />
     <ClInclude Include="ShaderResource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextureRenderable.h" />
