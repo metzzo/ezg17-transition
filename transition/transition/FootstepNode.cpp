@@ -98,7 +98,7 @@ void FootstepNode::init(RenderingEngine * engine)
 	this->foot_node_->apply_transformation(this->get_transformation(), this->get_inverse_transformation());
 }
 
-void FootstepNode::start_emitting()
+void FootstepNode::shine(float time)
 {
 	const int TTL = 10;
 	std::vector<glm::vec4> data_pos;
@@ -106,9 +106,9 @@ void FootstepNode::start_emitting()
 	std::vector<glm::vec4> data_vel;
 
 	for (int i = 0; i < 50 && (particle_count_ + i + 1 <= DEMO_MAX_PARTICLES); i++) {
-		float angle = ((float)rand()/RAND_MAX)*2*M_PI;
+		float angle = ((float)rand() / RAND_MAX) * 2 * M_PI;
 		float distance = ((float)rand() / RAND_MAX);// rand();
-		float speed = ((float)rand()/RAND_MAX)*0.4 + 0.5;
+		float speed = ((float)rand() / RAND_MAX)*0.4 + 0.5;
 		float ttl = 4.5 + ((float)rand() / RAND_MAX - 0.5);
 		float x = cos(angle)*distance;
 		float z = sin(angle)*distance;
@@ -118,7 +118,7 @@ void FootstepNode::start_emitting()
 		data_vel.push_back(vel);
 		data_col.push_back(glm::vec4(1, color_distribution_[0](rand_engine_), color_distribution_[1](rand_engine_), 1));
 	}
-	
+
 	if (data_pos.size() > 0) {
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo_pos_id_[pingpongindex_]);
 		glBufferSubData(GL_SHADER_STORAGE_BUFFER, particle_count_ * sizeof(glm::vec4), data_pos.size() * sizeof(glm::vec4), &data_pos[0]);
@@ -130,6 +130,12 @@ void FootstepNode::start_emitting()
 		is_emitting_ = true;
 	}
 	since_emitting = 0;
+	shine_length_ = time;
+}
+
+void FootstepNode::start_emitting()
+{
+	shine(4);
 }
 
 void FootstepNode::stop_emitting()
@@ -141,7 +147,7 @@ void FootstepNode::update_particles(float deltaT)
 {
 	this->foot_node_->get_editable_mesh_resource()->get_editable_material().set_ambient_color(color_);
 
-	float alpha = (4 - since_emitting)/4;
+	float alpha = (shine_length_ - since_emitting)/ shine_length_;
 	if (alpha > 0) {
 		//alpha = alpha*alpha;
 		//alpha = sqrt(alpha);

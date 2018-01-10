@@ -25,7 +25,7 @@ public:
 			this->lamp_controller_->set_brightness(0.0);
 		}
 		else {
-			this->lamp_controller_->set_brightness(glm::mix(0.5, 1.0, std::min(((progress_ - 4.25f) / 5)*((progress_ - 4.25f) / 5), 1.0f)));
+			this->lamp_controller_->set_brightness(glm::mix(0.2, 1.0, std::min(((progress_ - 4.25f) / 5)*((progress_ - 4.25f) / 5), 1.0f)));
 		}
 
 		this->progress_ += delta;

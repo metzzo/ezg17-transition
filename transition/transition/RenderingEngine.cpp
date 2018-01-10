@@ -142,7 +142,7 @@ void RenderingEngine::run()
 	const auto main_camera = static_cast<CameraNode*>(this->root_node_->find_by_name("MainCamera"));
 
 	irrklang::ISoundEngine* sound = irrklang::createIrrKlangDevice();
-	sound->play2D("assets/sfx/transition_short.mp3", false);
+	sound->play2D("assets/sfx/transition_edit.mp3", false);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	double last_time = glfwGetTime();

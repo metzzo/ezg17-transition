@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClInclude Include="AccelerateKeyPointAction.h" />
     <ClInclude Include="AnimatorNode.h" />
+    <ClInclude Include="BloomAction.h" />
     <ClInclude Include="BloomAddShader.h" />
     <ClInclude Include="BloomEffect.h" />
     <ClInclude Include="BloomGaussShader.h" />
@@ -163,8 +164,10 @@
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="CameraSplineController.h" />
     <ClInclude Include="CarController.h" />
+    <ClInclude Include="ClearColorAction.h" />
     <ClInclude Include="ColladaImporter.h" />
     <ClInclude Include="ComputeShader.h" />
+    <ClInclude Include="DoorAction.h" />
     <ClInclude Include="FootstepAnimator.h" />
     <ClInclude Include="FootstepNode.h" />
     <ClInclude Include="FootParticleShader.h" />

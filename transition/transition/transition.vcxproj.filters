@@ -232,6 +232,15 @@
     <ClInclude Include="RoomEnableKeyPoint.h">
       <Filter>Headerdateien\Controller\Actions</Filter>
     </ClInclude>
+    <ClInclude Include="BloomAction.h">
+      <Filter>Headerdateien\Controller\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="DoorAction.h">
+      <Filter>Headerdateien\Controller\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="ClearColorAction.h">
+      <Filter>Headerdateien\Controller\Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">

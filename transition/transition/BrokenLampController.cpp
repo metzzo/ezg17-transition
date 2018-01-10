@@ -31,7 +31,7 @@ void BrokenLampController::update(double delta)
 
 	const auto diff_color = mix(on_diffuse_color_, on_diffuse_color_*0.5f, val) * float(brightness_);
 	const auto spec_color = mix(on_specular_color_, on_specular_color_*0.5f, val) * float(brightness_);
-	const auto ambient_color = mix(glm::vec3(1), glm::vec3(0)*0.5f, val) * float(brightness_);
+	const auto ambient_color = mix(glm::vec3(1), glm::vec3(0), val) * float(brightness_);
 
 	this->lamp_->set_color(
 		diff_color, 

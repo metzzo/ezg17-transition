@@ -1,6 +1,8 @@
 #include "FootstepAnimator.h"
 #include <iostream>
 
+#define FOOT_SPEED 2.181818181818181818
+
 FootstepAnimator::FootstepAnimator(const std::string& name, FootstepNode* left_foot, FootstepNode* right_foot, bool left_start, glm::vec3 step_size) : AnimatorNode(name)
 {
 	this->left_foot_ = left_foot;
@@ -10,6 +12,9 @@ FootstepAnimator::FootstepAnimator(const std::string& name, FootstepNode* left_f
 	this->animating_ = false;
 	this->flash_done_ = false;
 	this->progress_ = 0.0;
+#ifdef VISUALIZE_KEYPOINTS
+	this->progress_ = 25;
+#endif
 }
 
 void FootstepAnimator::update(double delta)
@@ -18,14 +23,16 @@ void FootstepAnimator::update(double delta)
 
 	if (progress_>= 30.5 && !this->flash_done_)
 	{
-		right_foot_->start_emitting();
-		left_foot_->start_emitting();
+		right_foot_->shine(14);
+		left_foot_->shine(14);
 
 		this->flash_done_ = true;
 	}
 
-	if (this->progress_ >= 40.0) {
+	if (this->progress_ >= 40.0 && !this->animating_) {
 		this->animating_ = true;
+		//left_foot_->apply_transformation(Transformation::translate(step_size_));
+		right_foot_->apply_transformation(Transformation::translate(step_size_ * (1.0f/2.0f)));
 	}
 
 	if (!this->animating_)
@@ -36,13 +43,13 @@ void FootstepAnimator::update(double delta)
 
 	if (left_countdown_ == -1) {
 		if (left_start_) {
-			left_countdown_ = 4;
-			right_countdown_ = 2;
+			left_countdown_ = 2*FOOT_SPEED;
+			right_countdown_ = FOOT_SPEED;
 			left_foot_->start_emitting();
 		}
 		else {
-			right_countdown_ = 4;
-			left_countdown_ = 2;
+			right_countdown_ = 2*FOOT_SPEED;
+			left_countdown_ = FOOT_SPEED;
 			right_foot_->start_emitting();
 		}
 	}
@@ -50,12 +57,12 @@ void FootstepAnimator::update(double delta)
 		left_countdown_ -= delta;
 		right_countdown_ -= delta;
 		if (left_countdown_ <= 0) {
-			left_countdown_ = 4;
+			left_countdown_ = 2*FOOT_SPEED;
 			left_foot_->apply_transformation(Transformation::translate(step_size_));
 			left_foot_->start_emitting();
 		}
 		if (right_countdown_ <= 0) {
-			right_countdown_ = 4;
+			right_countdown_ = 2*FOOT_SPEED;
 			right_foot_->apply_transformation(Transformation::translate(step_size_));
 			right_foot_->start_emitting();
 		}

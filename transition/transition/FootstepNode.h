@@ -27,6 +27,7 @@ private:
 	float since_emitting = 10;
 	bool left_ = false;
 	glm::vec3 color_ = glm::vec3(1, 0, 0);
+	float shine_length_ = 4;
 
 	std::default_random_engine rand_engine_ = std::default_random_engine(10);
 	std::normal_distribution<float> color_distribution_[2] = { std::normal_distribution<float>(0.7, 0.3), std::normal_distribution<float>(0.3, 0.2) };
@@ -38,6 +39,7 @@ public:
 	virtual ~FootstepNode();
 
 	void init(RenderingEngine *engine) override;
+	void shine(float time);
 	void start_emitting() override;
 	void stop_emitting() override;
 	void update_particles(float deltaT) override;
