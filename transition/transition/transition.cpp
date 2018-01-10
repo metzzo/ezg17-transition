@@ -82,8 +82,8 @@ int main()
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(3.42228, 9.55154, -8.97531), feet_pos, 12)); // moving towards feet
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-5.87092, 9.04411, -9.09759), feet_pos, 5)); // still moving
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-8.01213, 7.58564, -0.557837), feet_pos, 5)); // still
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-7.82971, 7.58564, 14.3606), feet_pos, 5)); // in corner, behind feet
-	//cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-0.0275997, 3.93666, 12.0401), glm::vec3(-0.584047, 1.24179, 5.88077), 5)); // behind feet
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-7.82971, 7.58564, 14.3606), glm::vec3(2.74811, 3.93666, -25.5096), 5)); // in corner, behind feet
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-0.0275997, 3.93666, 12.0401), glm::vec3(2.74811, 3.93666, -25.5096), 5)); // behind feet
 
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.12464, 3.93666, 10.4443), glm::vec3(2.74811, 3.93666, -25.5096), 5)); // moving towards door
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.39148, 3.93666, 5.31498), glm::vec3(2.74811, 3.93666, -25.5096), 5));

@@ -23,7 +23,7 @@ void FootstepAnimator::update(double delta)
 
 		this->flash_done_ = true;
 	}
-	std::cout << this->progress_ << std::endl;
+
 	if (this->progress_ >= 40.0) {
 		this->animating_ = true;
 	}
