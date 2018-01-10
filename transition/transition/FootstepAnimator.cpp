@@ -1,17 +1,33 @@
 #include "FootstepAnimator.h"
 #include <iostream>
 
-FootstepAnimator::FootstepAnimator(const std::string& name, FootstepNode* left_foot, FootstepNode* right_foot, bool left_start, glm::vec3 step_size) : AnimatorNode(name)
+FootstepAnimator::FootstepAnimator(const std::string& name, FootstepNode* left_foot, FootstepNode* right_foot, bool left_start, glm::vec3 step_size, CameraSplineController *spline_controller) : AnimatorNode(name)
 {
 	this->left_foot_ = left_foot;
 	this->right_foot_ = right_foot;
 	this->left_start_ = left_start;
 	this->step_size_ = step_size;
 	this->animating_ = false;
+	this->spline_controller_ = spline_controller;
+	this->flash_done_ = false;
 }
 
 void FootstepAnimator::update(double delta)
 {
+
+	std::cout << spline_controller_->get_progress() << std::endl;
+	if (spline_controller_->get_progress() > 19 && !this->flash_done_)
+	{
+		right_foot_->start_emitting();
+		left_foot_->start_emitting();
+
+		this->flash_done_ = true;
+	}
+
+	if (spline_controller_->get_progress() > 27.5) {
+		this->animating_ = true;
+	}
+
 	if (!this->animating_)
 	{
 		return;

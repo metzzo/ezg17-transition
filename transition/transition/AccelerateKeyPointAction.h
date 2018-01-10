@@ -27,6 +27,6 @@ public:
 		}
 
 		// reverse time
-		controller->set_progress(controller->get_progress() - delta);
+		controller->set_progress(std::max(controller->get_progress() - delta, 0.0));
 	}
 };

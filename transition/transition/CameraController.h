@@ -21,6 +21,7 @@ private:
 	glm::vec3 lookat_;
 	GeometryNode* look_at_marker_;
 	MeshResource* mesh_;
+	glm::mat4 save_trafo_[10];
 public:
 	CameraController(const std::string name, TransformationNode *camera, GroupNode *container);
 	void update(double delta) override;

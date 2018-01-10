@@ -20,16 +20,12 @@ public:
 
 	void update(CameraSplineController* controller, float delta, float tween) override
 	{
-		if (progress_ < 4)
+		if (progress_ < 4.25)
 		{
 			this->lamp_controller_->set_brightness(0.0);
 		}
 		else {
-			this->lamp_controller_->set_brightness(glm::mix(0.2, 1.0, std::min(((progress_ - 4) / 5)*((progress_ - 4) / 5), 1.0f)));
-
-			auto bloom = glm::mix(0.0, 0.8, std::min((progress_ - 4) / 10, 1.0f));
-			bloom = bloom*bloom;
-			cam_->set_bloom_params(2, bloom, 0.8 - bloom);
+			this->lamp_controller_->set_brightness(glm::mix(0.5, 1.0, std::min(((progress_ - 4.25f) / 5)*((progress_ - 4.25f) / 5), 1.0f)));
 		}
 
 		this->progress_ += delta;

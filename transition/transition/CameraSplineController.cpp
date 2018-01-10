@@ -46,33 +46,28 @@ void CameraSplineController::update(double delta)
 	// position
 	float tween = this->progress_ / this->duration_ * this->position_spline_->getMaxT();
 
-	if (int(this->progress_) % 2 == 0) {
-		std::cout << "Tween: " << tween << std::endl;
-	}
-
 	const Vector3 interpolated_pos = this->position_spline_->getPosition(tween);
 	const glm::vec3 new_pos = glm::vec3(interpolated_pos[0], interpolated_pos[1], interpolated_pos[2]);
 	
 	// rotation
-	KeyPoint *current_keypoint = this->keypoints_[int(tween + 1)];
-	glm::vec3 target_look_at = current_keypoint->look_at_pos;
-	glm::vec3 forward = glm::normalize(glm::transpose(get_target()->get_inverse_transformation()) * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
-	glm::mat4 current_rotation = glm::inverse(glm::lookAt(glm::vec3(0, 0, 0), forward, glm::vec3(0, 1, 0)));
+	KeyPoint *current_keypoint = this->keypoints_[int(tween) + 1];
+	glm::vec3 target_look_at = current_keypoint->look_at_pos; // this->target_->get_position();  
+	//std::cout << "Look At " << target_look_at.x << " " << target_look_at.y << " " << target_look_at.z << std::endl;
+
 	glm::vec3 target_direction = target_look_at - new_pos;
+
 	glm::mat4 new_rotation;
-	auto global_tween = (this->progress_ - this->keypoints_[int(tween) + 1]->at_time) / this->keypoints_[int(tween) + 1]->duration;
+	float global_tween = (tween - current_keypoint->at_time) / float(current_keypoint->duration / this->duration_ * this->position_spline_->getMaxT());
 	if (glm::length(target_direction) >= 0.00001)
 	{
 		glm::mat4 target_rotation = glm::inverse(glm::lookAt(glm::vec3(0, 0, 0), target_direction, glm::vec3(0, 1, 0)));
+		glm::quat quat_target = glm::quat_cast(target_rotation);
 
-		new_rotation = glm::interpolate(current_rotation, target_rotation, 0.5f*float(delta));
+		this->current_rotation_ = glm::mix(this->current_rotation_, quat_target, global_tween*global_tween);
 
-	} else
-	{
-		new_rotation = current_rotation;
 	}
 	
-	glm::mat4 mat = glm::translate(new_pos) * new_rotation;
+	glm::mat4 mat = glm::translate(new_pos) * glm::mat4_cast(this->current_rotation_);
 	get_target()->set_transformation(mat);
 
 
@@ -99,6 +94,10 @@ void CameraSplineController::init(RenderingEngine* rendering_engine)
 	const glm::vec3 new_pos = glm::vec3(interpolated_pos[0], interpolated_pos[1], interpolated_pos[2]);
 	auto mat = glm::lookAt(new_pos, this->keypoints_[1]->look_at_pos, glm::vec3(0, 1, 0));
 	get_target()->set_transformation(glm::inverse(mat), mat);
+
+
+	glm::vec3 forward = glm::normalize(glm::transpose(get_target()->get_inverse_transformation()) * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
+	this->current_rotation_ = glm::quat_cast(glm::inverse(glm::lookAt(glm::vec3(0, 0, 0), forward, glm::vec3(0, 1, 0))));
 
 #ifdef VISUALIZE_KEYPOINTS
 	this->keypoint_visualizer_->init();
@@ -135,10 +134,8 @@ void CameraSplineController::build_spline()
 	position_spline_points.push_back(Vector3({ first->pos.x, first->pos.y, first->pos.z }));
 	for (int i = 0; i <= timeless_position_spline.getMaxT(); i++)
 	{
-		position_spline_points.push_back(timeless_position_spline.getPosition(i));
 		auto keypoint = this->keypoints_[i + 1];
-		new_keypoints.push_back(keypoint);
-		for (int time = 1; time < keypoint->duration; time++)
+		for (int time = 1; time <= keypoint->duration; time++)
 		{ 
 			auto tweened_pos = timeless_position_spline.getPosition(i + float(time) / keypoint->duration);
 			position_spline_points.push_back(tweened_pos);
@@ -172,7 +169,7 @@ void CameraSplineController::build_spline()
 TransformationNode* CameraSplineController::get_target() const
 {
 #ifdef VISUALIZE_KEYPOINTS
-	return test_cam_ ? test_cam_ : this->target_;
+	return test_cam_ && ! glfwGetKey(this->get_rendering_engine()->get_window(), GLFW_KEY_F12) ? test_cam_ : this->target_;
 #else
 		return this->target_;
 #endif

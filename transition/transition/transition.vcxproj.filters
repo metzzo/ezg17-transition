@@ -226,9 +226,6 @@
     <ClInclude Include="AccelerateKeyPointAction.h">
       <Filter>Headerdateien\Controller\Actions</Filter>
     </ClInclude>
-    <ClInclude Include="ShowFeetKeyPointAction.h">
-      <Filter>Headerdateien\Controller\Actions</Filter>
-    </ClInclude>
     <ClInclude Include="LightKeyPointAction.h">
       <Filter>Headerdateien\Controller\Actions</Filter>
     </ClInclude>

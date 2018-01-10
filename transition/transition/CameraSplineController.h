@@ -3,6 +3,7 @@
 #include "BloomAddShader.h"
 #include <spline_library/splines/uniform_cr_spline.h>
 #include <spline_library/vector.h>
+#include <glm/gtc/quaternion.hpp>
 
 //#define VISUALIZE_KEYPOINTS
 
@@ -58,6 +59,7 @@ class CameraSplineController :
 	double duration_;
 
 	UniformCRSpline<Vector3> *position_spline_;
+	glm::quat current_rotation_;
 
 #ifdef VISUALIZE_KEYPOINTS
 	MeshResource* keypoint_visualizer_;

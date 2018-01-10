@@ -150,8 +150,8 @@ MeshResource* MeshResource::create_cube(glm::vec3 color)
 	}
 
 	Material mat;
-	mat.set_ambient_color(color);
-	mat.set_diffuse_color(glm::vec3(0, 0, 0));
+	mat.set_ambient_color(color*0.2f);
+	mat.set_diffuse_color(color);
 	mat.set_specular_color(glm::vec3(0, 0, 0));
 
 	return new MeshResource(

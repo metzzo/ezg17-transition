@@ -12,7 +12,6 @@ CameraController::CameraController(const std::string name, TransformationNode *t
 	this->target_ = target;
 	this->n_pressed_ = false;
 
-
 	this->mesh_ = MeshResource::create_cube(glm::vec3(0, 1, 0));
 	this->look_at_marker_ = new GeometryNode("keypoint", mesh_);
 	container->add_node(this->look_at_marker_);
@@ -41,6 +40,21 @@ void CameraController::update(double delta)
 			"), glm::vec3(" << lookat.x << ", " << lookat.y << ", " << lookat.z <<
 			"), 0));\n";
 		file.close();
+	}
+	for (int i = 0; i < 10; i++) {
+		if (glfwGetKey(window, GLFW_KEY_F1 + i))
+		{
+			if (glfwGetKey(window, GLFW_KEY_RIGHT_ALT))
+			{
+				std::cout << "Restored from " << i << std::endl;
+				this->target_->set_transformation(this->save_trafo_[i]);
+			} else
+			{
+				std::cout << "Save to " << i << std::endl;
+				this->save_trafo_[i] = this->target_->get_transformation();
+			}
+			
+		}
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_C))
