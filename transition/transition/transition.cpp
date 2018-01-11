@@ -53,7 +53,7 @@ int main()
 	car_light->set_color(glm::vec3(255/255.0, 255 / 255.0, 223 / 255.0), glm::vec3(1.0, 0.0, 0.0));
 	car_light->set_cutoff(12.5f, 50.0f);
 	car_light->set_shadow_strategy(new DirectionalShadowStrategy(1024), 0, 0);
-	car_light->set_volumetric(true, 20000.0, 0.05, true, 16);
+	car_light->set_volumetric(true, 20000.0, 0.05, true, 32);
 	((GroupNode*)root->find_by_name("darkroom"))->add_node(car_light);
 
 	auto car_anim = new CarController("car_anim", car_light);
@@ -141,7 +141,7 @@ int main()
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(77.0854, 4.77344, -21.1752), glm::vec3(91.0045, 4.77344, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(84.3001, 4.77344, -11.5358), glm::vec3(91.0045, 4.77344, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 16.3427, -16.337), glm::vec3(91.0045, 4.77344, -19.635), 5, { new RoomEnableKeyPointAction(2, false) }));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 18, -16.337), glm::vec3(91.0045, 4.77344, -19.635), 5));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 18, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 30.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 40.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 50.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
