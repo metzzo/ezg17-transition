@@ -235,10 +235,16 @@
     <ClInclude Include="BloomAction.h">
       <Filter>Headerdateien\Controller\Actions</Filter>
     </ClInclude>
-    <ClInclude Include="DoorAction.h">
+    <ClInclude Include="ClearColorAction.h">
       <Filter>Headerdateien\Controller\Actions</Filter>
     </ClInclude>
-    <ClInclude Include="ClearColorAction.h">
+    <ClInclude Include="DoorAnimation.h">
+      <Filter>Headerdateien\Controller\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationAction.h">
+      <Filter>Headerdateien\Controller\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="PianoAnimation.h">
       <Filter>Headerdateien\Controller\Actions</Filter>
     </ClInclude>
   </ItemGroup>

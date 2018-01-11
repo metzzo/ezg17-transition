@@ -16,6 +16,8 @@ class OmniDirectionalDepthShader;
 class FrustumG;
 class Node;
 
+#define PLAY_SOUND 1
+
 class RenderingEngine
 {
 	GLFWwindow *window_;

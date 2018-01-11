@@ -14,5 +14,8 @@ public:
 	std::vector<AnimatorNode*> get_animator_nodes() override;
 
 	virtual void update(double delta) = 0;
+
+	//Most animations start automatically. If not call this method! (Worst method name ever)
+	virtual void start_if_not_automatic() {}
 };
 

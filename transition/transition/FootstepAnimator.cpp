@@ -12,9 +12,6 @@ FootstepAnimator::FootstepAnimator(const std::string& name, FootstepNode* left_f
 	this->animating_ = false;
 	this->flash_done_ = false;
 	this->progress_ = 0.0;
-#ifdef VISUALIZE_KEYPOINTS
-	this->progress_ = 25;
-#endif
 }
 
 void FootstepAnimator::update(double delta)
