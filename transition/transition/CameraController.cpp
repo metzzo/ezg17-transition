@@ -57,7 +57,7 @@ void CameraController::update(double delta)
 		}
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_C))
+	/*if (glfwGetKey(window, GLFW_KEY_C))
 	{
 		look_at_marker_->set_transformation(glm::translate(this->target_->get_position()));
 	}
@@ -66,7 +66,7 @@ void CameraController::update(double delta)
 	{
 		auto mat = glm::inverse(glm::lookAt(this->target_->get_position(), look_at_marker_->get_position(), glm::vec3(0, 1, 0)));
 		target_->set_transformation(mat);
-	}
+	}*/
 
 
 	glm::vec3 sidedirection = glm::cross(viewdirection, glm::vec3(0, 1, 0));

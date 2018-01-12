@@ -111,7 +111,7 @@ void CameraSplineController::update(double delta)
 
 
 	if (this->progress_ < this->duration_) {
-		this->progress_ += delta*(1 + glfwGetKey(get_rendering_engine()->get_window(), GLFW_KEY_PAGE_UP)*5);
+		this->progress_ += delta;// delta*(1 + glfwGetKey(get_rendering_engine()->get_window(), GLFW_KEY_PAGE_UP) * 5);
 	}
 	this->progress_ = std::min(this->progress_, this->duration_);
 

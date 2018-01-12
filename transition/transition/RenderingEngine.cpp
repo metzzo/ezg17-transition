@@ -159,6 +159,7 @@ void RenderingEngine::run()
 			last_fps_time = current_time;
 		}
 		last_time = current_time;
+		delta = delta*(1 + glfwGetKey(get_window(), GLFW_KEY_PAGE_UP) * 5)*(1+ glfwGetKey(get_window(), GLFW_KEY_RIGHT_SHIFT)*2);
 
 		if (glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 			glfwSetWindowShouldClose(window_, true);

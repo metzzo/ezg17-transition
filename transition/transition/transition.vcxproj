@@ -169,6 +169,7 @@
     <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="AnimationAction.h" />
     <ClInclude Include="DoorAnimation.h" />
+    <ClInclude Include="FootColorAction.h" />
     <ClInclude Include="FootstepAnimator.h" />
     <ClInclude Include="FootstepNode.h" />
     <ClInclude Include="FootParticleShader.h" />

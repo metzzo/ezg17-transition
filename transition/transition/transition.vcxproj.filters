@@ -250,6 +250,9 @@
     <ClInclude Include="HallLightIncreaseAction.h">
       <Filter>Headerdateien\Controller\Actions</Filter>
     </ClInclude>
+    <ClInclude Include="FootColorAction.h">
+      <Filter>Headerdateien\Controller\Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">

@@ -15,6 +15,8 @@ private:
 	bool animating_;
 	bool flash_done_;
 	double progress_;
+	float foot_speed_ = 2.181818181818181818;
+	int stage = 1;
 
 public:
 	FootstepAnimator(const std::string& name, FootstepNode* left_foot_, FootstepNode* right_foot_, bool left_start_, glm::vec3 stepsize);

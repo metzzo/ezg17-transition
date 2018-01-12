@@ -27,6 +27,7 @@
 #include "PianoAnimation.h"
 #include <fstream>
 #include "HallLightIncreaseAction.h"
+#include "FootColorAction.h"
 
 int main()
 {
@@ -131,7 +132,18 @@ int main()
 	auto door3b = root->find_by_name("DoorAHandle_001_0");
 	glm::vec3 d3angle = door3a->get_position();
 
-	auto feet_pos = (glm::vec3(0, 0, 7) + glm::vec3(-2, 0, 8)) / 2.0f;
+	//auto feet_pos = (glm::vec3(0, 0, 7) + glm::vec3(-2, 0, 8)) / 2.0f;
+	auto feet_pos = (glm::vec3(3.8, 0, 5) + glm::vec3(1.8, 0, 5)) / 2.0f;
+
+	ShaderResource* main_shader = engine->get_main_shader();
+	auto right = new FootstepNode("emitter", main_shader, false);
+	root->add_node(right);
+	right->apply_transformation(Transformation::translate(glm::vec3(3.8, 0, 5)));
+	auto left = new FootstepNode("emitter", main_shader, true);
+	root->add_node(left);
+	left->apply_transformation(Transformation::translate(glm::vec3(1.8, 0, 5)));
+	FootstepAnimator* footanim = new FootstepAnimator("footanim", left, right, false, glm::vec3(0, 0, -2));
+	root->add_node(footanim);
 
 	auto cam_spline_controller = new CameraSplineController("spline_cam_controller", cam, root);
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(-1.91211, 2.66449, 17.5909), glm::vec3(-5.39691, 9.64562, -8.49919), 0)); // back
@@ -152,7 +164,7 @@ int main()
 	PianoAnimation* pianoanim = new PianoAnimation("PianoAnim", root->find_by_name("ThePiano"));
 	root->add_node(pianoanim);
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.73851, 3.93666, -1.35578), glm::vec3(2.74811, 3.93666, -25.5096), 5, { new AnimationAction(door1anim), new AnimationAction(pianoanim), new RoomEnableKeyPointAction(1, true) }));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(3.12215, 3.93666, -8.7304), glm::vec3(2.74811, 3.93666, -25.5096), 5));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(3.12215, 3.93666, -8.7304), glm::vec3(2.74811, 3.93666, -25.5096), 5, { new FootColorAction(left, glm::vec3(1, 0.5, 0)), new FootColorAction(right, glm::vec3(1, 0.5, 0))}));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(3.23171, 3.93666, -12.9764), glm::vec3(2.74811, 3.93666, -25.5096), 5));
 
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.91994, 3.93666, -16.3544), glm::vec3(-1.14446, 1.79147, -25.2764), 5, { new RoomEnableKeyPointAction(0, false) })); // turning around chair
@@ -172,7 +184,7 @@ int main()
 	auto door2banim = new DoorAnimation("Door2bAnim", door2b, d2angle, 1);
 	root->add_node(door2aanim);
 	root->add_node(door2banim);
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.0, 7.5871, -23.6803), glm::vec3(50.1475, 7.5871, -21.8012), 7, { new AnimationAction(door2aanim), new AnimationAction(door2banim), new RoomEnableKeyPointAction(2, true), hall_action_1, hall_action_2 }));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.0, 7.5871, -23.6803), glm::vec3(50.1475, 7.5871, -21.8012), 7, { new AnimationAction(door2aanim), new AnimationAction(door2banim), new RoomEnableKeyPointAction(2, true), hall_action_1, hall_action_2, new FootColorAction(left, glm::vec3(1, 1, 0), 1.7), new FootColorAction(right, glm::vec3(1,1,0), 2.5) }));
 
 	// hallway
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.61161, 7.5871, -21.6465), glm::vec3(50.1475, 7.5871, -21.8012), 7, { hall_action_1, hall_action_2 }));
@@ -183,7 +195,7 @@ int main()
 	root->add_node(door3aanim);
 	root->add_node(door3banim);
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(23.6967, 4.77344, -21.4799), glm::vec3(91.0045, 4.77344, -19.635), 7, { new ClearColorAction(glm::vec4(9 / 255.0, 94 / 255.0, 232 / 255.0, 1)), new AnimationAction(door3aanim), new AnimationAction(door3banim), new RoomEnableKeyPointAction(1, false), new RoomEnableKeyPointAction(3, true) }));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(47.7877, 4.77344, -22.2962), glm::vec3(91.0045, 4.77344, -19.635), 5));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(47.7877, 4.77344, -22.2962), glm::vec3(91.0045, 4.77344, -19.635), 5, {  new FootColorAction(left, glm::vec3(1, 1, 1)), new FootColorAction(right, glm::vec3(1, 1, 1)) }));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(55.1978, 4.77344, -22.1224), glm::vec3(91.0045, 4.77344, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(62.5513, 4.77344, -21.8042), glm::vec3(91.0045, 4.77344, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(70.5708, 4.77344, -21.4571), glm::vec3(91.0045, 4.77344, -19.635), 5));
@@ -201,16 +213,6 @@ int main()
 
 	cam_spline_controller->build_spline();
 	root->add_node(cam_spline_controller);
-
-	ShaderResource* main_shader = engine->get_main_shader();
-	auto right = new FootstepNode("emitter", main_shader, false);
-	root->add_node(right);
-	right->apply_transformation(Transformation::translate(glm::vec3(3.8, 0, 5)));
-	auto left = new FootstepNode("emitter", main_shader, true);
-	root->add_node(left);
-	left->apply_transformation(Transformation::translate(glm::vec3(1.8, 0, 5)));
-	FootstepAnimator* footanim = new FootstepAnimator("footanim", left, right, false, glm::vec3(0, 0, -2));
-	root->add_node(footanim);
 
 #ifdef VISUALIZE_KEYPOINTS
 	auto anim = new CameraController("cam_anim", cam, root);
