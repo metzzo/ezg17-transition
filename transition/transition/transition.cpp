@@ -26,6 +26,7 @@
 #include "ClearColorAction.h"
 #include "PianoAnimation.h"
 #include <fstream>
+#include "HallLightIncreaseAction.h"
 
 int main()
 {
@@ -109,13 +110,26 @@ int main()
 	LightNode* living_room_light = static_cast<LightNode*>(root->find_by_name("Point"));
 	living_room_light->set_shadow_strategy(living_room_light->get_shadow_strategy(), 0.05, 0.2);
 
+	//Hall Lights
+	LightNode* hall_light_1 = static_cast<LightNode*>(root->find_by_name("GangLicht_"));
+	LightNode* hall_light_2 = static_cast<LightNode*>(root->find_by_name("GangLicht2_"));
+	hall_light_1->set_color(glm::vec3(0), glm::vec3(0));
+	hall_light_2->set_color(glm::vec3(0), glm::vec3(0));
+	GeometryNode* hall_bulb_1 = static_cast<GeometryNode*>(root->find_by_name("Sphere_002_0"));
+	GeometryNode* hall_bulb_2 = static_cast<GeometryNode*>(root->find_by_name("Sphere_003_0"));
+	hall_bulb_1->get_editable_mesh_resource()->get_editable_material().set_ambient_color(glm::vec3(0));
+	hall_bulb_2->get_editable_mesh_resource()->get_editable_material().set_ambient_color(glm::vec3(0));
+	HallLightIncreaseAction* hall_action_1 = new HallLightIncreaseAction(hall_bulb_1, hall_light_1, 8, 3);
+	HallLightIncreaseAction* hall_action_2 = new HallLightIncreaseAction(hall_bulb_2, hall_light_2, 8, 3);
+
 	auto door1 = static_cast<GeometryNode*>(root->find_by_name("Door1_0"));
 	glm::vec3 d1angle = door1->get_position();
-	auto door2a = root->find_by_name("DoorADoor");
-	auto door2b = root->find_by_name("DoorAHandle");
-	glm::vec3 d2angle = glm::vec3(12.8, 0, -19.6);
-	auto door3 = root->find_by_name("Moveable");
-	glm::vec3 d3angle = glm::vec3(51, 0, -23.5);
+	auto door2a = static_cast<GeometryNode*>(root->find_by_name("DoorADoor_0"));
+	auto door2b = root->find_by_name("DoorAHandle_0");
+	glm::vec3 d2angle = door2a->get_position();
+	auto door3a = static_cast<GeometryNode*>(root->find_by_name("DoorADoor_001_0"));
+	auto door3b = root->find_by_name("DoorAHandle_001_0");
+	glm::vec3 d3angle = door3a->get_position();
 
 	auto feet_pos = (glm::vec3(0, 0, 7) + glm::vec3(-2, 0, 8)) / 2.0f;
 
@@ -155,18 +169,20 @@ int main()
 
 	// going outside
 	auto door2aanim = new DoorAnimation("Door2aAnim", door2a, d2angle, 1);
-	auto door2banim = new DoorAnimation("Door2bAnim", door2b, d2angle, 1.2);
+	auto door2banim = new DoorAnimation("Door2bAnim", door2b, d2angle, 1);
 	root->add_node(door2aanim);
 	root->add_node(door2banim);
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.0, 7.5871, -23.6803), glm::vec3(50.1475, 7.5871, -21.8012), 7, { new AnimationAction(door2aanim), new AnimationAction(door2banim), new RoomEnableKeyPointAction(2, true) }));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.0, 7.5871, -23.6803), glm::vec3(50.1475, 7.5871, -21.8012), 7, { new AnimationAction(door2aanim), new AnimationAction(door2banim), new RoomEnableKeyPointAction(2, true), hall_action_1, hall_action_2 }));
 
 	// hallway
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.61161, 7.5871, -21.6465), glm::vec3(50.1475, 7.5871, -21.8012), 7));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.61161, 7.5871, -21.6465), glm::vec3(50.1475, 7.5871, -21.8012), 7, { hall_action_1, hall_action_2 }));
 
 
-	auto door3anim = new DoorAnimation("Door3Anim", door3, d3angle, 1.2, false);
-	root->add_node(door3anim);
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(23.6967, 4.77344, -21.4799), glm::vec3(91.0045, 4.77344, -19.635), 7, { new ClearColorAction(glm::vec4(9 / 255.0, 94 / 255.0, 232 / 255.0, 1)), new AnimationAction(door3anim), new RoomEnableKeyPointAction(1, false), new RoomEnableKeyPointAction(3, true) }));
+	auto door3aanim = new DoorAnimation("Door3aAnim", door3a, d3angle, 1.2, false);
+	auto door3banim = new DoorAnimation("Door3bAnim", door3b, d3angle, 1.2, false);
+	root->add_node(door3aanim);
+	root->add_node(door3banim);
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(23.6967, 4.77344, -21.4799), glm::vec3(91.0045, 4.77344, -19.635), 7, { new ClearColorAction(glm::vec4(9 / 255.0, 94 / 255.0, 232 / 255.0, 1)), new AnimationAction(door3aanim), new AnimationAction(door3banim), new RoomEnableKeyPointAction(1, false), new RoomEnableKeyPointAction(3, true) }));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(47.7877, 4.77344, -22.2962), glm::vec3(91.0045, 4.77344, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(55.1978, 4.77344, -22.1224), glm::vec3(91.0045, 4.77344, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(62.5513, 4.77344, -21.8042), glm::vec3(91.0045, 4.77344, -19.635), 5));

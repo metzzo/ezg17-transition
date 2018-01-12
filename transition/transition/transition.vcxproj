@@ -181,6 +181,7 @@
     <ClInclude Include="GLDebugContext.h" />
     <ClInclude Include="glheaders.h" />
     <ClInclude Include="GroupNode.h" />
+    <ClInclude Include="HallLightIncreaseAction.h" />
     <ClInclude Include="IDrawable.h" />
     <ClInclude Include="ILightShader.h" />
     <ClInclude Include="IResource.h" />
