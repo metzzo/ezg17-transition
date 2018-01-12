@@ -76,6 +76,10 @@ int main()
 	tree_light->set_view_matrix(glm::lookAt(glm::vec3(120, 50, -19), glm::vec3(92, 21, -19), glm::vec3(0, 1, 0)));
 	((GroupNode*)root->find_by_name("treeroom"))->add_node(tree_light);
 
+	//Adapt shadow strategy for living room
+	LightNode* living_room_light = (LightNode*)root->find_by_name("Point");
+	living_room_light->set_shadow_strategy(living_room_light->get_shadow_strategy(), 0.05, 0.2);
+
 	auto door1 = (GeometryNode*)root->find_by_name("Door1_0");
 	glm::vec3 d1angle = door1->get_position();
 	auto door2a = root->find_by_name("DoorADoor");
