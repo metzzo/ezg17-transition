@@ -3,14 +3,18 @@
 #include <glm/gtx/spline.hpp>
 #include <iostream>
 #include <algorithm>
+#include "RenderingEngine.h"
 
 CarController::CarController(std::string name, LightNode *moving) : AnimatorNode(name)
 {
 	this->moving_ = moving;
 	this->progress_ = 4.5;
 
-	diff_color_ = this->moving_->get_diffuse();
-	spec_color_ = this->moving_->get_specular();
+	this->diff_color_ = this->moving_->get_diffuse();
+	this->spec_color_ = this->moving_->get_specular();
+
+	this->sound_source_ = nullptr;
+	this->sound_ = nullptr;
 }
 
 
@@ -36,7 +40,25 @@ void CarController::update(double delta)
 		spec_color
 	);
 
-	this->progress_ = fmod(this->progress_ + delta, 15);
 
-	//std::cout << "Progress " << this->progress_ << " Segment: " << this->segment_ << std::endl;
+#ifdef PLAY_SOUND
+	if (this->progress_ > 10 && (this->sound_ == nullptr || this->sound_->isFinished())) {
+		if (this->sound_ != nullptr)
+		{
+			this->sound_->drop();
+		}
+		this->sound_ = this->get_rendering_engine()->get_sound_engine()->play2D(this->sound_source_, false, false, true);
+		this->sound_->setVolume(0.025);
+	}
+#endif
+
+	this->progress_ = fmod(this->progress_ + delta, 15);
+}
+
+void CarController::init(RenderingEngine* rendering_engine)
+{
+	AnimatorNode::init(rendering_engine);
+
+	// load sound
+	this->sound_source_ = rendering_engine->get_sound_engine()->addSoundSourceFromFile("assets/sfx/car.wav", irrklang::ESM_AUTO_DETECT, true);
 }

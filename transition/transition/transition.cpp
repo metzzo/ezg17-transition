@@ -96,8 +96,6 @@ int main()
 	auto broken_lamp = new BrokenLampController("broken_lamp", lamp);
 	root->add_node(broken_lamp);
 
-	root->add_node(new LookAtController("lookat", cam, car_light));
-
 	auto tree_light = new LightNode("tree_light", SPOT_LIGHT);
 	tree_light->set_attenuation(1.0, 0.0, 0.0);
 	tree_light->set_color(glm::vec3(0.9, 0.9, 0.8), glm::vec3(0.8, 0.8, 0.8));

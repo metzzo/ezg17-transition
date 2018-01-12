@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/vec2.hpp>
 #include <vector>
+#include <irrKlang/ik_ISoundEngine.h>
 struct GLFWwindow;
 class GroupNode;
 class IResource;
@@ -40,6 +41,7 @@ class RenderingEngine
 	OmniDirectionalDepthShader *omni_directional_depth_shader_;
 
 	FrustumG *frustum_;
+	irrklang::ISoundEngine *sound_engine_;
 
 public:
 	explicit RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int refresh_rate);
@@ -76,6 +78,11 @@ public:
 
 	GLFWwindow* get_window() const {
 		return this->window_;
+	}
+
+	irrklang::ISoundEngine *get_sound_engine() const
+	{
+		return this->sound_engine_;
 	}
 
 	void set_room_enabled(int room, bool enable);

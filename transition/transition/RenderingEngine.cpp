@@ -104,6 +104,7 @@ void RenderingEngine::run()
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	}
 #endif
+	this->sound_engine_ = irrklang::createIrrKlangDevice();
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -141,9 +142,9 @@ void RenderingEngine::run()
 
 	const auto main_camera = static_cast<CameraNode*>(this->root_node_->find_by_name("MainCamera"));
 
-	irrklang::ISoundEngine* sound = irrklang::createIrrKlangDevice();
 #ifdef PLAY_SOUND
-		sound->play2D("assets/sfx/transition_edit.mp3", false);
+	auto music = this->sound_engine_->addSoundSourceFromFile("assets/sfx/transition_edit.mp3", irrklang::ESM_AUTO_DETECT, true);
+	this->sound_engine_->play2D(music, false);
 #endif
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -214,7 +215,7 @@ void RenderingEngine::run()
 	for (auto& resource : resources_) {
 		delete resource;
 	}
-	sound->drop();
+	this->sound_engine_->drop();
 }
 
 void RenderingEngine::set_room_enabled(int room, bool enable)
