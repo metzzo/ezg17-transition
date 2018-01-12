@@ -25,20 +25,51 @@
 #include "DoorAnimation.h"
 #include "ClearColorAction.h"
 #include "PianoAnimation.h"
+#include <fstream>
 
 int main()
 {
-	int WINDOW_WIDTH = 1600;
-	int WINDOW_HEIGHT = 900;
-	bool WINDOW_FULLSCREEN = false;
-	int REFRESH_RATE = 60;
+	int window_width = 1600;
+	int window_height = 900;
+	bool window_fullscreen = false;
+	int refresh_rate = 60;
 
-	auto engine = new RenderingEngine(glm::ivec2(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_FULLSCREEN, REFRESH_RATE);
+	std::ifstream config("assets/config.txt");
+	if (config.is_open())
+	{
+		std::string line;
+		while (std::getline(config, line))
+		{
+			auto sep = line.find("=");
+			auto param = line.substr(0, sep);
+			auto value = line.substr(sep + 1);
+
+			if (param == "width")
+			{
+				window_width = std::stoi(value);
+			} else if (param == "height")
+			{
+				window_height = std::stoi(value);
+			}
+			else if (param == "fullscreen")
+			{
+				window_fullscreen = std::stoi(value);
+			} else if (param == "refreshrate") {
+				refresh_rate = std::stoi(value);
+			} else
+			{
+				std::cout << "Unknown Parameter " << param << std::endl;
+			}
+		}
+		config.close();
+	}
+
+	auto engine = new RenderingEngine(glm::ivec2(window_width, window_height), window_fullscreen, refresh_rate);
 	auto root = engine->get_root_node();
 
 	const auto cam = new CameraNode("MainCamera",
 		engine->get_viewport(),
-		60.0f, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 75.0f, true
+		60.0f, float(window_width) / float(window_height), 0.1f, 75.0f, true
 	);
 	cam->set_bloom_params(1, 1.0, 1);
 	cam->set_view_matrix(glm::lookAt(glm::vec3(6.11709, 5.40085, -9.8344), glm::vec3(-4.42165, 5.40085, -3.74445), glm::vec3(0, 1, 0)));
@@ -53,8 +84,8 @@ int main()
 	car_light->set_color(glm::vec3(255/255.0, 255 / 255.0, 223 / 255.0), glm::vec3(1.0, 0.0, 0.0));
 	car_light->set_cutoff(12.5f, 50.0f);
 	car_light->set_shadow_strategy(new DirectionalShadowStrategy(1024), 0, 0);
-	car_light->set_volumetric(true, 20000.0, 0.05, true, 16);
-	((GroupNode*)root->find_by_name("darkroom"))->add_node(car_light);
+	car_light->set_volumetric(true, 20000.0, 0.05, true, 32);
+	static_cast<GroupNode*>(root->find_by_name("darkroom"))->add_node(car_light);
 
 	auto car_anim = new CarController("car_anim", car_light);
 	root->add_node(car_anim);
@@ -65,8 +96,6 @@ int main()
 	auto broken_lamp = new BrokenLampController("broken_lamp", lamp);
 	root->add_node(broken_lamp);
 
-	root->add_node(new LookAtController("lookat", cam, car_light));
-
 	auto tree_light = new LightNode("tree_light", SPOT_LIGHT);
 	tree_light->set_attenuation(1.0, 0.0, 0.0);
 	tree_light->set_color(glm::vec3(0.9, 0.9, 0.8), glm::vec3(0.8, 0.8, 0.8));
@@ -74,13 +103,13 @@ int main()
 	tree_light->set_shadow_strategy(new DirectionalShadowStrategy(4096), 0, 0);
 	tree_light->set_volumetric(true, 100000000, 0.00001, false, 64);
 	tree_light->set_view_matrix(glm::lookAt(glm::vec3(120, 50, -19), glm::vec3(92, 21, -19), glm::vec3(0, 1, 0)));
-	((GroupNode*)root->find_by_name("treeroom"))->add_node(tree_light);
+	static_cast<GroupNode*>(root->find_by_name("treeroom"))->add_node(tree_light);
 
 	//Adapt shadow strategy for living room
-	LightNode* living_room_light = (LightNode*)root->find_by_name("Point");
+	LightNode* living_room_light = static_cast<LightNode*>(root->find_by_name("Point"));
 	living_room_light->set_shadow_strategy(living_room_light->get_shadow_strategy(), 0.05, 0.2);
 
-	auto door1 = (GeometryNode*)root->find_by_name("Door1_0");
+	auto door1 = static_cast<GeometryNode*>(root->find_by_name("Door1_0"));
 	glm::vec3 d1angle = door1->get_position();
 	auto door2a = root->find_by_name("DoorADoor");
 	auto door2b = root->find_by_name("DoorAHandle");
@@ -104,7 +133,7 @@ int main()
 
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.12464, 3.93666, 10.4443), glm::vec3(2.74811, 3.93666, -25.5096), 5)); // moving towards door
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.39148, 3.93666, 5.31498), glm::vec3(2.74811, 3.93666, -25.5096), 5));
-	DoorAnimation* door1anim = new DoorAnimation("Door1Anim", door1, d1angle, 240.f / 55.f);
+	DoorAnimation* door1anim = new DoorAnimation("Door1Anim", door1, d1angle, 240.f / 55.f, true, true);
 	root->add_node(door1anim);
 	PianoAnimation* pianoanim = new PianoAnimation("PianoAnim", root->find_by_name("ThePiano"));
 	root->add_node(pianoanim);
@@ -145,7 +174,7 @@ int main()
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(77.0854, 4.77344, -21.1752), glm::vec3(91.0045, 4.77344, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(84.3001, 4.77344, -11.5358), glm::vec3(91.0045, 4.77344, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 16.3427, -16.337), glm::vec3(91.0045, 4.77344, -19.635), 5, { new RoomEnableKeyPointAction(2, false) }));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 18, -16.337), glm::vec3(91.0045, 4.77344, -19.635), 5));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 18, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 30.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 40.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 50.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
