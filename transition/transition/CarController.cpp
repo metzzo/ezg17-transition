@@ -15,6 +15,7 @@ CarController::CarController(std::string name, LightNode *moving) : AnimatorNode
 
 	this->sound_source_ = nullptr;
 	this->sound_ = nullptr;
+	this->sound_play_counter_ = 0;
 }
 
 
@@ -42,7 +43,8 @@ void CarController::update(double delta)
 
 
 #ifdef PLAY_SOUND
-	if (this->progress_ > 10 && (this->sound_ == nullptr || this->sound_->isFinished())) {
+	if (this->sound_play_counter_ < 5 && (this->progress_ > 10 && (this->sound_ == nullptr || this->sound_->isFinished()))) {
+		this->sound_play_counter_++;
 		if (this->sound_ != nullptr)
 		{
 			this->sound_->drop();

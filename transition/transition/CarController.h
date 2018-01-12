@@ -14,6 +14,7 @@ class CarController :
 	glm::vec3 spec_color_;
 	irrklang::ISoundSource* sound_source_;
 	irrklang::ISound* sound_;
+	int sound_play_counter_;
 public:
 	explicit CarController(std::string name, LightNode *moving);
 	~CarController();
