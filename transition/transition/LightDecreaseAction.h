@@ -4,19 +4,18 @@
 #include "GeometryNode.h"
 #include "LightNode.h"
 
-class HallLightIncreaseAction : public IKeyPointAction
+class LightDecreaseAction : public IKeyPointAction
 {
-	GeometryNode* bulb_;
 	LightNode* light_;
 	float delay_ = 0;
 	float duration_ = 0;
 	float passed_ = 0;
+	glm::vec3 startintensity_;
 
 public:
 
-	explicit HallLightIncreaseAction(GeometryNode* bulb, LightNode* light, float duration, float delay)
+	explicit LightDecreaseAction(LightNode* light, float duration, float delay)
 	{
-		this->bulb_ = bulb;
 		this->light_ = light;
 		this->duration_ = duration;
 		this->delay_ = delay;
@@ -26,14 +25,12 @@ public:
 	{
 		if (delay_ >= 0) {
 			delay_ -= delta;
+			startintensity_ = light_->get_diffuse();
 			return;
 		}
 		passed_ += delta;
-		float alpha = glm::min(passed_ / duration_, 1.0f);
-		if (this->bulb_ != nullptr) {
-			this->bulb_->get_editable_mesh_resource()->get_editable_material().set_ambient_color(glm::vec3(sqrt(alpha)));
-		}
-		this->light_->set_color(glm::vec3(alpha), glm::vec3(alpha));
+		float alpha = 1 -glm::min(passed_ / duration_, 1.0f);
+		this->light_->set_color(alpha * startintensity_, alpha * startintensity_);
 	}
 };
 

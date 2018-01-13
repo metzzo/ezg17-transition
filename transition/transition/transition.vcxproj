@@ -168,6 +168,7 @@
     <ClInclude Include="ColladaImporter.h" />
     <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="AnimationAction.h" />
+    <ClInclude Include="CullOffAction.h" />
     <ClInclude Include="DoorAnimation.h" />
     <ClInclude Include="FootColorAction.h" />
     <ClInclude Include="FootstepAnimator.h" />
@@ -186,6 +187,7 @@
     <ClInclude Include="IDrawable.h" />
     <ClInclude Include="ILightShader.h" />
     <ClInclude Include="IResource.h" />
+    <ClInclude Include="LightDecreaseAction.h" />
     <ClInclude Include="LightKeyPointAction.h" />
     <ClInclude Include="LightNode.h" />
     <ClInclude Include="LookAtController.h" />
@@ -202,6 +204,7 @@
     <ClInclude Include="RenderingNode.h" />
     <ClInclude Include="RoomEnableKeyPoint.h" />
     <ClInclude Include="ShaderResource.h" />
+    <ClInclude Include="StopAction.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextureRenderable.h" />
     <ClInclude Include="TextureFBO.h" />

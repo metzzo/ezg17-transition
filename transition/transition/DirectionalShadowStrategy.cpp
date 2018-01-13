@@ -62,11 +62,17 @@ void DirectionalShadowStrategy::before_render(const LightNode *light_node)
 	shader->use();
 	shader->set_camera_uniforms(light_node);
 
+	if (!RE_CULLING) {
+		glEnable(GL_CULL_FACE);
+	}
 	glCullFace(GL_FRONT);
 }
 
 void DirectionalShadowStrategy::after_render(const LightNode *light_node)
 {
+	if (!RE_CULLING) {
+		glDisable(GL_CULL_FACE);
+	}
 	glCullFace(GL_BACK);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

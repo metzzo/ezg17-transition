@@ -15,6 +15,8 @@
 #include "FrustumG.h"
 #include <irrKlang\irrKlang.h>
 
+bool RE_CULLING = true;
+
 RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int refresh_rate)
 {
 	this->root_node_ = new GroupNode("root");
@@ -222,4 +224,9 @@ void RenderingEngine::run()
 void RenderingEngine::set_room_enabled(int room, bool enable)
 {
 	this->rooms_[room]->set_enabled(enable);
+}
+
+void RenderingEngine::stop()
+{
+	glfwSetWindowShouldClose(window_, true);
 }

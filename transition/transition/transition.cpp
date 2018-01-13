@@ -28,6 +28,10 @@
 #include <fstream>
 #include "HallLightIncreaseAction.h"
 #include "FootColorAction.h"
+#include "CullOffAction.h"
+#include "BloomAction.h"
+#include "StopAction.h"
+#include "LightDecreaseAction.h"
 
 int main()
 {
@@ -163,9 +167,9 @@ int main()
 	root->add_node(door1anim);
 	PianoAnimation* pianoanim = new PianoAnimation("PianoAnim", root->find_by_name("ThePiano"));
 	root->add_node(pianoanim);
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.73851, 3.93666, -1.35578), glm::vec3(2.74811, 3.93666, -25.5096), 5, { new AnimationAction(door1anim), new AnimationAction(pianoanim), new RoomEnableKeyPointAction(1, true) }));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(3.12215, 3.93666, -8.7304), glm::vec3(2.74811, 3.93666, -25.5096), 5, { new FootColorAction(left, glm::vec3(1, 0.5, 0)), new FootColorAction(right, glm::vec3(1, 0.5, 0))}));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(3.23171, 3.93666, -12.9764), glm::vec3(2.74811, 3.93666, -25.5096), 5));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.73851, 3.93666, -1.35578), glm::vec3(2.74811, 3.93666, -25.5096), 5, { new AnimationAction(door1anim), new AnimationAction(pianoanim) }));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(3.12215, 3.93666, -8.7304), glm::vec3(2.74811, 3.93666, -25.5096), 5, { new FootColorAction(left, glm::vec3(1, 0.5, 0)), new FootColorAction(right, glm::vec3(1, 0.5, 0)), new RoomEnableKeyPointAction(1, true, 0.4) }));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(3.23171, 3.93666, -12.9764), glm::vec3(2.74811, 3.93666, -25.5096), 5, { new LightDecreaseAction(lamp, 4, 1)}));
 
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.91994, 3.93666, -16.3544), glm::vec3(-1.14446, 1.79147, -25.2764), 5, { new RoomEnableKeyPointAction(0, false) })); // turning around chair
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(6.16065, 3.93666, -24.8615), glm::vec3(-1.14446, 1.79147, -25.2764), 5));
@@ -187,29 +191,38 @@ int main()
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.0, 7.5871, -23.6803), glm::vec3(50.1475, 7.5871, -21.8012), 7, { new AnimationAction(door2aanim), new AnimationAction(door2banim), new RoomEnableKeyPointAction(2, true), hall_action_1, hall_action_2, new FootColorAction(left, glm::vec3(1, 1, 0), 1.7), new FootColorAction(right, glm::vec3(1,1,0), 2.5) }));
 
 	// hallway
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.61161, 7.5871, -21.6465), glm::vec3(50.1475, 7.5871, -21.8012), 7, { hall_action_1, hall_action_2 }));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(2.61161, 7.5871, -21.6465), glm::vec3(50.1475, 7.5871, -21.8012), 7, { hall_action_1, hall_action_2, new LightDecreaseAction(living_room_light, 5, 0) }));
 
-
+	auto treelight = static_cast<LightNode*>(root->find_by_name("Sun_"));
+	treelight->set_color(glm::vec3(0), glm::vec3(0));
+	auto treelightaction = new HallLightIncreaseAction(nullptr, treelight, 3.5, 3);
 	auto door3aanim = new DoorAnimation("Door3aAnim", door3a, d3angle, 1.2, false);
 	auto door3banim = new DoorAnimation("Door3bAnim", door3b, d3angle, 1.2, false);
 	root->add_node(door3aanim);
 	root->add_node(door3banim);
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(23.6967, 4.77344, -21.4799), glm::vec3(91.0045, 4.77344, -19.635), 7, { new ClearColorAction(glm::vec4(9 / 255.0, 94 / 255.0, 232 / 255.0, 1)), new AnimationAction(door3aanim), new AnimationAction(door3banim), new RoomEnableKeyPointAction(1, false), new RoomEnableKeyPointAction(3, true) }));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(47.7877, 4.77344, -22.2962), glm::vec3(91.0045, 4.77344, -19.635), 5, {  new FootColorAction(left, glm::vec3(1, 1, 1)), new FootColorAction(right, glm::vec3(1, 1, 1)) }));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(55.1978, 4.77344, -22.1224), glm::vec3(91.0045, 4.77344, -19.635), 5));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(62.5513, 4.77344, -21.8042), glm::vec3(91.0045, 4.77344, -19.635), 5));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(70.5708, 4.77344, -21.4571), glm::vec3(91.0045, 4.77344, -19.635), 5));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(77.0854, 4.77344, -21.1752), glm::vec3(91.0045, 4.77344, -19.635), 5));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(84.3001, 4.77344, -11.5358), glm::vec3(91.0045, 4.77344, -19.635), 5));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 16.3427, -16.337), glm::vec3(91.0045, 4.77344, -19.635), 5, { new RoomEnableKeyPointAction(2, false) }));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 18, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 30.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 40.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
+	//glm::vec4 brightbackground = glm::vec4(9 / 255.0, 94 / 255.0, 232 / 255.0, 1);
+	glm::vec4 brightbackground = glm::vec4(35 / 255.0, 110 / 255.0, 232 / 255.0, 1);
+	//glm::vec3 planecolor = glm::vec3(0.9, 0.9, 0.4);
+	glm::vec3 planecolor = glm::vec3(1, 1, 0.3);
+	static_cast<GeometryNode*>(root->find_by_name("Cube_0"))->get_editable_mesh_resource()->get_editable_material().set_diffuse_color(planecolor);
+	BloomAction* blomp = new BloomAction(cam, glm::vec2(1, 0), glm::vec2(0.8, 1), 8, 3);
+	BloomAction* blex = new BloomAction(cam, glm::vec2(0.8, 1), glm::vec2(0, 2), 4, 1);
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(23.6967, 4.77344, -21.4799), glm::vec3(91.0045, 4.77344, -19.635), 7, { new BloomAction(cam, glm::vec2(1, 1), glm::vec2(1, 0), 4.5, 2), new CullOffAction(), treelightaction, new ClearColorAction(brightbackground), new AnimationAction(door3aanim), new AnimationAction(door3banim), new RoomEnableKeyPointAction(1, false), new RoomEnableKeyPointAction(3, true) }));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(47.7877, 4.77344, -22.2962), glm::vec3(91.0045, 12, -19.635), 5, {  new FootColorAction(left, glm::vec3(0, 0, 0)), new FootColorAction(right, glm::vec3(0, 0, 0)) }));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(55.1978, 4.77344, -22.1224), glm::vec3(91.0045, 12, -19.635), 5));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(62.5513, 4.77344, -21.8042), glm::vec3(91.0045, 12, -19.635), 5));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(70.5708, 4.77344, -21.4571), glm::vec3(91.0045, 12, -19.635), 5));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(77.0854, 4.77344, -21.1752), glm::vec3(91.0045, 12, -19.635), 5));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(84.3001, 4.77344, -11.5358), glm::vec3(91.0045, 12, -19.635), 5));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 16.3427, -16.337), glm::vec3(91.0045, 11, -19.635), 5, { blomp, new RoomEnableKeyPointAction(2, false) }));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 18, -16.337), glm::vec3(100, 50, -19.635), 5, { blomp }));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 30.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5, { blomp, blex }));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 35.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 40.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5, {new StopAction(engine)}));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 50.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 60.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 70.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 80.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 90.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
 
 	cam_spline_controller->build_spline();
 	root->add_node(cam_spline_controller);

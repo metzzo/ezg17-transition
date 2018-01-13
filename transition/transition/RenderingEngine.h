@@ -18,9 +18,11 @@ class FrustumG;
 class Node;
 
 #define PLAY_SOUND 1
+extern bool RE_CULLING;	//Backface-Culling activated or not?
 
 class RenderingEngine
 {
+
 	GLFWwindow *window_;
 	GroupNode *root_node_;
 
@@ -44,6 +46,7 @@ class RenderingEngine
 	irrklang::ISoundEngine *sound_engine_;
 
 public:
+
 	explicit RenderingEngine::RenderingEngine(const glm::ivec2 viewport, bool fullscreen, int refresh_rate);
 	~RenderingEngine();
 
@@ -86,5 +89,7 @@ public:
 	}
 
 	void set_room_enabled(int room, bool enable);
+
+	void stop();
 };
 

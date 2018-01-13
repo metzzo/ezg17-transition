@@ -253,6 +253,15 @@
     <ClInclude Include="FootColorAction.h">
       <Filter>Headerdateien\Controller\Actions</Filter>
     </ClInclude>
+    <ClInclude Include="CullOffAction.h">
+      <Filter>Headerdateien\Controller\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="StopAction.h">
+      <Filter>Headerdateien\Controller\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="LightDecreaseAction.h">
+      <Filter>Headerdateien\Controller\Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">
