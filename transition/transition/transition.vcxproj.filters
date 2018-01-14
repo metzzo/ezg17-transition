@@ -262,6 +262,12 @@
     <ClInclude Include="LightDecreaseAction.h">
       <Filter>Headerdateien\Controller\Actions</Filter>
     </ClInclude>
+    <ClInclude Include="FinalParticlesNode.h">
+      <Filter>Headerdateien\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitAction.h">
+      <Filter>Headerdateien\Controller\Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transition.cpp">
@@ -395,6 +401,9 @@
     </ClCompile>
     <ClCompile Include="CameraSplineController.cpp">
       <Filter>Quelldateien\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="FinalParticlesNode.cpp">
+      <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

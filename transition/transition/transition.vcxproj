@@ -170,6 +170,7 @@
     <ClInclude Include="AnimationAction.h" />
     <ClInclude Include="CullOffAction.h" />
     <ClInclude Include="DoorAnimation.h" />
+    <ClInclude Include="FinalParticlesNode.h" />
     <ClInclude Include="FootColorAction.h" />
     <ClInclude Include="FootstepAnimator.h" />
     <ClInclude Include="FootstepNode.h" />
@@ -197,6 +198,7 @@
     <ClInclude Include="MainShader.h" />
     <ClInclude Include="OmniDirectionalDepthShader.h" />
     <ClInclude Include="OmniDirectionalShadowStrategy.h" />
+    <ClInclude Include="ParticleEmitAction.h" />
     <ClInclude Include="ParticleEmitterNode.h" />
     <ClInclude Include="PianoAnimation.h" />
     <ClInclude Include="PostProcessingEffect.h" />
@@ -224,6 +226,7 @@
     <ClCompile Include="BloomGaussShader.cpp" />
     <ClCompile Include="BrokenLampController.cpp" />
     <ClCompile Include="CameraSplineController.cpp" />
+    <ClCompile Include="FinalParticlesNode.cpp" />
     <ClCompile Include="FootParticleShader.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="CameraNode.cpp" />
