@@ -13,10 +13,12 @@ LookAtController::LookAtController(const std::string name, TransformationNode* t
 
 void LookAtController::update(double delta)
 {
+#ifdef DEBUG_KEYS
 	if (!glfwGetKey(get_rendering_engine()->get_window(), GLFW_KEY_SPACE))
 	{
 		return;
 	}
+#endif
 
 	auto target_pos = target_node_->get_position();
 	target_pos.y = 0;

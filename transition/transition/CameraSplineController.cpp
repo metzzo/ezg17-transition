@@ -8,9 +8,6 @@
 #include <stdlib.h>
 #include <glm/gtx/norm.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
-#include <glm/gtx/matrix_interpolation.hpp>
-
-
 
 glm::quat look_at(glm::vec3 start, glm::vec3 dest) {
 	start = glm::normalize(start);
@@ -95,7 +92,7 @@ void CameraSplineController::update(double delta)
 	if (glm::length(target_direction) >= 0.00001)
 	{
 		glm::mat4 target_rotation = glm::inverse(glm::lookAt(this->get_target()->get_position(), target_look_at, glm::vec3(0, 1, 0)));
-		glm::quat quat_target = glm::quat_cast(target_rotation); //look_at(target_direction, glm::vec3(0,0,1)); // 
+		glm::quat quat_target = glm::quat_cast(target_rotation);
 
 		if (glm::dot(this->current_rotation_, quat_target) < 0.0)
 		{
@@ -111,7 +108,7 @@ void CameraSplineController::update(double delta)
 
 
 	if (this->progress_ < this->duration_) {
-		this->progress_ += delta;// delta*(1 + glfwGetKey(get_rendering_engine()->get_window(), GLFW_KEY_PAGE_UP) * 5);
+		this->progress_ += delta;
 	}
 	this->progress_ = std::min(this->progress_, this->duration_);
 
@@ -119,11 +116,13 @@ void CameraSplineController::update(double delta)
 	{
 		action->update(this, delta, global_tween);
 	}
-
+	
+#ifdef DEBUG_KEYS
 	if (glfwGetKey(this->get_rendering_engine()->get_window(), GLFW_KEY_M))
 	{
 		this->progress_ = 0;
 	}
+#endif
 }
 
 void CameraSplineController::init(RenderingEngine* rendering_engine)
