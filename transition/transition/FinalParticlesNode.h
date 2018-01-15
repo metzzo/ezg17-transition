@@ -21,6 +21,8 @@ private:
 	GLuint particle_count_;
 	bool is_emitting_ = false;
 
+	void create_particles(int count);
+
 
 public:
 	explicit FinalParticlesNode(const std::string& name);

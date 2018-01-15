@@ -74,24 +74,26 @@ void FinalParticlesNode::init(RenderingEngine * engine)
 
 }
 
-void FinalParticlesNode::start_emitting()
+
+
+void FinalParticlesNode::create_particles(int count)
 {
 	std::vector<glm::vec4> data_pos;
 	std::vector<glm::vec4> data_col;
 	std::vector<glm::vec4> data_vel;
 
-	for (int i = 0; i < 500 && (particle_count_ + i + 1 <= FINAL_MAX_PARTICLES); i++) {
+	for (int i = 0; i < count && (particle_count_ + i + 1 <= FINAL_MAX_PARTICLES); i++) {
 		float angle = ((float)rand() / RAND_MAX) * 2 * M_PI;
-		float distance = ((float)rand() / RAND_MAX)*4;// rand();
-		float speed = ((float)rand() / RAND_MAX)*0.9 + 4.5;
-		float ttl = 7 + ((float)rand() / RAND_MAX - 0.5)*2;
+		float distance = ((float)rand() / RAND_MAX) * 10;// rand();
+		float speed = ((float)rand() / RAND_MAX)*0.5 + 0.8;
+		float ttl = 3 + ((float)rand() / RAND_MAX - 0.5) * 2;
 		float x = cos(angle)*distance;
 		float z = sin(angle)*distance;
 		data_pos.push_back(glm::vec4(x, 0, z, ttl));
-		glm::vec4 vel = glm::normalize(glm::vec4(x, 4, z, 0));
+		glm::vec4 vel = glm::normalize(glm::vec4(0, 1, 0, 0));
 		vel.w = speed;
 		data_vel.push_back(vel);
-		data_col.push_back(glm::vec4(0.3, 1, 0.3, 1));
+		data_col.push_back(glm::vec4(0, 0.5, 0, 1));
 	}
 
 	if (data_pos.size() > 0) {
@@ -104,6 +106,11 @@ void FinalParticlesNode::start_emitting()
 		particle_count_ += data_pos.size();
 		is_emitting_ = true;
 	}
+}
+
+void FinalParticlesNode::start_emitting()
+{
+	is_emitting_ = true;
 }
 
 void FinalParticlesNode::stop_emitting()
@@ -144,16 +151,14 @@ void FinalParticlesNode::update_particles(float deltaT)
 
 	glMemoryBarrier(GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
 
-	if (particle_count_ == 0) {
-		stop_emitting();
-	}
+	create_particles(deltaT * 120);
 }
 
 void FinalParticlesNode::draw_particles(const RenderingNode * cam) const
 {
 	draw_shader_->use();
 	draw_shader_->set_camera_uniforms(cam);
-	draw_shader_->set_modelmat_uniforms(this->get_transformation(), glm::vec2(0.1, 0.1));
+	draw_shader_->set_modelmat_uniforms(this->get_transformation(), glm::vec2(0.1, 0.1), 2);
 	glBindVertexArray(this->vao_ssbo_pos_id_[this->pingpongindex_]);
 	glDrawArrays(GL_POINTS, 0, particle_count_);
 	glBindVertexArray(0);

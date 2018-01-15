@@ -406,7 +406,7 @@
       <Filter>Quelldateien\Controller</Filter>
     </ClCompile>
     <ClCompile Include="FinalParticlesNode.cpp">
-      <Filter>Quelldateien</Filter>
+      <Filter>Quelldateien\SceneGraph</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
