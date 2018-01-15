@@ -1,7 +1,12 @@
 #include "FootstepAnimator.h"
 #include <iostream>
+#include "BrokenLampController.h"
 
-FootstepAnimator::FootstepAnimator(const std::string& name, FootstepNode* left_foot, FootstepNode* right_foot, bool left_start, glm::vec3 step_size) : AnimatorNode(name)
+#define FOOT_QUAKE_INTENSITY (7.5)
+#define FOOT_QUAKE_DURATION (3.5)
+
+
+FootstepAnimator::FootstepAnimator(const std::string& name, FootstepNode* left_foot, FootstepNode* right_foot, bool left_start, glm::vec3 step_size, BrokenLampController *lamp) : AnimatorNode(name)
 {
 	this->left_foot_ = left_foot;
 	this->right_foot_ = right_foot;
@@ -10,6 +15,7 @@ FootstepAnimator::FootstepAnimator(const std::string& name, FootstepNode* left_f
 	this->animating_ = false;
 	this->flash_done_ = false;
 	this->progress_ = 0.0;
+	this->lamp_ = lamp;
 #ifdef VISUALIZE_KEYPOINTS
 	//this->progress_ = 38;
 #endif

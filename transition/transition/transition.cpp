@@ -36,8 +36,7 @@
 #include "ParticleEmitAction.h"
 #include "EndCreditsAction.h"
 
-int main()
-{
+int main(){
 	int window_width = 1600;
 	int window_height = 900;
 	bool window_fullscreen = false;
@@ -149,7 +148,7 @@ int main()
 	auto left = new FootstepNode("emitter", main_shader, true);
 	root->add_node(left);
 	left->apply_transformation(Transformation::translate(glm::vec3(1.8, 0, 5)));
-	FootstepAnimator* footanim = new FootstepAnimator("footanim", left, right, false, glm::vec3(0, 0, -2));
+	FootstepAnimator* footanim = new FootstepAnimator("footanim", left, right, false, glm::vec3(0, 0, -2), broken_lamp);
 	root->add_node(footanim);
 
 	auto tree_plane = static_cast<GeometryNode*>(root->find_by_name("Cube_0"));
