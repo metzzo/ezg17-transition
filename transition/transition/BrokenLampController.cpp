@@ -82,6 +82,7 @@ void BrokenLampController::init(RenderingEngine* rendering_engine)
 	assert(this->whole_lamp_geometry_ != nullptr);
 
 	this->origin_pos_ = this->geometry_->get_position() - glm::vec3(0,-3,0);
+	this->set_brightness(0.0);
 
 }
 
