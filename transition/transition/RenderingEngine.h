@@ -18,7 +18,7 @@ class FrustumG;
 class Node;
 
 #define PLAY_SOUND (1)
-#define DEBUG_KEYS
+//#define DEBUG_KEYS
 
 extern bool RE_CULLING;	//Backface-Culling activated or not?
 
