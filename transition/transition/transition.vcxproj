@@ -170,6 +170,7 @@
     <ClInclude Include="AnimationAction.h" />
     <ClInclude Include="CullOffAction.h" />
     <ClInclude Include="DoorAnimation.h" />
+    <ClInclude Include="EndCreditsAction.h" />
     <ClInclude Include="FinalParticlesNode.h" />
     <ClInclude Include="FootColorAction.h" />
     <ClInclude Include="FootstepAnimator.h" />

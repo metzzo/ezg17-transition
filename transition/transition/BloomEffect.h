@@ -16,12 +16,13 @@ private:
 	unsigned int iterations_;
 	float addintensity_  = 1.0f;
 	glm::ivec2 viewport_;
-
+	TextureRenderable *end_tex_; // texture that is displayed when reaching the end
+	float end_tex_intensity_;
 public:
 	/*
 	intensity: How strong the bloom should be. The number of 8x8-Gauss-Filter to use on the image.
 	*/
-	BloomEffect(unsigned int iterations);
+	BloomEffect(unsigned int iterations, TextureRenderable *end_tex);
 
 	virtual void init(RenderingEngine *engine, CameraNode *camera) override;
 
@@ -29,4 +30,5 @@ public:
 
 	void set_iterations(int iterations);
 	void set_addintensity(float intensity);
+	void set_end_tex_intensity(float end_tex_intensity);
 };
