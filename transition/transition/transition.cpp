@@ -78,7 +78,7 @@ int main()
 
 	const auto cam = new CameraNode("MainCamera",
 		engine->get_viewport(),
-		60.0f, float(window_width) / float(window_height), 0.05f, 75.0f, true
+		60.0f, float(window_width) / float(window_height), 0.05f, 95.0f, true
 	);
 	cam->set_bloom_params(1, 1.0, 1);
 	cam->set_view_matrix(glm::lookAt(glm::vec3(6.11709, 5.40085, -9.8344), glm::vec3(-4.42165, 5.40085, -3.74445), glm::vec3(0, 1, 0)));
@@ -152,6 +152,18 @@ int main()
 	FootstepAnimator* footanim = new FootstepAnimator("footanim", left, right, false, glm::vec3(0, 0, -2));
 	root->add_node(footanim);
 
+	auto tree_plane = static_cast<GeometryNode*>(root->find_by_name("Cube_0"));
+	AlphaTextureResource* alpha = new AlphaTextureResource("assets/gfx/treeflooralpha1.png");
+	engine->register_resource(alpha);
+	tree_plane->get_editable_mesh_resource()->get_editable_material().set_alpha_texture(alpha);
+	tree_plane->get_editable_mesh_resource()->get_editable_material().set_alpha_cutoff(0);
+
+	auto blood_plane = static_cast<GeometryNode*>(root->find_by_name("Bloodstain_0"));
+	alpha = new AlphaTextureResource("assets/gfx/bloooda.png");
+	engine->register_resource(alpha);
+	blood_plane->get_editable_mesh_resource()->get_editable_material().set_alpha_texture(alpha);
+	blood_plane->get_editable_mesh_resource()->get_editable_material().set_alpha_cutoff(0);
+
 	FinalParticlesNode* particle_node = new FinalParticlesNode("Final");
 	particle_node->apply_transformation(Transformation::translate(glm::vec3(91.5, 0, -20)));
 	root->add_node(particle_node);
@@ -202,7 +214,7 @@ int main()
 
 	auto treelight = static_cast<LightNode*>(root->find_by_name("Sun_"));
 	treelight->set_color(glm::vec3(0), glm::vec3(0));
-	auto treelightaction = new HallLightIncreaseAction(nullptr, treelight, 3.5, 3);
+	auto treelightaction = new HallLightIncreaseAction(nullptr, treelight, 3.5, 3, 0.8);
 	auto door3aanim = new DoorAnimation("Door3aAnim", door3a, d3angle, 1.2, false);
 	auto door3banim = new DoorAnimation("Door3bAnim", door3b, d3angle, 1.2, false);
 	root->add_node(door3aanim);
