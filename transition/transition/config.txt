@@ -1,4 +1,4 @@
 width=1920
 height=1080
-fullscreen=1
+fullscreen=0
 refreshrate=60

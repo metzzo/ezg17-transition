@@ -1,8 +1,10 @@
 #include "BloomEffect.h"
 
-BloomEffect::BloomEffect(unsigned int iterations)
+BloomEffect::BloomEffect(unsigned int iterations, TextureRenderable *end_tex)
 {
 	this->iterations_ = iterations;
+	end_tex_ = end_tex;
+	end_tex_intensity_ = 0.0;
 }
 
 void BloomEffect::init(RenderingEngine *engine, CameraNode *camera)
@@ -21,6 +23,7 @@ void BloomEffect::init(RenderingEngine *engine, CameraNode *camera)
 
 	help_buffer_[1] = new TextureFBO(engine->get_viewport().x, engine->get_viewport().y, 1);
 	help_buffer_[1]->init_color();
+
 }
 
 void BloomEffect::perform_effect(const TextureFBO * from, GLuint fbo_to, const std::vector<LightNode *> light_nodes)
@@ -44,7 +47,7 @@ void BloomEffect::perform_effect(const TextureFBO * from, GLuint fbo_to, const s
 	}
 
 	add_shader_->use();
-	add_shader_->set_textures(from->get_texture(0), help_buffer_[!horizontal], addintensity_);
+	add_shader_->set_textures(from->get_texture(0), help_buffer_[!horizontal], addintensity_, end_tex_, end_tex_intensity_);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo_to);
 	glViewport(0, 0, viewport_.x, viewport_.y);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -62,4 +65,9 @@ void BloomEffect::set_iterations(int iterations)
 void BloomEffect::set_addintensity(float intensity)
 {
 	this->addintensity_ = intensity;
+}
+
+void BloomEffect::set_end_tex_intensity(float end_tex_intensity)
+{
+	this->end_tex_intensity_ = end_tex_intensity;
 }

@@ -5,15 +5,16 @@
 #include "VolumetricLightingShader.h"
 #include "VolumetricLightingEffect.h"
 #include "BloomEffect.h"
+#include "DummyEffect.h"
 
 CameraNode::CameraNode(const std::string& name, const glm::ivec2& viewport, const float fieldOfView, const float ratio, const float nearp, const float farp, const bool culling) : RenderingNode(name, viewport, fieldOfView, ratio, nearp, farp, culling)
 {
-	screen_mesh_ = nullptr;
 	volumetric_lighting_result_render_target_ = nullptr;
 	main_render_target_ = nullptr;
 
 	volumetric_lighting_effect_ = new VolumetricLightingEffect();
-	bloom_effect_ = new BloomEffect(1);
+	credits_texture_ = new TextureResource("assets/gfx/end.tga");
+	bloom_effect_ = new BloomEffect(1, credits_texture_);
 }
 
 CameraNode::~CameraNode()
@@ -26,7 +27,8 @@ void CameraNode::init(RenderingEngine *rendering_engine)
 {
 	RenderingNode::init(rendering_engine);
 
-	screen_mesh_ = MeshResource::create_sprite(nullptr);
+	credits_texture_->init();
+	rendering_engine->register_resource(credits_texture_);
 
 	main_render_target_ = new TextureFBO(rendering_engine->get_viewport().x, rendering_engine->get_viewport().y, 2);
 	main_render_target_->init_color(true);
@@ -75,4 +77,9 @@ void CameraNode::set_bloom_params(int iterations, float treshold, float addinten
 	bloom_effect_->set_iterations(iterations);
 	bloom_effect_->set_addintensity(addintensity);
 	volumetric_lighting_effect_->set_bloom_treshold(treshold);
+}
+
+void CameraNode::set_end_tex_intensity(float end_tex_intensity)
+{
+	this->bloom_effect_->set_end_tex_intensity(end_tex_intensity);
 }
