@@ -17,7 +17,7 @@ public:
 	{
 		progress_ += delta;
 		
-		auto intensity = glm::clamp(this->progress_ - 3.0, 0.0, 10.0) / 10.0;
+		auto intensity = glm::clamp(this->progress_ - 1.0, 0.0, 7.0) / 7.0;
 		cam_->set_end_tex_intensity(intensity * intensity);
 	}
 };

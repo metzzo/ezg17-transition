@@ -202,7 +202,7 @@ void FootstepNode::draw_particles(const RenderingNode *cam) const
 
 	draw_shader_->use();
 	draw_shader_->set_camera_uniforms(cam);
-	draw_shader_->set_modelmat_uniforms(this->get_transformation(), glm::vec2(0.03, 0.03));
+	draw_shader_->set_modelmat_uniforms(this->get_transformation(), glm::vec2(0.03, 0.03), 5);
 	glBindVertexArray(this->vao_ssbo_pos_id_[this->pingpongindex_]);
 	glDrawArrays(GL_POINTS, 0, particle_count_);
 	glBindVertexArray(0);

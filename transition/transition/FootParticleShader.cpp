@@ -21,6 +21,7 @@ void FootParticleShader::init()
 	this->view_uniform_ = get_uniform("mvp.view");
 	this->projection_uniform_ = get_uniform("mvp.projection");
 	this->size_uniform_ = get_uniform("size");
+	this->maxttl_uniform_ = get_uniform("max_ttl");
 }
 
 void FootParticleShader::set_camera_uniforms(const RenderingNode * node)
@@ -34,8 +35,9 @@ void FootParticleShader::set_model_uniforms(const GeometryNode * node)
 	glUniformMatrix4fv(this->model_uniform_, 1, GL_FALSE, &node->get_transformation()[0][0]);
 }
 
-void FootParticleShader::set_modelmat_uniforms(const glm::mat4 & trafo, const glm::vec2& size)
+void FootParticleShader::set_modelmat_uniforms(const glm::mat4 & trafo, const glm::vec2& size, float max_ttl)
 {
 	glUniformMatrix4fv(this->model_uniform_, 1, GL_FALSE, &trafo[0][0]);
 	glUniform2fv(this->size_uniform_, 1, &size[0]);
+	glUniform1f(this->maxttl_uniform_, max_ttl);
 }

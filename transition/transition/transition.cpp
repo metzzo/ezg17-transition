@@ -165,7 +165,7 @@ int main()
 	blood_plane->get_editable_mesh_resource()->get_editable_material().set_alpha_cutoff(0);
 
 	FinalParticlesNode* particle_node = new FinalParticlesNode("Final");
-	particle_node->apply_transformation(Transformation::translate(glm::vec3(91.5, 0, -20)));
+	particle_node->apply_transformation(Transformation::translate(glm::vec3(87.5, 0, -20)));
 	root->add_node(particle_node);
 
 	auto cam_spline_controller = new CameraSplineController("spline_cam_controller", cam, root);
@@ -229,20 +229,20 @@ int main()
 	EndCreditsAction *ecs = new EndCreditsAction(cam);
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(23.6967, 4.77344, -21.4799), glm::vec3(91.0045, 4.77344, -19.635), 7, { new BloomAction(cam, glm::vec2(1, 1), glm::vec2(1, 0), 4.5, 2), new CullOffAction(), treelightaction, new ClearColorAction(brightbackground), new AnimationAction(door3aanim), new AnimationAction(door3banim), new RoomEnableKeyPointAction(1, false), new RoomEnableKeyPointAction(3, true) }));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(47.7877, 4.77344, -22.2962), glm::vec3(91.0045, 12, -19.635), 5, {  new FootColorAction(left, glm::vec3(0, 1, 0)), new FootColorAction(right, glm::vec3(0, 1, 0)) }));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(55.1978, 4.77344, -22.1224), glm::vec3(91.0045, 12, -19.635), 5));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(55.1978, 4.77344, -22.1224), glm::vec3(91.0045, 12, -19.635), 5, { new ParticleEmitAction(particle_node, 2.0) }));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(62.5513, 4.77344, -21.8042), glm::vec3(91.0045, 12, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(70.5708, 4.77344, -21.4571), glm::vec3(91.0045, 12, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(77.0854, 4.77344, -21.1752), glm::vec3(91.0045, 12, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(84.3001, 4.77344, -11.5358), glm::vec3(91.0045, 12, -19.635), 5));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 16.3427, -16.337), glm::vec3(91.0045, 11, -19.635), 5, { blomp, new RoomEnableKeyPointAction(2, false), new ParticleEmitAction(particle_node, 3.5) }));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 16.3427, -16.337), glm::vec3(91.0045, 11, -19.635), 5, { blomp, new RoomEnableKeyPointAction(2, false) }));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 18, -16.337), glm::vec3(100, 50, -19.635), 5, { blomp }));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 30.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5, { blomp, blex, ecs }));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 35.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 25, { ecs }));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 40.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5, {new StopAction(engine)}));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 35.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 10, { ecs }));
+	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 40.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5, {new StopAction(engine)}));    
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 50.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 60.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
 	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 70.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
-	cam_spline_controller->add_keypoint(new KeyPoint(glm::vec3(87.4164, 80.3427, -16.337), glm::vec3(91.0045, 200, -19.635), 5));
+
 
 	cam_spline_controller->build_spline();
 	root->add_node(cam_spline_controller);
