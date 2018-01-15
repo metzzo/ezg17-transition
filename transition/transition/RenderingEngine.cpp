@@ -161,11 +161,16 @@ void RenderingEngine::run()
 			last_fps_time = current_time;
 		}
 		last_time = current_time;
-		delta = delta*(1 + glfwGetKey(get_window(), GLFW_KEY_PAGE_UP) * 5)*(1+ glfwGetKey(get_window(), GLFW_KEY_RIGHT_SHIFT)*2);
+		delta = delta
+			* (1 + glfwGetKey(get_window(), GLFW_KEY_PAGE_UP) * 5)
+			* (1 + glfwGetKey(get_window(), GLFW_KEY_RIGHT_SHIFT)*2)
+			* (1 - glfwGetKey(get_window(), GLFW_KEY_PAGE_DOWN) * 0.75);
 
 		if (glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 			glfwSetWindowShouldClose(window_, true);
 		}
+
+#ifdef DEBUG_KEYS
 		if (glfwGetKey(window_, GLFW_KEY_1) == GLFW_PRESS) {
 			darkroom->set_enabled(true);
 		} else if (glfwGetKey(window_, GLFW_KEY_2) == GLFW_PRESS) {
@@ -199,6 +204,7 @@ void RenderingEngine::run()
 		} else if (glfwGetKey(window_, GLFW_KEY_O)) {
 			glClearColor(0, 0, 0, 1);
 		}
+#endif
 
 		for (auto& animator_node : this->animator_nodes_)
 		{

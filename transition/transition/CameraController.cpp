@@ -19,11 +19,13 @@ CameraController::CameraController(const std::string name, TransformationNode *t
 
 void CameraController::update(double delta)
 {
+#ifdef DEBUG_KEYS
 	GLFWwindow* window = get_rendering_engine()->get_window();
+	glm::vec3 viewdirection = glm::transpose(target_->get_inverse_transformation()) * glm::vec4(0, 0, -1, 0);
+
 	if (glfwGetKey(window, GLFW_KEY_L)) {
 		std::cout << "Position " << this->target_->get_position().x << " " << this->target_->get_position().y << " " << this->target_->get_position().z << std::endl;
 	}
-	glm::vec3 viewdirection = glm::transpose(target_->get_inverse_transformation()) * glm::vec4(0, 0, -1, 0);
 	if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
 	{
 		n_pressed_ = true;
@@ -56,18 +58,6 @@ void CameraController::update(double delta)
 			
 		}
 	}
-
-	/*if (glfwGetKey(window, GLFW_KEY_C))
-	{
-		look_at_marker_->set_transformation(glm::translate(this->target_->get_position()));
-	}
-
-	if (glfwGetKey(window, GLFW_KEY_V))
-	{
-		auto mat = glm::inverse(glm::lookAt(this->target_->get_position(), look_at_marker_->get_position(), glm::vec3(0, 1, 0)));
-		target_->set_transformation(mat);
-	}*/
-
 
 	glm::vec3 sidedirection = glm::cross(viewdirection, glm::vec3(0, 1, 0));
 	viewdirection.y = 0;
@@ -111,6 +101,8 @@ void CameraController::update(double delta)
 		target_->apply_transformation(Transformation::rotate_around_point(dY*sensitivity_, sidedirection, cpos));
 	}
 	target_->apply_transformation(Transformation::rotate_around_point(dX*sensitivity_, glm::vec3(0, 1, 0), cpos));
+
+#endif
 }
 
 void CameraController::init(RenderingEngine* rendering_engine)

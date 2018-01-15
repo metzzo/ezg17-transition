@@ -42,7 +42,7 @@ int main()
 	bool window_fullscreen = false;
 	int refresh_rate = 60;
 
-	std::ifstream config("assets/config.txt");
+	std::ifstream config("config.txt");
 	if (config.is_open())
 	{
 		std::string line;
